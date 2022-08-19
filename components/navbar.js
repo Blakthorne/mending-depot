@@ -10,6 +10,7 @@ export default function Navbar() {
 				<div>
 					<div className="inline-flex items-center text-2xl text-slate-400">
 						<Link href="/the-depot" className="mr-5 hover:text-slate-100">The Depot</Link>
+                        <Link href="/new-mend" className="hover:text-slate-100">New Mend</Link>
 					</div>
 				</div>
 			</div>
