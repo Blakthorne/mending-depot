@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+	provider = "prisma-client-js"
+}
+
+datasource db {
+	provider = "mysql"
+	url      = env("DATABASE_URL")
+}
+
+model Owner {
+	ownerId			String		@id @default(uuid())
+	ownerName		String
+	books			Book[]
+}
+
+model Book {
+	bookId			String		@id @default(uuid())
+	title			String		
+	author			String
+	publisher		String?
+	yearPublished	Int?
+	numberOfPages	Int?
+	bindingType		BindingType
+	received		DateTime
+	returned		DateTime?
+	bookMaterialsCost	Float?
+	amountCharged	Float?
+	owner			Owner		@relation(fields: [ownerId], references: [ownerId])
+	ownerId			String
+	repairs			Repair[]
+}
+
+model Repair {
+	repairId		String		@id @default(uuid())
+	repairType		RepairType
+	repairMaterialsCost	Float?
+	book			Book		@relation(fields: [bookId], references: [bookId])
+	bookId			String
+	replacementCover	ReplacementCover?
+	materials		MaterialForRepair[]
+}
+
+model ReplacementCover {
+	repairId		String		@unique
+	repair			Repair		@relation(fields: [repairId], references: [repairId])
+	coverType		CoverType?
+	spineMaterial	CoverMaterial?
+	sideMaterial	CoverMaterial?
+}
+
+model Material {
+	materialId		String		@id @default(uuid())
+	materialName	String
+	units			Unit
+	unitCost		Float
+	repairs			MaterialForRepair[]
+}
+
+model MaterialForRepair {
+	repair			Repair		@relation(fields: [repairId], references: [repairId])
+	repairId		String
+	material		Material	@relation(fields: [materialId], references: [materialId])
+	materialId		String
+	amountUsed		Float
+	@@id([repairId, materialId])
+}
+
+enum BindingType {
+	SEWN
+	PERFECT
+}
+
+enum RepairType {
+	BASEHINGE
+	TIPIN
+	PAPER
+	FLYSHEET
+	SPINEREPLACEMENT
+	COVERREPLACEMENT
+	RESEWING
+}
+
+enum CoverType {
+	FULL
+	QUARTER
+	THREEQUARTER
+}
+
+enum CoverMaterial {
+	BUCKRAM
+	BOOKCLOTH
+	LEATHER
+}
+
+enum Unit {
+	INCHES
+	INCHESSQUARED
+}
