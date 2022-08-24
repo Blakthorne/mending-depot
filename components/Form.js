@@ -37,26 +37,13 @@ export default function Form({ table, items }) {
                     required
                 />
                 <button
-                    className="bg-slate-800 hover:bg-slate-700"
-                    // disabled={!ownerName}
+                    className="bg-slate-800 hover:bg-slate-700 py-2 px-4 shadow-sm shadow-slate-800"
                     type="submit"
                 >Save Changes</button>
-                <a className="back" href="#" onClick={() => router.push('/')}>
+                <a className="ml-4 text-slate-900" href="#" onClick={() => router.push('/')}>
                     or Cancel
                 </a>
             </form>
-                
-            <style jsx>{`
-                button[type='submit'] {
-                    border: 0;
-                    padding: .5rem 1rem;
-                }
-
-                .back {
-                    margin-left: 1rem;
-                    color: black;
-                }
-            `}</style>
         </div>
     )
 }

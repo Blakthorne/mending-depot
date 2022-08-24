@@ -6,7 +6,7 @@ import Form from '../components/Form'
 
 function Home() {
   
-  const table = 'owners'
+  const table = 'repairs'
   
   return (
     <SWRConfig
