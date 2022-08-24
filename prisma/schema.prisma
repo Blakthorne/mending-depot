@@ -12,7 +12,7 @@ datasource db {
 
 model Owner {
 	ownerId			String		@id @default(uuid())
-	ownerName		String
+	ownerName		String		@unique
 	books			Book[]
 }
 

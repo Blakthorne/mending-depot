@@ -8,9 +8,17 @@ export default function Navbar() {
 					<Link href="/">Mending Depot</Link>
 				</div>
 				<div>
-					<div className="inline-flex items-center text-2xl text-slate-400">
-						<Link href="/the-depot" className="mr-5 hover:text-slate-100">The Depot</Link>
-                        <Link href="/new-mend" className="hover:text-slate-100">New Mend</Link>
+					<div className="inline-flex text-2xl text-slate-400">
+						<Link href="/the-depot">
+							<a className="mr-5 hover:text-slate-100">
+								The Depot
+							</a>
+						</Link>
+                        <Link href="/new-mend">
+							<a className="hover:text-slate-100">
+								New Mend
+							</a>
+						</Link>
 					</div>
 				</div>
 			</div>

@@ -11,8 +11,7 @@ services:
       - 3000:3000
     volumes:
       - ./:/app
-      - /app/node_modules
-      - /app/.next
+      - next:/app/.next
     environment:
       MYSQL_HOST: mysql
       MYSQL_USER: root
@@ -25,12 +24,13 @@ services:
     image: mysql:8
     container_name: mending-depot-db
     volumes:
-      - mending-depot-db-data:/var/lib/mysql
-    environment: 
+      - db-data:/var/lib/mysql
+    environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: mending-depot-db
     ports:
       - 3306:3306
 
 volumes:
-  mending-depot-db-data:
+  db-data:
+  next:
