@@ -2,11 +2,11 @@ import Head from 'next/head'
 import Layout from '../components/layout';
 import { SWRConfig, useSWRConfig } from 'swr'
 import Table from '../components/Table'
-import Form from '../components/Form'
+import AddOwnerForm from '../components/AddOwnerForm'
 
 function Home() {
   
-  const table = 'repairs'
+  const table = 'owners'
   
   return (
     <SWRConfig
@@ -26,7 +26,7 @@ function Home() {
           I meet your book mending needs.
         </div>
         <div className="mx-auto">
-          <Form table={table}/>
+          <AddOwnerForm table={table}/>
           <Table table={table}/>
         </div>
         <div>
