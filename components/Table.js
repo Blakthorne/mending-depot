@@ -9,7 +9,7 @@ export default function Table({ table }) {
     let cellKey = 0
 
     return (
-    <div className="table border-collapse table-auto text-sm mt-16">
+    <div className="table border-collapse table-auto text-sm mt-16 mb-32">
         <div className="table-header-group">
             <div className="table-row">
                 {Object.keys(data[0]).map(item => (

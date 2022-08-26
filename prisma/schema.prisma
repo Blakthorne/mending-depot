@@ -24,8 +24,8 @@ model Book {
 	yearPublished	Int?
 	numberOfPages	Int?
 	bindingType		BindingType
-	received		DateTime
-	returned		DateTime?
+	received		DateTime	@db.Date
+	returned		DateTime?	@db.Date
 	bookMaterialsCost	Float?
 	amountCharged	Float?
 	owner			Owner		@relation(fields: [ownerId], references: [ownerId])

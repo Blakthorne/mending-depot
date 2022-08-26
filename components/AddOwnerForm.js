@@ -36,10 +36,6 @@ export default function AddOwnerForm() {
         }
     }
 
-    const checkInput = async name => {
-        setOwnerName(name)
-    }
-
     const cancelInputs = () => {
         setOwnerName('')
     }
@@ -49,9 +45,9 @@ export default function AddOwnerForm() {
             <form
                 autoComplete="off"
                 onSubmit={submitData}>
-                <FormTextInput onChange={(value) => checkInput(value)} placeholder={ "'John Doe'" } input={ ownerName } values={ names } id={ "Owner" }/>
-                <FormInputErrorMessage id={ "OwnerError" } text={ "That name already exists. Please enter a new name." }/>
-                <FormSubmitButton inputs={[ownerName]} uniques={ [{"key": ownerName, "values": names}] }/>
+                <FormTextInput onChange={(value) => setOwnerName(value)} placeholder={ "'Virgil'" } input={ ownerName } values={ names } inputId={ "Owner" } constraints={ ["unique"] } errorMessage={ "That name already exists. Please enter a new name." }/>
+
+                <FormSubmitButton requiredInputs={ [ownerName] } uniques={ [{"key": ownerName, "values": names}] }/>
                 <FormCancelButton cancelClick={() => cancelInputs()}/>
             </form>
         </div>

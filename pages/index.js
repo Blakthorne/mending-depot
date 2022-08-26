@@ -3,11 +3,9 @@ import Layout from '../components/layout';
 import { SWRConfig, useSWRConfig } from 'swr'
 import Table from '../components/Table'
 import AddOwnerForm from '../components/AddOwnerForm'
+import AddBookForm from '../components/AddBookForm'
 
-function Home() {
-  
-  const table = 'owners'
-  
+function Home() {  
   return (
     <SWRConfig
       value = {{
@@ -26,8 +24,11 @@ function Home() {
           I meet your book mending needs.
         </div>
         <div className="mx-auto">
-          <AddOwnerForm table={table}/>
-          <Table table={table}/>
+          <AddOwnerForm table={"owners"}/>
+          <Table table={"owners"}/>
+
+          <AddBookForm table={"books"}/>
+          <Table table={"books"}/>
         </div>
         <div>
           

@@ -1,10 +1,10 @@
 import React from 'react'
 
-export default function FormSubmitButton({ inputs, uniques }) {
+export default function FormSubmitButton({ requiredInputs, uniques }) {
 
     const disable = () => {
-        for (let i = 0; i < inputs.length; ++i) {
-            if (!inputs[i]) return true
+        for (let i = 0; i < requiredInputs.length; ++i) {
+            if (!requiredInputs[i]) return true
         }
 
         for (let i = 0; i < uniques.length; ++i) {
