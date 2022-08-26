@@ -5,20 +5,29 @@ import FormInputErrorMessage from './FormInputErrorMessage'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
 
-export default function AddOwnerForm() {
+export default function AddBookForm() {
 
-    let names = []
-    const { data, error } = useSWR('/api/owners')
-    if (error) return <div>{ error }</div>
-    else if (!data) {}
-    else {
-        for (const entry in data) {
-            names.push(data[entry].ownerName)
-        }
-    }
+    // let titles = []
+    // const { data, error } = useSWR('/api/books')
+    // if (error) return <div>{ error }</div>
+    // else if (!data) {}
+    // else {
+    //     for (const entry in data) {
+    //         names.push(data[entry].ownerName)
+    //     }
+    // }
 
     const { mutate } = useSWRConfig()
-    const [ownerName, setOwnerName] = useState('')
+    const [bookTitle, setBookTitle] = useState('')
+    const [bookAuthor, setBookAuthor] = useState('')
+    const [bookPublisher, setBookPublisher] = useState('')
+    const [bookNumPages, setBookNumPages] = useState('')
+    const [bookBindingType, setBookBindingType] = useState('')
+    const [bookReceived, setBookReceived] = useState('')
+    const [bookReturned, setBookReturned] = useState('')
+    const [bookMaterialsCost, setBookMaterialsCost] = useState('')
+    const [bookAmountCharged, setBookAmountCharged] = useState('')
+    const [bookOwner, setBookOwner] = useState('')
 
     const submitData = async e => {
         e.preventDefault()
@@ -50,7 +59,7 @@ export default function AddOwnerForm() {
                 autoComplete="off"
                 onSubmit={submitData}>
                 <FormTextInput onChange={(value) => checkInput(value)} placeholder={ "'John Doe'" } input={ ownerName } values={ names } id={ "Owner" }/>
-                <FormInputErrorMessage id={ "OwnerError" } text={ "That name already exists. Please enter a new name." }/>
+                <FormInputErrorMessage id={ "nameError" } text={ "That name already exists. Please enter a new name." }/>
                 <FormSubmitButton inputs={[ownerName]} uniques={ [{"key": ownerName, "values": names}] }/>
                 <FormCancelButton cancelClick={() => cancelInputs()}/>
             </form>
