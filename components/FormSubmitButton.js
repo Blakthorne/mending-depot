@@ -7,8 +7,10 @@ export default function FormSubmitButton({ requiredInputs, dateValids }) {
             if (!requiredInputs[i]) return true
         }
 
-        for (let i = 0; i < dateValids.length; ++i) {
-            if (dateValids[i] == false && requiredInputs.includes(dateValids[i])) return true
+        if (dateValids) {
+            for (let i = 0; i < dateValids.length; ++i) {
+                if (dateValids[i] == false && requiredInputs.includes(dateValids[i])) return true
+            }
         }
         return false
     }

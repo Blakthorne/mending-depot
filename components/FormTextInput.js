@@ -72,19 +72,13 @@ export default function FormTextInput({ onChange, placeholder, input, values, in
             onChange(text)
         }
         if (constraints.includes("int")) {
-            if (!text.match(/^\d*$/)) {
-                renderInvalid()
-            }
-            else {
-                renderValid()
-                onChange(text)
-            }
+            if (text.match(/^\d*$/)) onChange(text)
         }
         if (constraints.includes("date")) {
             let stringDate = checkStringDate(text)
             
             if (!stringDate && (text != '')) {
-                renderInvalid()
+                // renderInvalid()
             }
             else {
                 if (stringDate.length == 14) {
@@ -122,13 +116,7 @@ export default function FormTextInput({ onChange, placeholder, input, values, in
                 text = '0.'
                 onChange(text)
             }
-            else if (!text.match(/^\d*\.?\d{0,2}$/)) {
-                renderInvalid()
-            }
-            else {
-                renderValid()
-                onChange(text)
-            }
+            else if (text.match(/^\d*\.?\d{0,2}$/)) onChange(text)
         }
     }
 
