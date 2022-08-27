@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import FormInputErrorMessage from './FormInputErrorMessage'
 
-export default function FormTextInput({ onChange, placeholder, input, values, inputId, constraints, errorMessage }) {
+export default function FormTextInput({ onChange, placeholder, input, values, inputId, constraints, errorMessage, dateIsValid }) {
     let idError, idField
+    const [privateDateValid, setPrivateDateValid] = useState(false)
 
     const renderInvalid = () => {
         idError.classList.remove("invisible")
@@ -22,8 +23,14 @@ export default function FormTextInput({ onChange, placeholder, input, values, in
         idField.classList.add("focus:border-sky-400")
     }
 
-    const checkDate = text => {
-        if ((text.length == 1) && text.match(/^\d$/)) return text
+    const renderDateValid = valid => {
+        setPrivateDateValid(valid)
+        dateIsValid(valid)
+    }
+
+    const checkStringDate = text => {
+        if (text.length == 0) return text
+        else if ((text.length == 1) && text.match(/^\d$/)) return text
         else if ((text.length == 2) && text.match(/^\d\d$/)) {
             text += ' - '
             return text
@@ -44,6 +51,7 @@ export default function FormTextInput({ onChange, placeholder, input, values, in
         }
         else if (text.length == 10) return text
         else if ((text.length >= 11) && (text.length <= 14) && text.match(/^\d\d - \d\d - \d{1,4}$/)) return text
+        else if (text.length == 15 && text.match(/^\d\d - \d\d - \d\d\d\d.$/)) return text
         else {
             return null
         }
@@ -73,13 +81,40 @@ export default function FormTextInput({ onChange, placeholder, input, values, in
             }
         }
         if (constraints.includes("date")) {
-            let date = checkDate(text)
-            if (!date && (text != '')) {
+            let stringDate = checkStringDate(text)
+            
+            if (!stringDate && (text != '')) {
                 renderInvalid()
             }
             else {
-                renderValid()
-                onChange(date)
+                if (stringDate.length == 14) {
+                    let date = new Date(stringDate.slice(10) + '/' + stringDate.slice(0, 2) + '/' + stringDate.slice(5, 7))
+                    if (isNaN(date)) {
+                        renderDateValid(false)
+                        renderInvalid()
+                    }
+                    else {
+                        renderDateValid(true)
+                        renderValid()
+                    }
+                    onChange(stringDate)
+                }
+                else if (stringDate.length == 15) {
+                    if (privateDateValid == true) {
+                        renderDateValid(true)
+                        renderValid()
+                    }
+                    else {
+                        renderDateValid(false)
+                        renderInvalid()
+                    }
+                    
+                }
+                else {
+                    renderDateValid(false)
+                    renderValid()
+                    onChange(stringDate)
+                }
             }
         }
         if (constraints.includes("money")) {

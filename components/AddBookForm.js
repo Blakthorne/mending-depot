@@ -7,17 +7,11 @@ import FormCancelButton from './FormCancelButton'
 
 export default function AddBookForm() {
 
-    // let titles = []
-    // const { data, error } = useSWR('/api/books')
-    // if (error) return <div>{ error }</div>
-    // else if (!data) {}
-    // else {
-    //     for (const entry in data) {
-    //         names.push(data[entry].ownerName)
-    //     }
-    // }
+    const { data, error } = useSWR('/api/owners')
+    if (error) return <div>{ error }</div>
 
     const { mutate } = useSWRConfig('')
+    
     const [bookTitle, setBookTitle] = useState('')
     const [bookAuthor, setBookAuthor] = useState('')
     const [bookPublisher, setBookPublisher] = useState('')
@@ -30,6 +24,9 @@ export default function AddBookForm() {
     const [bookAmountCharged, setBookAmountCharged] = useState('')
     const [bookOwner, setBookOwner] = useState('')
 
+    const [bookReceivedValid, setBookReceivedValid] = useState(false)
+    const [bookReturnedValid, setBookReturnedValid] = useState(false)
+
     const submitData = async e => {
         e.preventDefault()
         try {
@@ -40,9 +37,25 @@ export default function AddBookForm() {
                 body: JSON.stringify(body),
             })
             cancelInputs()
+            clear()
             mutate('/api/books')
         } catch (error) {
             console.error(error)
+        }
+    }
+
+    const clear = () => {
+        const errorMessages = document.getElementsByClassName("errorMessage")
+        const inputs = document.getElementsByClassName("input")
+
+        for (let i = 0; i < errorMessages.length; ++i) {
+            errorMessages[i].classList.remove("visible")
+            errorMessages[i].classList.add("invisible")
+        }
+        for (let i = 0; i < inputs.length; ++i) {
+            inputs[i].classList.remove("border-red-400")
+            inputs[i].classList.add("border-slate-900")
+            inputs[i].classList.add("focus:border-sky-400")
         }
     }
 
@@ -58,6 +71,11 @@ export default function AddBookForm() {
         setBookMaterialsCost('')
         setBookAmountCharged('')
         setBookOwner('')
+
+        setBookReceivedValid(false)
+        setBookReturnedValid(false)
+
+        clear()        
     }
 
     return (
@@ -75,20 +93,20 @@ export default function AddBookForm() {
 
                 <FormTextInput onChange={(value) => setBookNumPages(value)} placeholder={ "'475'" } input={ bookNumPages } inputId={ "Number of Pages" } constraints={ ["int"] } errorMessage={ "Please only enter a number here." }/>
 
-                <FormSelectInput onChange={(value) => setBookBindingType(value)} placeholder={ "'Sewn' or 'Perfect'" } input={ bookBindingType } inputId={ "Binding Type" } options={ ["Sewn", "Perfect"] }/>
+                <FormSelectInput onChange={(value) => setBookBindingType(value)} input={ bookBindingType } inputId={ "Binding Type" } options={ [{"type": "Sewn"}, {"type": "Perfect"}] } displayKey={ "type"} storeKey={ "type" }/>
 
-                <FormTextInput onChange={(value) => setBookReceived(value)} placeholder={ "'01-18-2017'" } input={ bookReceived } inputId={ "Date Received" } constraints={ ["date"] } errorMessage={ "Please only enter a date in the MM-DD-YYYY format." }/>
+                <FormTextInput onChange={(value) => setBookReceived(value)} placeholder={ "'01-18-2017'" } input={ bookReceived } inputId={ "Date Received" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setBookReceivedValid(validity)}/>
 
-                <FormTextInput onChange={(value) => setBookReturned(value)} placeholder={ "'03-28-2017'" } input={ bookReturned } inputId={ "Date Returned" } constraints={ ["date"] } errorMessage={ "Please only enter a date in the MM-DD-YYYY format." }/>
+                <FormTextInput onChange={(value) => setBookReturned(value)} placeholder={ "'03-28-2017'" } input={ bookReturned } inputId={ "Date Returned" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setBookReturnedValid(validity)}/>
 
                 <FormTextInput onChange={(value) => setBookMaterialsCost(value)} placeholder={ "'14.89'" } input={ bookMaterialsCost } inputId={ "Materials Cost" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
 
                 <FormTextInput onChange={(value) => setBookAmountCharged(value)} placeholder={ "'50.00'" } input={ bookAmountCharged } inputId={ "Amount Charged" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
 
-                <FormTextInput onChange={(value) => setBookOwner(value)} placeholder={ "'William Caxton'" } input={ bookOwner } inputId={ "Owner" } constraints={ [] }/>
+                <FormSelectInput onChange={(value) => setBookOwner(value)} input={ bookOwner } inputId={ "Owner" } options={ data } displayKey={ "ownerName"} storeKey={ "ownerId" }/>
 
-                <FormSubmitButton requiredInputs={ [bookTitle, bookAuthor, bookBindingType, bookReceived, bookOwner] }/>
-                <FormCancelButton cancelClick={() => cancelInputs()}/>
+                <FormSubmitButton requiredInputs={ [bookTitle, bookAuthor, bookBindingType, bookReceived, bookReceivedValid, bookOwner] } dateValids={ [bookReceivedValid, bookReturnedValid] }/>
+                <FormCancelButton clearInvalids={() => clear()} cancelClick={() => cancelInputs()}/>
             </form>
         </div>
     )

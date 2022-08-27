@@ -1,16 +1,15 @@
 import useSWR, { useSWRConfig } from 'swr'
 import React, { useState } from 'react'
 import FormTextInput from './FormTextInput'
-import FormInputErrorMessage from './FormInputErrorMessage'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
 
 export default function AddOwnerForm() {
 
     let names = []
+
     const { data, error } = useSWR('/api/owners')
     if (error) return <div>{ error }</div>
-    else if (!data) {}
     else {
         for (const entry in data) {
             names.push(data[entry].ownerName)
@@ -18,6 +17,7 @@ export default function AddOwnerForm() {
     }
 
     const { mutate } = useSWRConfig()
+    
     const [ownerName, setOwnerName] = useState('')
 
     const submitData = async e => {
@@ -36,6 +36,21 @@ export default function AddOwnerForm() {
         }
     }
 
+    const clear = () => {
+        const errorMessages = document.getElementsByClassName("errorMessage")
+        const inputs = document.getElementsByClassName("input")
+
+        for (let i = 0; i < errorMessages.length; ++i) {
+            errorMessages[i].classList.remove("visible")
+            errorMessages[i].classList.add("invisible")
+        }
+        for (let i = 0; i < inputs.length; ++i) {
+            inputs[i].classList.remove("border-red-400")
+            inputs[i].classList.add("border-slate-900")
+            inputs[i].classList.add("focus:border-sky-400")
+        }
+    }
+
     const cancelInputs = () => {
         setOwnerName('')
     }
@@ -47,8 +62,8 @@ export default function AddOwnerForm() {
                 onSubmit={submitData}>
                 <FormTextInput onChange={(value) => setOwnerName(value)} placeholder={ "'Virgil'" } input={ ownerName } values={ names } inputId={ "Owner" } constraints={ ["unique"] } errorMessage={ "That name already exists. Please enter a new name." }/>
 
-                <FormSubmitButton requiredInputs={ [ownerName] } uniques={ [{"key": ownerName, "values": names}] }/>
-                <FormCancelButton cancelClick={() => cancelInputs()}/>
+                <FormSubmitButton requiredInputs={ [ownerName] }/>
+                <FormCancelButton clearInvalids={() => clear()} cancelClick={() => cancelInputs()}/>
             </form>
         </div>
     )

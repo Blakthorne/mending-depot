@@ -1,14 +1,14 @@
 import React from 'react'
 
-export default function FormSubmitButton({ requiredInputs, uniques }) {
+export default function FormSubmitButton({ requiredInputs, dateValids }) {
 
     const disable = () => {
         for (let i = 0; i < requiredInputs.length; ++i) {
             if (!requiredInputs[i]) return true
         }
 
-        for (let i = 0; i < uniques.length; ++i) {
-            if (uniques[i]["values"].includes(uniques[i]["key"])) return true
+        for (let i = 0; i < dateValids.length; ++i) {
+            if (dateValids[i] == false && requiredInputs.includes(dateValids[i])) return true
         }
         return false
     }
