@@ -28,22 +28,9 @@ export default function AddBookForm() {
     const [returnedValid, setReturnedValid] = useState(false)
 
     const submitData = async e => {
-
-        if (publisher == '') publisher = null
-        yearPublished = parseInt(yearPublished, 10)
-        numberOfPages = parseInt(numberOfPages, 10)
-        bindingType = bindingType.toUpperCase()
-        received = received.slice(10) + '-' + received.slice(0, 2) + '-' + received.slice(5, 7)
-        if (returned == '') {
-            returned = null
-        }
-        else { returned = returned.slice(10) + '-' + returned.slice(0, 2) + '-' + returned.slice(5, 7) }
-        bookMaterialsCost = parseFloat(bookMaterialsCost)
-        amountCharged = parseFloat(amountCharged)
-        
         e.preventDefault()
         try {
-            const body = { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId}
+            const body = { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
             await fetch('/api/books', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

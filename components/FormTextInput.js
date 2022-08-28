@@ -77,9 +77,7 @@ export default function FormTextInput({ onChange, placeholder, input, values, in
         if (constraints.includes("date")) {
             let stringDate = checkStringDate(text)
             
-            if (!stringDate && (text != '')) {
-                // renderInvalid()
-            }
+            if (!stringDate && (text != '')) { }
             else {
                 if (stringDate.length == 14) {
                     let date = new Date(stringDate.slice(10) + '/' + stringDate.slice(0, 2) + '/' + stringDate.slice(5, 7))
