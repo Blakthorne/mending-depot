@@ -12,25 +12,38 @@ export default function AddBookForm() {
 
     const { mutate } = useSWRConfig('')
     
-    const [bookTitle, setBookTitle] = useState('')
-    const [bookAuthor, setBookAuthor] = useState('')
-    const [bookPublisher, setBookPublisher] = useState('')
-    const [bookYearPublished, setBookYearPublished] = useState('')
-    const [bookNumPages, setBookNumPages] = useState('')
-    const [bookBindingType, setBookBindingType] = useState('')
-    const [bookReceived, setBookReceived] = useState('')
-    const [bookReturned, setBookReturned] = useState('')
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [publisher, setPublisher] = useState('')
+    const [yearPublished, setYearPublished] = useState('')
+    const [numberOfPages, setNumberOfPages] = useState('')
+    const [bindingType, setBindingType] = useState('')
+    const [received, setReceived] = useState('')
+    const [returned, setReturned] = useState('')
     const [bookMaterialsCost, setBookMaterialsCost] = useState('')
-    const [bookAmountCharged, setBookAmountCharged] = useState('')
-    const [bookOwner, setBookOwner] = useState('')
+    const [amountCharged, setAmountCharged] = useState('')
+    const [ownerId, setOwnerId] = useState('')
 
-    const [bookReceivedValid, setBookReceivedValid] = useState(false)
-    const [bookReturnedValid, setBookReturnedValid] = useState(false)
+    const [receivedValid, setReceivedValid] = useState(false)
+    const [returnedValid, setReturnedValid] = useState(false)
 
     const submitData = async e => {
+
+        if (publisher == '') publisher = null
+        yearPublished = parseInt(yearPublished, 10)
+        numberOfPages = parseInt(numberOfPages, 10)
+        bindingType = bindingType.toUpperCase()
+        received = received.slice(10) + '-' + received.slice(0, 2) + '-' + received.slice(5, 7)
+        if (returned == '') {
+            returned = null
+        }
+        else { returned = returned.slice(10) + '-' + returned.slice(0, 2) + '-' + returned.slice(5, 7) }
+        bookMaterialsCost = parseFloat(bookMaterialsCost)
+        amountCharged = parseFloat(amountCharged)
+        
         e.preventDefault()
         try {
-            const body = { bookTitle, bookAuthor, bookPublisher, bookYearPublished, bookNumPages, bookBindingType, bookReceived, bookReturned, bookMaterialsCost, bookAmountCharged, bookOwner }
+            const body = { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId}
             await fetch('/api/books', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -60,20 +73,20 @@ export default function AddBookForm() {
     }
 
     const cancelInputs = () => {
-        setBookTitle('')
-        setBookAuthor('')
-        setBookPublisher('')
-        setBookYearPublished('')
-        setBookNumPages('')
-        setBookBindingType('')
-        setBookReceived('')
-        setBookReturned('')
+        setTitle('')
+        setAuthor('')
+        setPublisher('')
+        setYearPublished('')
+        setNumberOfPages('')
+        setBindingType('')
+        setReceived('')
+        setReturned('')
         setBookMaterialsCost('')
-        setBookAmountCharged('')
-        setBookOwner('')
+        setAmountCharged('')
+        setOwnerId('')
 
-        setBookReceivedValid(false)
-        setBookReturnedValid(false)
+        setReceivedValid(false)
+        setReturnedValid(false)
 
         clear()        
     }
@@ -83,29 +96,29 @@ export default function AddBookForm() {
             <form
                 autoComplete="off"
                 onSubmit={submitData}>
-                <FormTextInput onChange={(value) => setBookTitle(value)} placeholder={ "'The Divine Comedy'" } input={ bookTitle } inputId={ "Title" } constraints={ [] }/>
+                <FormTextInput onChange={(value) => setTitle(value)} placeholder={ "'The Divine Comedy'" } input={ title } inputId={ "Title" } constraints={ [] }/>
 
-                <FormTextInput onChange={(value) => setBookAuthor(value)} placeholder={ "'Dante Alighieri'" } input={ bookAuthor } inputId={ "Author" } constraints={ [] }/>
+                <FormTextInput onChange={(value) => setAuthor(value)} placeholder={ "'Dante Alighieri'" } input={ author } inputId={ "Author" } constraints={ [] }/>
 
-                <FormTextInput onChange={(value) => setBookPublisher(value)} placeholder={ "'Doubleday & Company, Inc'" } input={ bookPublisher } inputId={ "Publisher" } constraints={ [] }/>
+                <FormTextInput onChange={(value) => setPublisher(value)} placeholder={ "'Doubleday & Company, Inc'" } input={ publisher } inputId={ "Publisher" } constraints={ [] }/>
 
-                <FormTextInput onChange={(value) => setBookYearPublished(value)} placeholder={ "'1946'" } input={ bookYearPublished } inputId={ "Year Published" } constraints={ ["int"] } errorMessage={ "Please only enter a number here." }/>
+                <FormTextInput onChange={(value) => setYearPublished(value)} placeholder={ "'1946'" } input={ yearPublished } inputId={ "Year Published" } constraints={ ["int"] } errorMessage={ "Please only enter a number here." }/>
 
-                <FormTextInput onChange={(value) => setBookNumPages(value)} placeholder={ "'475'" } input={ bookNumPages } inputId={ "Number of Pages" } constraints={ ["int"] } errorMessage={ "Please only enter a number here." }/>
+                <FormTextInput onChange={(value) => setNumberOfPages(value)} placeholder={ "'475'" } input={ numberOfPages } inputId={ "Number of Pages" } constraints={ ["int"] } errorMessage={ "Please only enter a number here." }/>
 
-                <FormSelectInput onChange={(value) => setBookBindingType(value)} input={ bookBindingType } inputId={ "Binding Type" } options={ [{"type": "Sewn"}, {"type": "Perfect"}] } displayKey={ "type"} storeKey={ "type" }/>
+                <FormSelectInput onChange={(value) => setBindingType(value)} input={ bindingType } inputId={ "Binding Type" } options={ [{"type": "Sewn"}, {"type": "Perfect"}] } displayKey={ "type"} storeKey={ "type" }/>
 
-                <FormTextInput onChange={(value) => setBookReceived(value)} placeholder={ "'01-18-2017'" } input={ bookReceived } inputId={ "Date Received" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setBookReceivedValid(validity)}/>
+                <FormTextInput onChange={(value) => setReceived(value)} placeholder={ "'01-18-2017'" } input={ received } inputId={ "Date Received" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setReceivedValid(validity)}/>
 
-                <FormTextInput onChange={(value) => setBookReturned(value)} placeholder={ "'03-28-2017'" } input={ bookReturned } inputId={ "Date Returned" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setBookReturnedValid(validity)}/>
+                <FormTextInput onChange={(value) => setReturned(value)} placeholder={ "'03-28-2017'" } input={ returned } inputId={ "Date Returned" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setReturnedValid(validity)}/>
 
                 <FormTextInput onChange={(value) => setBookMaterialsCost(value)} placeholder={ "'14.89'" } input={ bookMaterialsCost } inputId={ "Materials Cost" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
 
-                <FormTextInput onChange={(value) => setBookAmountCharged(value)} placeholder={ "'50.00'" } input={ bookAmountCharged } inputId={ "Amount Charged" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
+                <FormTextInput onChange={(value) => setAmountCharged(value)} placeholder={ "'50.00'" } input={ amountCharged } inputId={ "Amount Charged" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
 
-                <FormSelectInput onChange={(value) => setBookOwner(value)} input={ bookOwner } inputId={ "Owner" } options={ data } displayKey={ "ownerName"} storeKey={ "ownerId" }/>
+                <FormSelectInput onChange={(value) => setOwnerId(value)} input={ ownerId} inputId={ "Owner" } options={ data } displayKey={ "ownerName"} storeKey={ "id" }/>
 
-                <FormSubmitButton requiredInputs={ [bookTitle, bookAuthor, bookBindingType, bookReceived, bookReceivedValid, bookOwner] } dateValids={ [bookReceivedValid, bookReturnedValid] }/>
+                <FormSubmitButton requiredInputs={ [title, author, bindingType, received, receivedValid, ownerId] } dateValids={ [receivedValid, returnedValid] }/>
                 <FormCancelButton clearInvalids={() => clear()} cancelClick={() => cancelInputs()}/>
             </form>
         </div>

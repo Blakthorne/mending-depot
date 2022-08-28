@@ -6,35 +6,37 @@ export default async function handle(req, res) {
         res.json(books)
     }
     if (req.method == 'POST') {
-        let { bookTitle, bookAuthor, bookPublisher, bookYearPublished, bookNumPages, bookBindingType, bookReceived, bookReturned, bookMaterialsCost, bookAmountCharged, bookOwner } = req.body
+        let { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId } = req.body
 
-        if (bookPublisher == '') bookPublisher = null
-        bookYearPublished = parseInt(bookYearPublished, 10)
-        bookNumPages = parseInt(bookNumPages, 10)
-        bookBindingType = bookBindingType.toUpperCase()
-        bookReceived = bookReceived.slice(10) + '-' + bookReceived.slice(0, 2) + '-' + bookReceived.slice(5, 7)
-        if (bookReturned == '') {
-            bookReturned = null
+        if (publisher == '') publisher = null
+        yearPublished = parseInt(yearPublished, 10)
+        numberOfPages = parseInt(numberOfPages, 10)
+        bindingType = bindingType.toUpperCase()
+        received = received.slice(10) + '-' + received.slice(0, 2) + '-' + received.slice(5, 7)
+        if (returned == '') {
+            returned = null
         }
-        else { bookReturned = bookReturned.slice(10) + '-' + bookReturned.slice(0, 2) + '-' + bookReturned.slice(5, 7) }
+        else { returned = returned.slice(10) + '-' + returned.slice(0, 2) + '-' + returned.slice(5, 7) }
         bookMaterialsCost = parseFloat(bookMaterialsCost)
-        bookAmountCharged = parseFloat(bookAmountCharged)
+        amountCharged = parseFloat(amountCharged)
 
-        const result = await prisma.book.create({
+        const book = await prisma.book.create({
             data: {
-                title: bookTitle,
-                author: bookAuthor,
-                publisher: bookPublisher,
-                yearPublished: bookYearPublished,
-                numberOfPages: bookNumPages,
-                bindingType: bookBindingType,
-                received: bookReceived,
-                returned: bookReturned,
+                title: title,
+                author: author,
+                publisher: publisher,
+                yearPublished: yearPublished,
+                numberOfPages: numberOfPages,
+                bindingType: bindingType,
+                received: received,
+                returned: returned,
                 bookMaterialsCost: bookMaterialsCost,
-                amountCharged: bookAmountCharged,
-                ownerId: bookOwner,
+                amountCharged: amountCharged,
+                owner: {
+                    connect: { id: ownerId}
+                },
             },
         })
-        res.status(200).json(result)
+        res.status(200).json(book)
     }
 }

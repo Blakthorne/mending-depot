@@ -11,13 +11,13 @@ datasource db {
 }
 
 model Owner {
-	ownerId			String		@id @default(uuid())
+	id				String		@id @default(uuid())
 	ownerName		String		@unique
 	books			Book[]
 }
 
 model Book {
-	bookId			String		@id @default(uuid())
+	id				String		@id @default(uuid())
 	title			String		
 	author			String
 	publisher		String?
@@ -28,31 +28,32 @@ model Book {
 	returned		DateTime?	@db.Date
 	bookMaterialsCost	Float?
 	amountCharged	Float?
-	owner			Owner		@relation(fields: [ownerId], references: [ownerId])
+	owner			Owner		@relation(fields: [ownerId], references: [id])
 	ownerId			String
 	repairs			Repair[]
 }
 
 model Repair {
-	repairId		String		@id @default(uuid())
+	id				String		@id @default(uuid())
 	repairType		RepairType
 	repairMaterialsCost	Float?
-	book			Book		@relation(fields: [bookId], references: [bookId])
+	book			Book		@relation(fields: [bookId], references: [id])
 	bookId			String
 	replacementCover	ReplacementCover?
 	materials		MaterialForRepair[]
 }
 
 model ReplacementCover {
+	id				String		@id @default(uuid())
+	repair			Repair		@relation(fields: [repairId], references: [id])
 	repairId		String		@unique
-	repair			Repair		@relation(fields: [repairId], references: [repairId])
 	coverType		CoverType?
 	spineMaterial	CoverMaterial?
 	sideMaterial	CoverMaterial?
 }
 
 model Material {
-	materialId		String		@id @default(uuid())
+	id		String		@id @default(uuid())
 	materialName	String
 	units			Unit
 	unitCost		Float
@@ -60,9 +61,9 @@ model Material {
 }
 
 model MaterialForRepair {
-	repair			Repair		@relation(fields: [repairId], references: [repairId])
+	repair			Repair		@relation(fields: [repairId], references: [id])
 	repairId		String
-	material		Material	@relation(fields: [materialId], references: [materialId])
+	material		Material	@relation(fields: [materialId], references: [id])
 	materialId		String
 	amountUsed		Float
 	@@id([repairId, materialId])
