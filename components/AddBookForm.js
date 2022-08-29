@@ -4,6 +4,7 @@ import FormTextInput from './FormTextInput'
 import FormSelectInput from './FormSelectInput'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
+import { BindingType } from '@prisma/client'
 
 /**
  * 
@@ -40,6 +41,9 @@ export default function AddBookForm() {
 
     // Rename the retrieved owners for specificity later
     let owners = data
+
+    // Create array of the binding type options to be used in the FormSelectInput component
+    let bindingTypeOptions =  [{"display": "Sewn", "store": BindingType.SEWN}, {"display": "Perfect", "store": BindingType.PERFECT}]
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -123,7 +127,7 @@ export default function AddBookForm() {
 
                 <FormTextInput onChange={(value) => setNumberOfPages(value)} placeholder={ "'475'" } input={ numberOfPages } inputId={ "Number of Pages" } constraints={ ["int"] } errorMessage={ "Please only enter a number here." }/>
 
-                <FormSelectInput onChange={(value) => setBindingType(value)} input={ bindingType } inputId={ "Binding Type" } options={ [{"type": "Sewn"}, {"type": "Perfect"}] } displayKey={ "type"} storeKey={ "type" }/>
+                <FormSelectInput onChange={(value) => setBindingType(value)} input={ bindingType } inputId={ "Binding Type" } options={ bindingTypeOptions } displayKey={ "display"} storeKey={ "store" }/>
 
                 <FormTextInput onChange={(value) => setReceived(value)} placeholder={ "'01 - 18 - 2017'" } input={ received } inputId={ "Date Received" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setReceivedValid(validity)}/>
 

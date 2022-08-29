@@ -6,14 +6,20 @@ export default async function handle(req, res) {
         const materials = await prisma.material.findMany()
         res.json(materials)
     }
-    // if (req.method == 'POST')
-    // {
-    //     const { ownerName } = req.body
-    //     const result = await prisma.owner.create({
-    //         data: {
-    //             ownerName: ownerName,
-    //         },
-    //     })
-    //     res.status(200).json(result)
-    // }
+    if (req.method == 'POST')
+    {
+        let { materialName, units, unitCost } = req.body
+
+        // Ensure the new entries are in the correct format
+        unitCost == '' ? unitCost = null : unitCost = parseFloat(unitCost)
+
+        const result = await prisma.material.create({
+            data: {
+                materialName: materialName,
+                units: units,
+                unitCost: unitCost,
+            },
+        })
+        res.status(200).json(result)
+    }
 }

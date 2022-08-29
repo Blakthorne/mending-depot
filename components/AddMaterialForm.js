@@ -4,32 +4,39 @@ import FormTextInput from './FormTextInput'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
 import FormSelectInput from './FormSelectInput'
-import { RepairType } from '@prisma/client'
+import { Unit } from '@prisma/client'
 
 /**
  * 
- * @returns HTML form for adding a repair to the database, along with submit and cancel buttons
+ * @returns HTML form for adding a material to the database, along with submit and cancel buttons
  */
-export default function AddRepairForm() {
+export default function AddMaterialForm() {
 
     // Create state for the attributes of a repair
-    const [repairType, setRepairType] = useState('')
-    const [repairMaterialsCost, setRepairMaterialsCost] = useState('')
-    const [bookId, setBookId] = useState('')
+    const [materialName, setMaterialName] = useState('')
+    const [units, setUnits] = useState('')
+    const [unitCost, setUnitCost] = useState('')
 
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
-    // Retrieve the books table to get the book names and ids to be used as the foreign key in the repairs table
-    const { data, error } = useSWR('/api/books')
+    // Stores the names of the owners to be used in the
+    // uniqueness check of the FormSubmitButton component
+    let materials = []
+
+    // Retrieve the owners for use in the materials[] for the uniqueness check
+    const { data, error } = useSWR('/api/materials')
     if (error) return <div>{ error }</div>
     if (!data) return <div>Loading...</div>
+    else {
+        // Extract all the names of the materials
+        for (const entry in data) {
+            materials.push(data[entry].materialName)
+        }
+    }
 
-    // Rename the retrieved books for specificity later
-    let books = data
-
-    // Create array of the repairType options to be used in the FormSelectInput component
-    let repairTypeOptions =  [{"display": "Basehinge", "store": RepairType.BASEHINGE}, {"display": "Tip-In", "store": "TIPIN"}, {"display": "Paper", "store": RepairType.PAPER}, {"display": "Flysheet", "store": RepairType.FLYSHEET}, {"display": "Spine Replacement", "store": RepairType.SPINEREPLACEMENT}, {"display": "Cover Replacement", "store": RepairType.COVERREPLACEMENT}, {"display": "Resewing", "store": RepairType.RESEWING}] 
+    // Create array of the unit options to be used in the FormSelectInput component
+    let unitOptions =  [{"display": "Inches", "store": Unit.INCHES}, {"display": "Inches Squared", "store": Unit.INCHESSQUARED}, {"display": "Centimeters", "store": Unit.CENTIMETERS}, {"display": "Centimeters Squared", "store": Unit.CENTIMETERSSQUARED}] 
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -43,8 +50,8 @@ export default function AddRepairForm() {
 
         try {
             // Don't submit id because of default creation by the database
-            const body = { repairType, repairMaterialsCost, bookId }
-            await fetch('/api/repairs', {
+            const body = { materialName, units, unitCost }
+            await fetch('/api/materials', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
@@ -53,7 +60,7 @@ export default function AddRepairForm() {
             clearErrors()
 
             // Update the UI wherever this API call is referenced
-            mutate('/api/repairs')
+            mutate('/api/materials')
         } catch (error) {
             console.error(error)
         }
@@ -81,9 +88,9 @@ export default function AddRepairForm() {
      * Clear all the form inputs
      */
     const cancelInputs = () => {
-        setRepairType('')
-        setRepairMaterialsCost('')
-        setBookId('')
+        setMaterialName('')
+        setUnits('')
+        setUnitCost('')
     }
 
     return (
@@ -91,13 +98,13 @@ export default function AddRepairForm() {
             <form
                 autoComplete="off"
                 onSubmit={submitData}>
-                <FormSelectInput onChange={(value) => setRepairType(value)} input={ repairType } inputId={ "Repair Type" } options={ repairTypeOptions } displayKey={ "display"} storeKey={ "store" }/>
+                <FormTextInput onChange={(value) => setMaterialName(value)} placeholder={ "'Japanese Paper'" } input={ materialName } inputId={ "Material Name" } uniquesArray={ materials } constraints={ ["unique"] } errorMessage={ "That material already exists. Please enter a new material." }/>
 
-                <FormTextInput onChange={(value) => setRepairMaterialsCost(value)} placeholder={ "'14.89'" } input={ repairMaterialsCost } inputId={ "Repair Materials Cost" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
+                <FormSelectInput onChange={(value) => setUnits(value)} input={ units } inputId={ "Units" } options={ unitOptions } displayKey={ "display"} storeKey={ "store" }/>
 
-                <FormSelectInput onChange={(value) => setBookId(value)} input={ bookId } inputId={ "Associated Book" } options={ books } displayKey={ "title"} storeKey={ "id" }/>
+                <FormTextInput onChange={(value) => setUnitCost(value)} placeholder={ "'3.79'" } input={ unitCost } inputId={ "Unit Cost" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
 
-                <FormSubmitButton requiredInputs={ [repairType, bookId] }/>
+                <FormSubmitButton requiredInputs={ [materialName, units, unitCost] }/>
                 <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
             </form>
         </div>

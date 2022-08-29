@@ -5,6 +5,7 @@ import Table from '../components/Table'
 import AddOwnerForm from '../components/AddOwnerForm'
 import AddBookForm from '../components/AddBookForm'
 import AddRepairForm from '../components/AddRepairForm';
+import AddMaterialForm from '../components/AddMaterialForm';
 
 function Home() {  
   return (
@@ -33,6 +34,9 @@ function Home() {
 
           <AddRepairForm/>
           <Table table={"repairs"}/>
+
+          <AddMaterialForm/>
+          <Table table={"materials"}/>
         </div>
         <div>
           
