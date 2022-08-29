@@ -5,8 +5,13 @@ import FormSelectInput from './FormSelectInput'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
 
+/**
+ * 
+ * @returns HTML form for adding a book to the database, along with submit and cancel buttons
+ */
 export default function AddBookForm() {
 
+    // Create state for the attributes of a book
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [publisher, setPublisher] = useState('')
@@ -18,17 +23,36 @@ export default function AddBookForm() {
     const [bookMaterialsCost, setBookMaterialsCost] = useState('')
     const [amountCharged, setAmountCharged] = useState('')
     const [ownerId, setOwnerId] = useState('')
+
+    // Create state for determining the validity of a date;
+    // Changed in the FormTextInput component where the constraint "date" is provided
+    // and passed via function through the optional parameter isDateValid
     const [receivedValid, setReceivedValid] = useState(false)
     const [returnedValid, setReturnedValid] = useState(false)
+
+    // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig('')
 
+    // Retrieve the owners table to be used as the foreign key in the book table
     const { data, error } = useSWR('/api/owners')
     if (error) return <div>{ error }</div>
     if (!data) return <div>Loading...</div>
 
+    // Rename the retrieved owners for specificity later
+    let owners = data
+
+    /**
+     * Submit data to the server upon pressing the submit button in the form
+     * 
+     * @param {*} e The event provided when the submit button is pressed
+     */
     const submitData = async e => {
+
+        // Prevent the browser from reloading the whole page
         e.preventDefault()
+
         try {
+            // Don't submit id because of default creation by the database
             const body = { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
             await fetch('/api/books', {
                 method: 'POST',
@@ -36,14 +60,19 @@ export default function AddBookForm() {
                 body: JSON.stringify(body),
             })
             cancelInputs()
-            clear()
+            clearErrors()
+
+            // Update the UI wherever this API call is referenced
             mutate('/api/books')
         } catch (error) {
             console.error(error)
         }
     }
 
-    const clear = () => {
+    /**
+     * Clear all the formatting for showing errors in the form
+     */
+    const clearErrors = () => {
         const errorMessages = document.getElementsByClassName("errorMessage")
         const inputs = document.getElementsByClassName("input")
 
@@ -58,6 +87,9 @@ export default function AddBookForm() {
         }
     }
 
+    /**
+     * Clear all the form inputs
+     */
     const cancelInputs = () => {
         setTitle('')
         setAuthor('')
@@ -73,8 +105,6 @@ export default function AddBookForm() {
 
         setReceivedValid(false)
         setReturnedValid(false)
-
-        clear()        
     }
 
     return (
@@ -102,10 +132,10 @@ export default function AddBookForm() {
 
                 <FormTextInput onChange={(value) => setAmountCharged(value)} placeholder={ "'50.00'" } input={ amountCharged } inputId={ "Amount Charged" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
 
-                <FormSelectInput onChange={(value) => setOwnerId(value)} input={ ownerId} inputId={ "Owner" } options={ data } displayKey={ "ownerName"} storeKey={ "id" }/>
+                <FormSelectInput onChange={(value) => setOwnerId(value)} input={ ownerId } inputId={ "Owner" } options={ owners } displayKey={ "ownerName"} storeKey={ "id" }/>
 
                 <FormSubmitButton requiredInputs={ [title, author, bindingType, received, receivedValid, ownerId] } dateValids={ [receivedValid, returnedValid] }/>
-                <FormCancelButton clearInvalids={() => clear()} cancelClick={() => cancelInputs()}/>
+                <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
             </form>
         </div>
     )

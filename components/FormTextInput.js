@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import FormInputErrorMessage from './FormInputErrorMessage'
 
 export default function FormTextInput({ onChange, placeholder, input, values, inputId, constraints, errorMessage, dateIsValid }) {
-    let idError, idField
     const [privateDateValid, setPrivateDateValid] = useState(false)
+    let idError, idField
 
     const renderInvalid = () => {
         idError.classList.remove("invisible")

@@ -1,5 +1,11 @@
 import React from 'react'
 
+/**
+ * 
+ * @param {function} onChange The function to call in the parent component on selection of an item
+ * @param {} 
+ * @returns HTML input of type "select"
+ */
 export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey }) {
     let displayOptions = []
     if (options) {

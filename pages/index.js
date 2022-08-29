@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Layout from '../components/layout';
+import Layout from '../components/Layout';
 import { SWRConfig, useSWRConfig } from 'swr'
 import Table from '../components/Table'
 import AddOwnerForm from '../components/AddOwnerForm'

@@ -4,24 +4,46 @@ import FormTextInput from './FormTextInput'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
 
+/**
+ * 
+ * @returns HTML form for adding an owner to the database, along with submit and cancel buttons
+ */
 export default function AddOwnerForm() {
 
-    let names = []
+    // Create state for the attribute of an owner
     const [ownerName, setOwnerName] = useState('')
+
+    // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
+    // Stores the names of the owners to be used in the
+    // uniqueness check of the FormSubmitButton component
+    let names = []
+
+    // Retrieve the owners for use in the names[] for the uniqueness check
     const { data, error } = useSWR('/api/owners')
     if (error) return <div>{ error }</div>
     if (!data) return <div>Loading...</div>
     else {
+
+        // Extract all the names of the owners
         for (const entry in data) {
             names.push(data[entry].ownerName)
         }
     }
 
+    /**
+     * Submit data to the server upon pressing the submit button in the form
+     * 
+     * @param {*} e The event provided when the submit button is pressed
+     */
     const submitData = async e => {
+
+        // Prevent the browser from reloading the whole page
         e.preventDefault()
+
         try {
+            // Don't submit id because of default creation by the database
             const body = { ownerName }
             await fetch('/api/owners', {
                 method: 'POST',
@@ -29,14 +51,19 @@ export default function AddOwnerForm() {
                 body: JSON.stringify(body),
             })
             cancelInputs()
-            clear()
+            clearErrors()
+
+            // Update the UI wherever this API call is referenced
             mutate('/api/owners')
         } catch (error) {
             console.error(error)
         }
     }
 
-    const clear = () => {
+    /**
+     * Clear all the formatting for showing errors in the form
+     */
+    const clearErrors = () => {
         const errorMessages = document.getElementsByClassName("errorMessage")
         const inputs = document.getElementsByClassName("input")
 
@@ -51,6 +78,9 @@ export default function AddOwnerForm() {
         }
     }
 
+    /**
+     * Clear all the form inputs
+     */
     const cancelInputs = () => {
         setOwnerName('')
     }
@@ -63,7 +93,7 @@ export default function AddOwnerForm() {
                 <FormTextInput onChange={(value) => setOwnerName(value)} placeholder={ "'Virgil'" } input={ ownerName } values={ names } inputId={ "Owner" } constraints={ ["unique"] } errorMessage={ "That name already exists. Please enter a new name." }/>
 
                 <FormSubmitButton requiredInputs={ [ownerName] } uniques={ [{"key": ownerName, "values": names}] }/>
-                <FormCancelButton clearInvalids={() => clear()} cancelClick={() => cancelInputs()}/>
+                <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
             </form>
         </div>
     )

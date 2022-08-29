@@ -1,5 +1,11 @@
 import React from 'react'
 
+/**
+ * 
+ * @param {string} id The id of the error message element
+ * @param {string} text The error message to display 
+ * @returns HTML error message
+ */
 export default function FormInputErrorMessage({ id, text }) {
     return (
         <div
