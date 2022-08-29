@@ -13,7 +13,6 @@ export default function AddOwnerForm() {
     const { data, error } = useSWR('/api/owners')
     if (error) return <div>{ error }</div>
     if (!data) return <div>Loading...</div>
-
     else {
         for (const entry in data) {
             names.push(data[entry].ownerName)
@@ -63,7 +62,7 @@ export default function AddOwnerForm() {
                 onSubmit={submitData}>
                 <FormTextInput onChange={(value) => setOwnerName(value)} placeholder={ "'Virgil'" } input={ ownerName } values={ names } inputId={ "Owner" } constraints={ ["unique"] } errorMessage={ "That name already exists. Please enter a new name." }/>
 
-                <FormSubmitButton requiredInputs={ [ownerName] }/>
+                <FormSubmitButton requiredInputs={ [ownerName] } uniques={ [{"key": ownerName, "values": names}] }/>
                 <FormCancelButton clearInvalids={() => clear()} cancelClick={() => cancelInputs()}/>
             </form>
         </div>
