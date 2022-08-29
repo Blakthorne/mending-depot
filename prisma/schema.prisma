@@ -53,8 +53,8 @@ model ReplacementCover {
 }
 
 model Material {
-	id		String		@id @default(uuid())
-	materialName	String
+	id				String		@id @default(uuid())
+	materialName	String		@unique
 	units			Unit
 	unitCost		Float
 	repairs			MaterialForRepair[]
