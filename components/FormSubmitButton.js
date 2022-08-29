@@ -2,9 +2,9 @@ import React from 'react'
 
 /**
  * 
- * @param {Array} [requiredInputs] The list of state variables which must have been filled out to submit the form
- * @param {Array} [dateValids] The list of boolean date state variables which must be "true" to submit the form
- * @param {Array} [uniques] The list of objects where key = state variable to check against values = array of values from the database
+ * @param {Array} [requiredInputs] Optional - The list of state variables which must have been filled out to submit the form
+ * @param {Array} [dateValids] Optional - The list of boolean date state variables which must be "true" to submit the form
+ * @param {Array} [uniques] Optional - The list of objects where key = state variable to check against values = array of values from the database
  * @returns HTML submit button
  */
 export default function FormSubmitButton({ requiredInputs, dateValids, uniques }) {

@@ -9,7 +9,7 @@ import FormInputErrorMessage from './FormInputErrorMessage'
  * @param {Object} options The database object retreived from the API for displaying the select input options
  * @param {string} displayKey The object key on which to display select options
  * @param {string} storeKey The object key on which to store select options
- * @param {string} [errorMessage] The error message to display to the user when there is something wrong with the input
+ * @param {string} [errorMessage] Optional - The error message to display to the user when there is something wrong with the input
  * @returns HTML input of type "select" with label and FormInputErrorMessage component
  */
 export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey, errorMessage }) {

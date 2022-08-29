@@ -7,10 +7,10 @@ import FormInputErrorMessage from './FormInputErrorMessage'
  * @param {string} placeholder The placeholder text to display in the input element
  * @param {string} input Allows state changes from the parent (e.g. in the clear() function) to propagate
  * @param {string} inputId For the HTML element id and the form element label
- * @param {Array} [uniquesArray] The list of values against which to check new input to enforce uniqueness when required
- * @param {Array} [constraints] The list of strings representing the constraints on the input
- * @param {string} [errorMessage] The error message to display to the user when there is something wrong with the input
- * @param {function} dateIsValid The function to call in the parent component upon change of date to valid or invalid
+ * @param {Array} [uniquesArray] Optional - The list of values against which to check new input to enforce uniqueness when required
+ * @param {Array} [constraints] Optional - The list of strings representing the constraints on the input
+ * @param {string} [errorMessage] Optional - The error message to display to the user when there is something wrong with the input
+ * @param {function} [dateIsValid] Optional - The function to call in the parent component upon change of date to valid or invalid
  * @returns HTML input of type "text" with label and FormInputErrorMessage component
  */
 export default function FormTextInput({ onChange, placeholder, input, inputId, uniquesArray, constraints, errorMessage, dateIsValid }) {
