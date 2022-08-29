@@ -33,7 +33,7 @@ export default function AddBookForm() {
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig('')
 
-    // Retrieve the owners table to be used as the foreign key in the book table
+    // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
     const { data, error } = useSWR('/api/owners')
     if (error) return <div>{ error }</div>
     if (!data) return <div>Loading...</div>
@@ -112,11 +112,12 @@ export default function AddBookForm() {
             <form
                 autoComplete="off"
                 onSubmit={submitData}>
-                <FormTextInput onChange={(value) => setTitle(value)} placeholder={ "'The Divine Comedy'" } input={ title } inputId={ "Title" } constraints={ [] }/>
+                
+                <FormTextInput onChange={(value) => setTitle(value)} placeholder={ "'The Divine Comedy'" } input={ title } inputId={ "Title" }/>
 
-                <FormTextInput onChange={(value) => setAuthor(value)} placeholder={ "'Dante Alighieri'" } input={ author } inputId={ "Author" } constraints={ [] }/>
+                <FormTextInput onChange={(value) => setAuthor(value)} placeholder={ "'Dante Alighieri'" } input={ author } inputId={ "Author" }/>
 
-                <FormTextInput onChange={(value) => setPublisher(value)} placeholder={ "'Doubleday & Company, Inc'" } input={ publisher } inputId={ "Publisher" } constraints={ [] }/>
+                <FormTextInput onChange={(value) => setPublisher(value)} placeholder={ "'Doubleday & Company, Inc'" } input={ publisher } inputId={ "Publisher" }/>
 
                 <FormTextInput onChange={(value) => setYearPublished(value)} placeholder={ "'1946'" } input={ yearPublished } inputId={ "Year Published" } constraints={ ["int"] } errorMessage={ "Please only enter a number here." }/>
 

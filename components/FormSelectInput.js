@@ -1,18 +1,18 @@
 import React from 'react'
+import FormInputErrorMessage from './FormInputErrorMessage'
 
 /**
  * 
- * @param {function} onChange The function to call in the parent component on selection of an item
- * @param {} 
- * @returns HTML input of type "select"
+ * @param {function} onChange The function to call in the parent component upon selection of an item
+ * @param {string} input Allows state changes from the parent (e.g. in the clear() function) to propagate
+ * @param {string} inputId For the HTML element id and the form element label
+ * @param {Object} options The database object retreived from the API for displaying the select input options
+ * @param {string} displayKey The object key on which to display select options
+ * @param {string} storeKey The object key on which to store select options
+ * @param {string} [errorMessage] The error message to display to the user when there is something wrong with the input
+ * @returns HTML input of type "select" with label and FormInputErrorMessage component
  */
-export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey }) {
-    let displayOptions = []
-    if (options) {
-        options.map(option => (
-            displayOptions.push(option[displayKey])
-        ))
-    }
+export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey, errorMessage }) {
     return (
         <div>
             <label>{ inputId }</label>
@@ -26,8 +26,8 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
                 {options ? options.map(selectOption => (
                     <option key={selectOption[storeKey]} value={selectOption[storeKey]}>{selectOption[displayKey]}</option>
                 )) : 'None Available'}
-                
             </select>
+            {!errorMessage ? <FormInputErrorMessage id={ inputId + "Error" } text={ "There is something wrong with your input." }/> : <FormInputErrorMessage id={ inputId + "Error" } text={ errorMessage }/>}
         </div>
     )
 }

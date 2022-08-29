@@ -1,11 +1,19 @@
 import useSWR from 'swr'
 
+/**
+ * 
+ * @param {string} table The table in the database to show as a table on the page 
+ * @returns HTML table populated with information from the database
+ */
 export default function Table({ table }) {
 
+    // Retrieve the table requested by the parent component
     const { data, error } = useSWR('/api/' + table)
     if (error) return <div>{ error }</div>
     if (!data) return <div>Loading ...</div>
     if (data[0] == undefined) return <div>There is no data in this table</div>
+
+    // Used for creating unique html keys in the table cells
     let cellKey = 0
 
     return (

@@ -9,7 +9,7 @@ import React from 'react'
 export default function FormCancelButton({ clearInvalids, cancelClick }) {
 
     /**
-     * Calls both functions passed by the parent component
+     * Calls both the {@link clearInvalids} and {@link cancelClick} passed by the parent component
      */
     const onClick = () => {
         clearInvalids()

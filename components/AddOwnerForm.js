@@ -90,7 +90,7 @@ export default function AddOwnerForm() {
             <form
                 autoComplete="off"
                 onSubmit={submitData}>
-                <FormTextInput onChange={(value) => setOwnerName(value)} placeholder={ "'Virgil'" } input={ ownerName } values={ names } inputId={ "Owner" } constraints={ ["unique"] } errorMessage={ "That name already exists. Please enter a new name." }/>
+                <FormTextInput onChange={(value) => setOwnerName(value)} placeholder={ "'Virgil'" } input={ ownerName } inputId={ "Owner" } uniquesArray={ names } constraints={ ["unique"] } errorMessage={ "That name already exists. Please enter a new name." }/>
 
                 <FormSubmitButton requiredInputs={ [ownerName] } uniques={ [{"key": ownerName, "values": names}] }/>
                 <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
