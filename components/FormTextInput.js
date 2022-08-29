@@ -145,7 +145,8 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
         if (!constraints) onChange(text)
         else {
             if (constraints.includes("unique")) {
-                if (uniquesArray.includes(text)) {
+                let tempText = text.toLowerCase()
+                if (uniquesArray.includes(tempText)) {
                     renderInvalid()
                 }
                 else {
