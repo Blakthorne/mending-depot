@@ -4,6 +4,7 @@ export default async function handle(req, res) {
     if (req.method == 'GET') {
         let books = await prisma.book.findMany()
 
+        // For every book entry in the table, reformat the date entries into the format MM - DD -YYYY
         for (let i = 0; i < books.length; ++i) {
             let { id, title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId } = books[i]
 
@@ -21,11 +22,13 @@ export default async function handle(req, res) {
 
             books[i] = { id, title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
         }
+
         res.json(books)
     }
     if (req.method == 'POST') {
         let { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId } = req.body
 
+        // Ensure the new entries are in the correct format
         if (publisher == '') publisher = null
         yearPublished == '' ? yearPublished = null : yearPublished =  parseInt(yearPublished, 10)
         numberOfPages == '' ? numberOfPages = null : numberOfPages = parseInt(numberOfPages, 10)

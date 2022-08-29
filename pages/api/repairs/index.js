@@ -6,14 +6,20 @@ export default async function handle(req, res) {
         const repairs = await prisma.repair.findMany()
         res.json(repairs)
     }
-    // if (req.method == 'POST')
-    // {
-    //     const { ownerName } = req.body
-    //     const result = await prisma.owner.create({
-    //         data: {
-    //             ownerName: ownerName,
-    //         },
-    //     })
-    //     res.status(200).json(result)
-    // }
+    if (req.method == 'POST')
+    {
+        let { repairType, repairMaterialsCost, bookId } = req.body
+
+        // Ensure the new entries are in the correct format
+        repairMaterialsCost == '' ? repairMaterialsCost = null : repairMaterialsCost = parseFloat(repairMaterialsCost)
+
+        const result = await prisma.repair.create({
+            data: {
+                repairType: repairType,
+                repairMaterialsCost: repairMaterialsCost,
+                bookId: bookId,
+            },
+        })
+        res.status(200).json(result)
+    }
 }

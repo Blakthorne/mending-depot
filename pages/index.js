@@ -4,6 +4,7 @@ import { SWRConfig, useSWRConfig } from 'swr'
 import Table from '../components/Table'
 import AddOwnerForm from '../components/AddOwnerForm'
 import AddBookForm from '../components/AddBookForm'
+import AddRepairForm from '../components/AddRepairForm';
 
 function Home() {  
   return (
@@ -24,11 +25,14 @@ function Home() {
           I meet your book mending needs.
         </div>
         <div className="mx-auto">
-          <AddOwnerForm table={"owners"}/>
+          <AddOwnerForm/>
           <Table table={"owners"}/>
 
-          <AddBookForm table={"books"}/>
+          <AddBookForm/>
           <Table table={"books"}/>
+
+          <AddRepairForm/>
+          <Table table={"repairs"}/>
         </div>
         <div>
           
