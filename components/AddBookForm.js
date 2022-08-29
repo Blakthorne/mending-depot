@@ -7,11 +7,6 @@ import FormCancelButton from './FormCancelButton'
 
 export default function AddBookForm() {
 
-    const { data, error } = useSWR('/api/owners')
-    if (error) return <div>{ error }</div>
-
-    const { mutate } = useSWRConfig('')
-    
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [publisher, setPublisher] = useState('')
@@ -23,9 +18,13 @@ export default function AddBookForm() {
     const [bookMaterialsCost, setBookMaterialsCost] = useState('')
     const [amountCharged, setAmountCharged] = useState('')
     const [ownerId, setOwnerId] = useState('')
-
     const [receivedValid, setReceivedValid] = useState(false)
     const [returnedValid, setReturnedValid] = useState(false)
+    const { mutate } = useSWRConfig('')
+
+    const { data, error } = useSWR('/api/owners')
+    if (error) return <div>{ error }</div>
+    if (!data) return <div>Loading...</div>
 
     const submitData = async e => {
         e.preventDefault()
@@ -95,9 +94,9 @@ export default function AddBookForm() {
 
                 <FormSelectInput onChange={(value) => setBindingType(value)} input={ bindingType } inputId={ "Binding Type" } options={ [{"type": "Sewn"}, {"type": "Perfect"}] } displayKey={ "type"} storeKey={ "type" }/>
 
-                <FormTextInput onChange={(value) => setReceived(value)} placeholder={ "'01-18-2017'" } input={ received } inputId={ "Date Received" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setReceivedValid(validity)}/>
+                <FormTextInput onChange={(value) => setReceived(value)} placeholder={ "'01 - 18 - 2017'" } input={ received } inputId={ "Date Received" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setReceivedValid(validity)}/>
 
-                <FormTextInput onChange={(value) => setReturned(value)} placeholder={ "'03-28-2017'" } input={ returned } inputId={ "Date Returned" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setReturnedValid(validity)}/>
+                <FormTextInput onChange={(value) => setReturned(value)} placeholder={ "'03 - 28 - 2017'" } input={ returned } inputId={ "Date Returned" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setReturnedValid(validity)}/>
 
                 <FormTextInput onChange={(value) => setBookMaterialsCost(value)} placeholder={ "'14.89'" } input={ bookMaterialsCost } inputId={ "Materials Cost" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
 

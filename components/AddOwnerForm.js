@@ -7,18 +7,18 @@ import FormCancelButton from './FormCancelButton'
 export default function AddOwnerForm() {
 
     let names = []
+    const [ownerName, setOwnerName] = useState('')
+    const { mutate } = useSWRConfig()
 
     const { data, error } = useSWR('/api/owners')
     if (error) return <div>{ error }</div>
+    if (!data) return <div>Loading...</div>
+
     else {
         for (const entry in data) {
             names.push(data[entry].ownerName)
         }
     }
-
-    const { mutate } = useSWRConfig()
-    
-    const [ownerName, setOwnerName] = useState('')
 
     const submitData = async e => {
         e.preventDefault()
@@ -29,7 +29,8 @@ export default function AddOwnerForm() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
-            setOwnerName('')
+            cancelInputs()
+            clear()
             mutate('/api/owners')
         } catch (error) {
             console.error(error)

@@ -2,38 +2,25 @@ import prisma from '../../../lib/prisma'
 
 export default async function handle(req, res) {
     if (req.method == 'GET') {
-        const books = await prisma.book.findMany()
+        let books = await prisma.book.findMany()
 
-        // for (let i = 0; i < books.length; ++i) {
-        //     console.log("hi")
-        //     let { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId } = books[i] 
+        for (let i = 0; i < books.length; ++i) {
+            let { id, title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId } = books[i]
 
-        //     if (received == null) received = ''
-        //     else {
-        //         let month = received.getMonth()
-        //         if (month < 10) month = '0' + month
+            if (received == null) received = ''
+            else {
+                received = received.toJSON()
+                received = received.slice(5,7) + ' - ' + received.slice(8,10) + ' - ' + received.slice(0,4)
+            }
 
-        //         let day = received.getDate()
-        //         if (day < 10) day = '0' + day
+            if (returned == null) returned = ''
+            else {
+                returned = returned.toJSON()
+                returned = returned.slice(5,7) + ' - ' + returned.slice(8,10) + ' - ' + returned.slice(0,4)
+            }
 
-        //         let year = recevied.getYear()
-                
-        //         received = month + ' - ' + day + ' - ' + year
-        //     }
-
-        //     if (returned == null) returned = ''
-        //     else {
-        //         let month = returned.getMonth()
-        //         if (month < 10) month = '0' + month
-
-        //         let day = returned.getDate()
-        //         if (day < 10) day = '0' + day
-
-        //         let year = returned.getYear()
-                
-        //         returned = month + ' - ' + day + ' - ' + year
-        //     }
-        // }
+            books[i] = { id, title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
+        }
         res.json(books)
     }
     if (req.method == 'POST') {
