@@ -3,34 +3,34 @@ import React, { useState } from 'react'
 import FormTextInput from './FormTextInput'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
-import FormSelectInput from './FormSelectInput'
-import { Unit } from '@prisma/client'
 
 /**
  * 
- * @returns HTML form for adding a material to the database, along with submit and cancel buttons
+ * @returns HTML form for adding a manufacturer to the database, along with submit and cancel buttons
  */
-export default function AddMaterialForm() {
+export default function AddManufacturerForm() {
 
-    // Create state for the attributes of a repair
-    const [materialName, setMaterialName] = useState('')
-    const [units, setUnits] = useState('')
-    const [unitCost, setUnitCost] = useState('')
-    const [manufacturerId, setManufacturerId] = useState('')
+    // Create state for the attribute of an owner
+    const [manufacturerName, setManufacturerName] = useState('')
 
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
-    // Retrieve the manufacturers table to get the manufacturer names and ids to be used as the foreign key in the material table
+    // Stores the names of the manufacturers to be used in the
+    // uniqueness check of the FormSubmitButton component
+    let manufacturers = []
+
+    // Retrieve the manufacturers for use in the manufacturers[] for the uniqueness check
     const { data, error } = useSWR('/api/manufacturers')
     if (error) return <div>{ error }</div>
     if (!data) return <div>Loading...</div>
+    else {
 
-    // Rename the retrieved manufacturers for specificity later
-    let manufacturers = data
-
-    // Create array of the unit options to be used in the FormSelectInput component
-    let unitOptions =  [{"display": "Inches", "store": Unit.INCHES}, {"display": "Inches Squared", "store": Unit.INCHESSQUARED}, {"display": "Centimeters", "store": Unit.CENTIMETERS}, {"display": "Centimeters Squared", "store": Unit.CENTIMETERSSQUARED}] 
+        // Extract all the names of the owners
+        for (const entry in data) {
+            manufacturers.push(data[entry].manufacturerName)
+        }
+    }
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -44,8 +44,8 @@ export default function AddMaterialForm() {
 
         try {
             // Don't submit id because of default creation by the database
-            const body = { materialName, units, unitCost, manufacturerId }
-            await fetch('/api/materials', {
+            const body = { manufacturerName }
+            await fetch('/api/manufacturers', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
@@ -54,7 +54,7 @@ export default function AddMaterialForm() {
             clearErrors()
 
             // Update the UI wherever this API call is referenced
-            mutate('/api/materials')
+            mutate('/api/manufacturers')
         } catch (error) {
             console.error(error)
         }
@@ -82,10 +82,7 @@ export default function AddMaterialForm() {
      * Clear all the form inputs
      */
     const cancelInputs = () => {
-        setMaterialName('')
-        setUnits('')
-        setUnitCost('')
-        setManufacturerId('')
+        setManufacturerName('')
     }
 
     return (
@@ -93,15 +90,9 @@ export default function AddMaterialForm() {
             <form
                 autoComplete="off"
                 onSubmit={submitData}>
-                <FormTextInput onChange={(value) => setMaterialName(value)} placeholder={ "'Archival Tape P'" } input={ materialName } inputId={ "Material Name" }/>
+                <FormTextInput onChange={(value) => setManufacturerName(value)} placeholder={ "'Filmoplast'" } input={ manufacturerName } inputId={ "Manufacturer" } uniquesArray={ manufacturers } constraints={ ["unique"] } errorMessage={ "That manufacturer already exists. Please enter a new manufacturer." }/>
 
-                <FormSelectInput onChange={(value) => setUnits(value)} input={ units } inputId={ "Units" } options={ unitOptions } displayKey={ "display"} storeKey={ "store" }/>
-
-                <FormTextInput onChange={(value) => setUnitCost(value)} placeholder={ "'3.00'" } input={ unitCost } inputId={ "Unit Cost" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
-
-                <FormSelectInput onChange={(value) => setManufacturerId(value)} input={ manufacturerId } inputId={ "Manufacturer" } options={ manufacturers } displayKey={ "manufacturerName"} storeKey={ "id" }/>
-
-                <FormSubmitButton requiredInputs={ [materialName, units, unitCost, manufacturerId] }/>
+                <FormSubmitButton requiredInputs={ [manufacturerName] } uniques={ [{"key": manufacturerName, "values": manufacturers}] }/>
                 <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
             </form>
         </div>

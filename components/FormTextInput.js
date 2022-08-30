@@ -146,7 +146,9 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
         else {
             if (constraints.includes("unique")) {
                 let tempText = text.toLowerCase()
-                if (uniquesArray.includes(tempText)) {
+                let tempUniquesArray = []
+                uniquesArray.map(item => tempUniquesArray.push(item.toLowerCase()))
+                if (tempUniquesArray.includes(tempText)) {
                     renderInvalid()
                 }
                 else {
@@ -169,6 +171,13 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
                     onChange(text)
                 }
                 else if (text.match(/^\d*\.?\d{0,2}$/)) onChange(text)
+            }
+            if (constraints.includes("decimal")) {
+                if (text.match(/^\.$/)) {
+                    text = '0.'
+                    onChange(text)
+                }
+                else if (text.match(/^\d*\.?\d*$/)) onChange(text)
             }
         }
     }

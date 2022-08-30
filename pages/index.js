@@ -6,6 +6,10 @@ import AddOwnerForm from '../components/AddOwnerForm'
 import AddBookForm from '../components/AddBookForm'
 import AddRepairForm from '../components/AddRepairForm';
 import AddMaterialForm from '../components/AddMaterialForm';
+import AddReplacementCover from '../components/AddReplacementCover';
+import AddManufacturerForm from '../components/AddManufacturerForm';
+import AddInventoryTransactionForm from '../components/AddInventoryTransaction';
+import AddProviderForm from '../components/AddProviderForm';
 
 function Home() {  
   return (
@@ -29,6 +33,12 @@ function Home() {
           <AddOwnerForm/>
           <Table table={"owners"}/>
 
+          <AddManufacturerForm/>
+          <Table table={"manufacturers"}/>
+
+          <AddProviderForm/>
+          <Table table={"providers"}/>
+
           <AddBookForm/>
           <Table table={"books"}/>
 
@@ -37,6 +47,13 @@ function Home() {
 
           <AddMaterialForm/>
           <Table table={"materials"}/>
+
+          <AddReplacementCover/>
+          <Table table={"replacementcovers"}/>
+
+          <AddInventoryTransactionForm/>
+          <Table table={"inventorytransactions"}/>
+
         </div>
         <div>
           

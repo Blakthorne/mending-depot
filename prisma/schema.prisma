@@ -45,19 +45,28 @@ model Repair {
 
 model ReplacementCover {
 	id				String		@id @default(uuid())
-	repair			Repair		@relation(fields: [repairId], references: [id])
-	repairId		String		@unique
 	coverType		CoverType?
 	spineMaterial	CoverMaterial?
 	sideMaterial	CoverMaterial?
+	repair			Repair		@relation(fields: [repairId], references: [id])
+	repairId		String		@unique
 }
 
 model Material {
 	id				String		@id @default(uuid())
-	materialName	String		@unique
+	materialName	String
 	units			Unit
 	unitCost		Float
 	repairs			MaterialForRepair[]
+	inventoryTransactions	InventoryTransaction[]
+	manufacturer	Manufacturer	@relation(fields: [manufacturerId], references: [id])
+	manufacturerId	String
+}
+
+model Manufacturer {
+	id				String		@id @default(uuid())
+	manufacturerName	String	@unique
+	materials		Material[]
 }
 
 model MaterialForRepair {
@@ -67,6 +76,24 @@ model MaterialForRepair {
 	materialId		String
 	amountUsed		Float
 	@@id([repairId, materialId])
+}
+
+model InventoryTransaction {
+	id				String		@id @default(uuid())
+	datePurchased	DateTime	@db.Date
+	dateReceived	DateTime?	@db.Date
+	unitsPurchased	Float
+	transactionCost	Float?
+	material		Material	@relation(fields: [materialId], references: [id])
+	materialId		String
+	provider		Provider	@relation(fields: [providerId], references: [id])
+	providerId		String
+}
+
+model Provider {
+	id				String		@id @default(uuid())
+	providerName	String		@unique
+	inventoryTransactions	InventoryTransaction[]
 }
 
 enum BindingType {

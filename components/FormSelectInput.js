@@ -10,9 +10,24 @@ import FormInputErrorMessage from './FormInputErrorMessage'
  * @param {string} displayKey The object key on which to display select options
  * @param {string} storeKey The object key on which to store select options
  * @param {string} [errorMessage] Optional - The error message to display to the user when there is something wrong with the input
+ * @param {Array} [uniquesArray] Optional - The list of values against which to check new input to enforce uniqueness when required
+ * @param {Array} [constraints] Optional - The list of strings representing the constraints on the input
  * @returns HTML input of type "select" with label and FormInputErrorMessage component
  */
-export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey, errorMessage }) {
+export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey, errorMessage, uniquesArray}) {
+
+    let finalOptions
+    if (!uniquesArray) {
+        finalOptions = options
+    }
+    else {
+        for (let i = 0; i < options[0].length; ++i) {
+            if (uniquesArray.includes(options[i][storeKey])) {
+                finalOptions.push(options[i][storeKey])
+            }
+        }
+    }
+
     return (
         <div>
             <label>{ inputId }</label>
@@ -23,7 +38,7 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
                 id={ inputId }
             >
                 <option hidden></option>
-                {options ? options.map(selectOption => (
+                {finalOptions ? finalOptions.map(selectOption => (
                     <option key={selectOption[storeKey]} value={selectOption[storeKey]}>{selectOption[displayKey]}</option>
                 )) : 'None Available'}
             </select>
