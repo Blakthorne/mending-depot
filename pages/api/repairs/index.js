@@ -8,14 +8,14 @@ export default async function handle(req, res) {
     }
     if (req.method == 'POST')
     {
-        let { repairType, repairMaterialsCost, bookId } = req.body
+        let { repairTypeId, repairMaterialsCost, bookId } = req.body
 
         // Ensure the new entries are in the correct format
         repairMaterialsCost == '' ? repairMaterialsCost = null : repairMaterialsCost = parseFloat(repairMaterialsCost)
 
         const result = await prisma.repair.create({
             data: {
-                repairType: repairType,
+                repairTypeId: repairTypeId,
                 repairMaterialsCost: repairMaterialsCost,
                 bookId: bookId,
             },

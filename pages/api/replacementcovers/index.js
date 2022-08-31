@@ -8,7 +8,13 @@ export default async function handle(req, res) {
     }
     if (req.method == 'POST')
     {
-        const { coverType, spineMaterial, sideMaterial, repairId } = req.body
+        let { coverType, spineMaterial, sideMaterial, repairId } = req.body
+
+        // Ensure the new entries are in the correct format
+        if (coverType == '') coverType = null
+        if (spineMaterial == '') spineMaterial = null
+        if (sideMaterial == '') sideMaterial = null
+
         const result = await prisma.replacementCover.create({
             data: {
                 coverType: coverType,

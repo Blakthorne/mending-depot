@@ -35,12 +35,14 @@ model Book {
 
 model Repair {
 	id				String		@id @default(uuid())
-	repairType		RepairType
 	repairMaterialsCost	Float?
 	book			Book		@relation(fields: [bookId], references: [id])
 	bookId			String
 	replacementCover	ReplacementCover?
 	materials		MaterialForRepair[]
+	repairType		RepairType	@relation(fields: [repairTypeId], references: [id])
+	repairTypeId	String
+
 }
 
 model ReplacementCover {
@@ -50,6 +52,12 @@ model ReplacementCover {
 	sideMaterial	CoverMaterial?
 	repair			Repair		@relation(fields: [repairId], references: [id])
 	repairId		String		@unique
+}
+
+model RepairType {
+	id				String		@id @default(uuid())
+	repairTypeName	String		@unique
+	repairs			Repair[]
 }
 
 model Material {
@@ -99,16 +107,6 @@ model Provider {
 enum BindingType {
 	SEWN
 	PERFECT
-}
-
-enum RepairType {
-	BASEHINGE
-	TIPIN
-	PAPER
-	FLYSHEET
-	SPINEREPLACEMENT
-	COVERREPLACEMENT
-	RESEWING
 }
 
 enum CoverType {

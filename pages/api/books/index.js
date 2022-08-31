@@ -35,7 +35,7 @@ export default async function handle(req, res) {
         bindingType = bindingType.toUpperCase()
         let receivedDate = new Date(received.slice(10), received.slice(0, 2), received.slice(5, 7))
         let returnedDate = null
-        returned == '' ? returned = null : returnedDate = new Date(returned.slice(10), returned.slice(0, 2), returned.slice(5, 7))
+        returned == '' ? returnedDate = null : returnedDate = new Date(returned.slice(10), returned.slice(0, 2), returned.slice(5, 7))
         bookMaterialsCost == '' ? bookMaterialsCost = null : bookMaterialsCost = parseFloat(bookMaterialsCost)
         amountCharged == '' ? amountCharged = null : amountCharged = parseFloat(amountCharged)
 

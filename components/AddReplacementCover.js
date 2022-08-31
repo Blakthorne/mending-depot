@@ -39,7 +39,7 @@ export default function AddReplacementCover() {
 
         // Extract all the ids of the repairs
         for (const entry in replacementCoversData) {
-            curRepairs.push(replacementCoversData[entry].id)
+            curRepairs.push(replacementCoversData[entry].repairId)
         }
     }
 

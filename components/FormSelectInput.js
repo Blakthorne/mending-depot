@@ -16,15 +16,32 @@ import FormInputErrorMessage from './FormInputErrorMessage'
  */
 export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey, errorMessage, uniquesArray}) {
 
-    let finalOptions
-    if (!uniquesArray) {
-        finalOptions = options
-    }
-    else {
-        for (let i = 0; i < options[0].length; ++i) {
-            if (uniquesArray.includes(options[i][storeKey])) {
-                finalOptions.push(options[i][storeKey])
+    // Define another array as null to hold the final options to display after filtering
+    let finalOptions = null
+
+    // Only filter if options was provided by the parent component
+    if (options) {
+        finalOptions = []
+
+        // If uniquesArray was not provided by the parent component, no filtering is needed
+        if (!uniquesArray) {
+            finalOptions = options
+        }
+        else {
+
+            // Iterate through the possible options to display
+            for (let i = 0; i < options.length; ++i) {
+
+                // If the value in the possible options is in the uniquesArray, don't display it
+                if (!uniquesArray.includes(options[i][storeKey])) {
+                    let newOption = {}
+                    newOption[displayKey] =  options[i][storeKey]
+                    finalOptions.push(newOption)
+                }
             }
+
+            // If there weren't any options added finalOptions, reset it to null for display purposes
+            if (finalOptions.length == 0) finalOptions = null
         }
     }
 
@@ -38,9 +55,9 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
                 id={ inputId }
             >
                 <option hidden></option>
-                {finalOptions ? finalOptions.map(selectOption => (
+                {finalOptions != null ? finalOptions.map(selectOption => (
                     <option key={selectOption[storeKey]} value={selectOption[storeKey]}>{selectOption[displayKey]}</option>
-                )) : 'None Available'}
+                )) : <option key={inputId + "None"} disabled>Nothing available</option>}
             </select>
             {!errorMessage ? <FormInputErrorMessage id={ inputId + "Error" } text={ "There is something wrong with your input." }/> : <FormInputErrorMessage id={ inputId + "Error" } text={ errorMessage }/>}
         </div>

@@ -33,11 +33,11 @@ export default async function handle(req, res) {
         // Ensure the new entries are in the correct format
         let datePurchasedDate = new Date(datePurchased.slice(10), datePurchased.slice(0, 2), datePurchased.slice(5, 7))
         let dateReceivedDate = null
-        dateReceived == '' ? dateReceived = null : dateReceivedDate = new Date(dateReceived.slice(10), dateReceived.slice(0, 2), dateReceived.slice(5, 7))
+        dateReceived == '' ? dateReceivedDate = null : dateReceivedDate = new Date(dateReceived.slice(10), dateReceived.slice(0, 2), dateReceived.slice(5, 7))
         unitsPurchased = parseFloat(unitsPurchased)
         transactionCost == '' ? transactionCost = null : transactionCost = parseFloat(transactionCost)
 
-        const result = await prisma.material.create({
+        const result = await prisma.inventoryTransaction.create({
             data: {
                 datePurchased: datePurchasedDate,
                 dateReceived: dateReceivedDate,
