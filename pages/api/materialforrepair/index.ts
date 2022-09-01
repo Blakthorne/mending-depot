@@ -1,0 +1,38 @@
+import prisma from '../../../lib/prisma'
+
+export default async function handle(req, res) {
+    
+    // Create type structure for a material for repair entry
+    type MaterialForRepair = {
+        repairId: string;
+        materialId: string;
+        amountUsed: string | number;
+    }
+
+    // Define an array of material for repairs as an array of type MaterialForRepair
+    type MaterialForRepairs = MaterialForRepair[]
+
+    if (req.method == 'GET')
+    {
+        const materialForRepairs: MaterialForRepairs = await prisma.materialForRepair.findMany()
+        res.json(materialForRepairs)
+    }
+    if (req.method == 'POST')
+    {
+        let { repairId, materialId, amountUsed }: MaterialForRepair = req.body
+
+        // Ensure the new entries are in the correct format
+        if (typeof amountUsed === "string") {
+            amountUsed = parseFloat(amountUsed)
+        }
+
+        const materialforRepair: MaterialForRepair = await prisma.materialForRepair.create({
+            data: {
+                repairId: repairId,
+                materialId: materialId,
+                amountUsed: amountUsed,
+            },
+        })
+        res.status(200).json(materialforRepair)
+    }
+}

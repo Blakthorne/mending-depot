@@ -1,3 +1,4 @@
 node_modules
+next-env.d.ts
 # Keep environment variables out of version control
 .env
