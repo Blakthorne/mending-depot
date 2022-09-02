@@ -1,6 +1,8 @@
 import prisma from '../../../lib/prisma'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { BindingType } from '@prisma/client';
 
-export default async function handle(req, res) {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     
     // Create type structure for a book entry
     type Book = {
@@ -10,7 +12,7 @@ export default async function handle(req, res) {
         publisher: string | null;
         yearPublished: string | number | null;
         numberOfPages: string | number | null;
-        bindingType: string;
+        bindingType: BindingType;
         received: string | Date;
         returned: string | Date | null;
         bookMaterialsCost: string | number | null;
@@ -51,23 +53,24 @@ export default async function handle(req, res) {
         let { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }: Book = req.body
 
         // Ensure the new entries are in the correct format
+        // Cannot use 'else if' on string empty checks for type checking reasons - TypeScript thinks they could still be numbers
         if (publisher === '') publisher = null
 
         if (yearPublished === '') {
             yearPublished = null
         }
-        else if (typeof yearPublished === "string") {
+        if (typeof yearPublished === "string") {
             yearPublished = parseInt(yearPublished, 10)
         }
 
         if (numberOfPages === '') {
             numberOfPages = null
         }
-        else if (typeof numberOfPages === "string") {
+        if (typeof numberOfPages === "string") {
             numberOfPages = parseInt(numberOfPages, 10)
         }
 
-        bindingType = bindingType.toUpperCase()
+        bindingType = BindingType[bindingType]
 
         if (typeof received === "string") {
             received = new Date(parseInt(received.slice(10)), parseInt(received.slice(0, 2)), parseInt(received.slice(5, 7)))
@@ -76,25 +79,25 @@ export default async function handle(req, res) {
         if (returned === '') {
             returned = null
         }
-        else if (typeof returned === "string") {
+        if (typeof returned === "string") {
             returned = new Date(parseInt(returned.slice(10)), parseInt(returned.slice(0, 2)), parseInt(returned.slice(5, 7)))
         }
 
         if (bookMaterialsCost === '') {
             bookMaterialsCost = null
         }
-        else if (typeof bookMaterialsCost === "string") {
+        if (typeof bookMaterialsCost === "string") {
             bookMaterialsCost = parseInt(bookMaterialsCost, 10)
         }
 
         if (amountCharged === '') {
             amountCharged = null
         }
-        else if (typeof amountCharged === "string") {
+        if (typeof amountCharged === "string") {
             amountCharged = parseInt(amountCharged, 10)
         }
 
-        const book: Book = await prisma.book.create({
+        const book = await prisma.book.create({
             data: {
                 title: title,
                 author: author,

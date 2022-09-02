@@ -1,6 +1,18 @@
 import React from 'react'
 import FormInputErrorMessage from './FormInputErrorMessage'
 
+type FormSelectInputComponent = {
+    onChange: (e: string) => void;
+    input: string;
+    inputId: string;
+    options: object[];
+    displayKey: string;
+    storeKey: string;
+    errorMessage?: string;
+    uniquesArray: string[];
+    containts: string[];
+}
+
 /**
  * 
  * @param {function} onChange The function to call in the parent component upon selection of an item
@@ -14,7 +26,7 @@ import FormInputErrorMessage from './FormInputErrorMessage'
  * @param {Array} [constraints] Optional - The list of strings representing the constraints on the input
  * @returns HTML input of type "select" with label and FormInputErrorMessage component
  */
-export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey, errorMessage, uniquesArray}) {
+export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey, errorMessage, uniquesArray}: FormSelectInputComponent) {
 
     // Define another array as null to hold the final options to display after filtering
     let finalOptions = null
@@ -56,10 +68,18 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
             >
                 <option hidden></option>
                 {finalOptions != null ? finalOptions.map(selectOption => (
-                    <option key={selectOption[storeKey]} value={selectOption[storeKey]}>{selectOption[displayKey]}</option>
-                )) : <option key={inputId + "None"} disabled>Nothing available</option>}
+                    <option
+                        key={selectOption[storeKey]}
+                        value={selectOption[storeKey]}
+                    >
+                        {selectOption[displayKey]}
+                    </option>
+                    )) : <option key={inputId + "None"} disabled>Nothing available</option>}
             </select>
-            {!errorMessage ? <FormInputErrorMessage id={ inputId + "Error" } text={ "There is something wrong with your input." }/> : <FormInputErrorMessage id={ inputId + "Error" } text={ errorMessage }/>}
+            {!errorMessage ?
+                <FormInputErrorMessage
+                    id={ inputId + "Error" }
+                    text={ "There is something wrong with your input." }/> : <FormInputErrorMessage id={ inputId + "Error" } text={ errorMessage }/>}
         </div>
     )
 }

@@ -32,7 +32,7 @@ export default function AddBookForm() {
     const [returnedValid, setReturnedValid] = useState(false)
 
     // For updating the UI on changes to specified API calls
-    const { mutate } = useSWRConfig('')
+    const { mutate } = useSWRConfig()
 
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
     const { data, error } = useSWR('/api/owners')
@@ -117,30 +117,110 @@ export default function AddBookForm() {
                 autoComplete="off"
                 onSubmit={submitData}>
                 
-                <FormTextInput onChange={(value) => setTitle(value)} placeholder={ "'The Divine Comedy'" } input={ title } inputId={ "Title" }/>
+                <FormTextInput
+                    onChange={(value) => setTitle(value)}
+                    placeholder={ "'The Divine Comedy'" }
+                    input={ title }
+                    inputId={ "Title" }
+                />
 
-                <FormTextInput onChange={(value) => setAuthor(value)} placeholder={ "'Dante Alighieri'" } input={ author } inputId={ "Author" }/>
+                <FormTextInput
+                    onChange={(value) => setAuthor(value)}
+                    placeholder={ "'Dante Alighieri'" }
+                    input={ author }
+                    inputId={ "Author" }
+                />
 
-                <FormTextInput onChange={(value) => setPublisher(value)} placeholder={ "'Doubleday & Company, Inc'" } input={ publisher } inputId={ "Publisher" }/>
+                <FormTextInput
+                    onChange={(value) => setPublisher(value)}
+                    placeholder={ "'Doubleday & Company, Inc'" }
+                    input={ publisher }
+                    inputId={ "Publisher" }
+                />
 
-                <FormTextInput onChange={(value) => setYearPublished(value)} placeholder={ "'1946'" } input={ yearPublished } inputId={ "Year Published" } constraints={ ["int"] } errorMessage={ "Please only enter a number here." }/>
+                <FormTextInput
+                    onChange={(value) => setYearPublished(value)}
+                    placeholder={ "'1946'" }
+                    input={ yearPublished }
+                    inputId={ "Year Published" }
+                    constraints={ ["int"] }
+                    errorMessage={ "Please only enter a number here." }
+                />
 
-                <FormTextInput onChange={(value) => setNumberOfPages(value)} placeholder={ "'475'" } input={ numberOfPages } inputId={ "Number of Pages" } constraints={ ["int"] } errorMessage={ "Please only enter a number here." }/>
+                <FormTextInput
+                    onChange={(value) => setNumberOfPages(value)}
+                    placeholder={ "'475'" }
+                    input={ numberOfPages }
+                    inputId={ "Number of Pages" }
+                    constraints={ ["int"] }
+                    errorMessage={ "Please only enter a number here." }
+                />
 
-                <FormSelectInput onChange={(value) => setBindingType(value)} input={ bindingType } inputId={ "Binding Type" } options={ bindingTypeOptions } displayKey={ "display"} storeKey={ "store" }/>
+                <FormSelectInput
+                    onChange={(value) => setBindingType(value)}
+                    input={ bindingType }
+                    inputId={ "Binding Type" }
+                    options={ bindingTypeOptions }
+                    displayKey={ "display"}
+                    storeKey={ "store" }
+                />
 
-                <FormTextInput onChange={(value) => setReceived(value)} placeholder={ "'01 - 18 - 2017'" } input={ received } inputId={ "Date Received" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setReceivedValid(validity)}/>
+                <FormTextInput
+                    onChange={(value) => setReceived(value)}
+                    placeholder={ "'01 - 18 - 2017'" }
+                    input={ received }
+                    inputId={ "Date Received" }
+                    constraints={ ["date"] }
+                    errorMessage={ "Sorry, but that's not a real date." }
+                    dateIsValid={(validity) => setReceivedValid(validity)}
+                />
 
-                <FormTextInput onChange={(value) => setReturned(value)} placeholder={ "'03 - 28 - 2017'" } input={ returned } inputId={ "Date Returned" } constraints={ ["date"] } errorMessage={ "Sorry, but that's not a real date." } dateIsValid={(validity) => setReturnedValid(validity)}/>
+                <FormTextInput
+                    onChange={(value) => setReturned(value)}
+                    placeholder={ "'03 - 28 - 2017'" }
+                    input={ returned }
+                    inputId={ "Date Returned" }
+                    constraints={ ["date"] }
+                    errorMessage={ "Sorry, but that's not a real date." }
+                    dateIsValid={(validity) => setReturnedValid(validity)}
+                />
 
-                <FormTextInput onChange={(value) => setBookMaterialsCost(value)} placeholder={ "'14.89'" } input={ bookMaterialsCost } inputId={ "Materials Cost" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
+                <FormTextInput
+                    onChange={(value) => setBookMaterialsCost(value)}
+                    placeholder={ "'14.89'" }
+                    input={ bookMaterialsCost }
+                    inputId={ "Materials Cost" }
+                    constraints={ ["money"] }
+                    errorMessage={ "Please only enter a dollar value here." }
+                />
 
-                <FormTextInput onChange={(value) => setAmountCharged(value)} placeholder={ "'50.00'" } input={ amountCharged } inputId={ "Amount Charged" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
+                <FormTextInput
+                    onChange={(value) => setAmountCharged(value)}
+                    placeholder={ "'50.00'" }
+                    input={ amountCharged }
+                    inputId={ "Amount Charged" }
+                    constraints={ ["money"] }
+                    errorMessage={ "Please only enter a dollar value here." }
+                />
 
-                <FormSelectInput onChange={(value) => setOwnerId(value)} input={ ownerId } inputId={ "Owner" } options={ owners } displayKey={ "ownerName"} storeKey={ "id" }/>
+                <FormSelectInput
+                    onChange={(value) => setOwnerId(value)}
+                    input={ ownerId }
+                    inputId={ "Owner" }
+                    options={ owners }
+                    displayKey={ "ownerName"}
+                    storeKey={ "id" }
+                />
 
-                <FormSubmitButton requiredInputs={ [title, author, bindingType, received, receivedValid, ownerId] } dateValids={ [receivedValid, returnedValid] }/>
-                <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
+                <FormSubmitButton
+                    requiredInputs={ [title, author, bindingType, received, ownerId] }
+                    requiredDates={ [receivedValid ]}
+                    dateValids={ [receivedValid, returnedValid] }
+                />
+                <FormCancelButton
+                    clearInvalids={() => clearErrors()}
+                    cancelClick={() => cancelInputs()}
+                />
             </form>
         </div>
     )

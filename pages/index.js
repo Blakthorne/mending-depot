@@ -20,7 +20,6 @@ function Home() {
         fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
       }}
     >
-    <Layout>
       <Head>
         <title>Mending Depot</title>
         <meta name="description" content="Helpful for the book mending business" />
@@ -76,7 +75,6 @@ function Home() {
           
       </div>
 		  </div>
-    </Layout>
     </SWRConfig>
   )
 }

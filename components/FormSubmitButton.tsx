@@ -1,13 +1,20 @@
 import React from 'react'
 
+type FormSubmitButtonComponent = {
+    requiredInputs?: string[];
+    requiredDates?: boolean[];
+    dateValids?: boolean[];
+    uniques?: object[];
+}
+
 /**
  * 
- * @param {Array} [requiredInputs] Optional - The list of state variables which must have been filled out to submit the form
- * @param {Array} [dateValids] Optional - The list of boolean date state variables which must be "true" to submit the form
- * @param {Array} [uniques] Optional - The list of objects where key = state variable to check against values = array of values from the database
+ * @param {string[]} [requiredInputs] Optional - The list of state variables which must have been filled out to submit the form
+ * @param {boolean[]} [dateValids] Optional - The list of boolean date state variables which must be "true" to submit the form
+ * @param {object[]} [uniques] Optional - The list of objects where key = state variable to check against values = array of values from the database
  * @returns HTML submit button
  */
-export default function FormSubmitButton({ requiredInputs, dateValids, uniques }) {
+export default function FormSubmitButton({ requiredInputs, requiredDates, dateValids, uniques }: FormSubmitButtonComponent) {
 
     /**
      * Determines whether the submit button should be disabled
@@ -28,7 +35,7 @@ export default function FormSubmitButton({ requiredInputs, dateValids, uniques }
         // iterate through the array and return true if any state variable in the array is false
         if (dateValids) {
             for (let i = 0; i < dateValids.length; ++i) {
-                if (dateValids[i] == false && requiredInputs.includes(dateValids[i])) return true
+                if (dateValids[i] === false && requiredDates.includes(dateValids[i])) return true
             }
         }
 
@@ -47,9 +54,9 @@ export default function FormSubmitButton({ requiredInputs, dateValids, uniques }
 
     return (
         <button
-                disabled={disable()}
-                className="bg-slate-800 hover:bg-slate-700 py-2 px-4 shadow-sm shadow-slate-800 disabled:shadow-none disabled:bg-slate-600"
-                type="submit"
-            >Save Changes</button>
+            disabled={disable()}
+            className="bg-slate-800 hover:bg-slate-700 py-2 px-4 shadow-sm shadow-slate-800 disabled:shadow-none disabled:bg-slate-600"
+            type="submit"
+        >Save Changes</button>
     )
 }

@@ -1,15 +1,21 @@
 import useSWR from 'swr'
 
+type TableComponent = {
+    table: string
+}
+
+type Table = object[]
+
 /**
  * 
  * @param {string} table The table in the database to show as a table on the page 
  * @returns HTML table populated with information from the database
  */
-export default function Table({ table }) {
+export default function Table({ table }: TableComponent) {
 
     // Retrieve the table requested by the parent component
-    const { data, error } = useSWR('/api/' + table)
-    if (error) return <div>{ error }</div>
+    const { data, error } = useSWR<Table, Error>('/api/' + table)
+    if (error) console.log(error)
     if (!data) return <div>Loading ...</div>
     if (data[0] == undefined) return <div>There is no data in this table</div>
 

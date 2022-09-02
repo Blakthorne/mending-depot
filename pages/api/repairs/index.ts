@@ -1,6 +1,7 @@
 import prisma from '../../../lib/prisma'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handle(req, res) {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     
     // Create type structure for a repair entry
     type Repair = {
@@ -23,10 +24,11 @@ export default async function handle(req, res) {
         let { repairTypeId, repairMaterialsCost, bookId }: Repair = req.body
 
         // Ensure the new entries are in the correct format
+        // Cannot use 'else if' on string empty checks for type checking reasons - TypeScript thinks they could still be numbers
         if (repairMaterialsCost === '') {
             repairMaterialsCost = null
         }
-        else if (typeof repairMaterialsCost === "string") {
+        if (typeof repairMaterialsCost === "string") {
             repairMaterialsCost = parseFloat(repairMaterialsCost)
         }
 

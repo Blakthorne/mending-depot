@@ -1,6 +1,7 @@
 import prisma from '../../../lib/prisma'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handle(req, res) {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
 
     // Create type structure for an inventory transaction entry
     type InventoryTransaction = {
@@ -48,6 +49,7 @@ export default async function handle(req, res) {
         let { datePurchased, dateReceived, unitsPurchased, transactionCost, materialId, providerId }: InventoryTransaction = req.body
 
         // Ensure the new entries are in the correct format
+        // Cannot use 'else if' on string empty checks for type checking reasons - TypeScript thinks they could still be numbers
         if (typeof datePurchased === "string") {
             datePurchased = new Date(parseInt(datePurchased.slice(10)), parseInt(datePurchased.slice(0, 2)), parseInt(datePurchased.slice(5, 7)))
         }
@@ -55,7 +57,7 @@ export default async function handle(req, res) {
         if (dateReceived === '') {
             dateReceived = null
         }
-        else if (typeof dateReceived === "string") {
+        if (typeof dateReceived === "string") {
             dateReceived = new Date(parseInt(dateReceived.slice(10)), parseInt(dateReceived.slice(0, 2)), parseInt(dateReceived.slice(5, 7)))
         }
 
@@ -66,7 +68,7 @@ export default async function handle(req, res) {
         if (transactionCost === '') {
             transactionCost = null
         }
-        else if (typeof transactionCost === "string") {
+        if (typeof transactionCost === "string") {
             transactionCost = parseFloat(transactionCost)
         }
 
