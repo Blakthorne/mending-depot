@@ -4,8 +4,6 @@ type TableComponent = {
     table: string
 }
 
-type Table = object[]
-
 /**
  * 
  * @param {string} table The table in the database to show as a table on the page 
@@ -14,7 +12,7 @@ type Table = object[]
 export default function Table({ table }: TableComponent) {
 
     // Retrieve the table requested by the parent component
-    const { data, error } = useSWR<Table, Error>('/api/' + table)
+    const { data, error } = useSWR<object[], Error>('/api/' + table)
     if (error) console.log(error)
     if (!data) return <div>Loading ...</div>
     if (data[0] == undefined) return <div>There is no data in this table</div>

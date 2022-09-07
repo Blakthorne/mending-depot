@@ -1,12 +1,17 @@
 import React from 'react'
 
+type FormInputErrorMessageComponent = {
+    id: string;
+    text: string;
+}
+
 /**
  * 
  * @param {string} id The id of the error message element
  * @param {string} text The error message to display 
  * @returns HTML error message
  */
-export default function FormInputErrorMessage({ id, text }) {
+export default function FormInputErrorMessage({ id, text }: FormInputErrorMessageComponent) {
     return (
         <div
             id={ id }

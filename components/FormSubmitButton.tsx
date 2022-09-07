@@ -10,6 +10,7 @@ type FormSubmitButtonComponent = {
 /**
  * 
  * @param {string[]} [requiredInputs] Optional - The list of state variables which must have been filled out to submit the form
+ * @param {boolean[]} [requiredDates] Optional - The list of boolean date state variables which must be "true" to submit the form
  * @param {boolean[]} [dateValids] Optional - The list of boolean date state variables which must be "true" to submit the form
  * @param {object[]} [uniques] Optional - The list of objects where key = state variable to check against values = array of values from the database
  * @returns HTML submit button
@@ -21,7 +22,7 @@ export default function FormSubmitButton({ requiredInputs, requiredDates, dateVa
      * 
      * @returns true if button should be disabled, false if should not be disabled
      */
-    const disable = () => {
+    const disable = (): boolean => {
 
         // If the requiredInputs parameter is passed to the component,
         // iterate through the array and return true if any state variable in the array is empty
@@ -32,7 +33,9 @@ export default function FormSubmitButton({ requiredInputs, requiredDates, dateVa
         }
 
         // If the dateValids parameter is passed to the component,
-        // iterate through the array and return true if any state variable in the array is false
+        // iterate through the array and return true if --
+        //      any state variable in the array is false and
+        //      the state of the dateValid element is in the requiredDates parameter
         if (dateValids) {
             for (let i = 0; i < dateValids.length; ++i) {
                 if (dateValids[i] === false && requiredDates.includes(dateValids[i])) return true

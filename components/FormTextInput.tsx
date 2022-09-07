@@ -1,19 +1,30 @@
 import React, { useState } from 'react'
 import FormInputErrorMessage from './FormInputErrorMessage'
 
+type FormTextInputComponent = {
+    onChange: (e: string) => void;
+    placeholder: string;
+    input: string;
+    inputId: string;
+    uniquesArray?: string[];
+    constraints?: string[];
+    errorMessage?: string;
+    dateIsValid?: (valid: boolean) => void;
+}
+
 /**
  * 
- * @param {function} onChange The function to call in the parent component upon user entry into the input element
+ * @param {(e: string) => void} onChange The function to call in the parent component upon user entry into the input element
  * @param {string} placeholder The placeholder text to display in the input element
  * @param {string} input Allows state changes from the parent (e.g. in the clear() function) to propagate
  * @param {string} inputId For the HTML element id and the form element label
- * @param {Array} [uniquesArray] Optional - The list of values against which to check new input to enforce uniqueness when required
- * @param {Array} [constraints] Optional - The list of strings representing the constraints on the input
+ * @param {string[]} [uniquesArray] Optional - The list of values against which to check new input to enforce uniqueness when required
+ * @param {string[]} [constraints] Optional - The list of strings representing the constraints on the input
  * @param {string} [errorMessage] Optional - The error message to display to the user when there is something wrong with the input
- * @param {function} [dateIsValid] Optional - The function to call in the parent component upon change of date to valid or invalid
+ * @param {(valid: boolean) => void} [dateIsValid] Optional - The function to call in the parent component upon change of date to valid or invalid
  * @returns HTML input of type "text" with label and FormInputErrorMessage component
  */
-export default function FormTextInput({ onChange, placeholder, input, inputId, uniquesArray, constraints, errorMessage, dateIsValid }) {
+export default function FormTextInput({ onChange, placeholder, input, inputId, uniquesArray, constraints, errorMessage, dateIsValid }: FormTextInputComponent) {
 
     // Create state for keeping track of whether a date is valid;
     // Used for rendering a date input valid or invalid when its at full length
@@ -21,13 +32,14 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
     const [privateDateValid, setPrivateDateValid] = useState(false)
 
     // Used for rendering error messages
-    let idError, idField
+    let idError: Element
+    let idField: Element
 
     /**
      * Make the error message in the created in the {@link FormInputErrorMessage} component visible and
      * make the border of the input element red to indicate an error
      */
-    const renderInvalid = () => {
+    const renderInvalid = (): void => {
         idError.classList.remove("invisible")
         idError.classList.add("visible")
 
@@ -40,7 +52,7 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
      * Make the error message in the created in the {@link FormInputErrorMessage} component invisible and
      * revert the border of the input element back to its original state
      */
-    const renderValid = () => {
+    const renderValid = (): void => {
         idError.classList.remove("visible")
         idError.classList.add("invisible")
         
@@ -54,7 +66,7 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
      * 
      * @param {boolean} valid true if date should be rendered as valid, false if should rendered as false
      */
-    const renderDateValid = valid => {
+    const renderDateValid = (valid: boolean): void => {
         setPrivateDateValid(valid)
         dateIsValid(valid)
     }
@@ -65,7 +77,7 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
      * @param {string} text The new entry in the input to check
      * @returns Either string passed in the text parameter without mutation or null
      */
-    const checkStringDate = text => {
+    const checkStringDate = (text: string): string => {
         if (text.length == 0) return text
         else if ((text.length == 1) && text.match(/^\d$/)) return text
         else if ((text.length == 2) && text.match(/^\d\d$/)) {
@@ -99,10 +111,10 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
      * 
      * @param {string} stringDate 
      */
-    const renderDate = stringDate => {
+    const renderDate = (stringDate: string): void => {
         if (stringDate.length == 14) {
             let date = new Date(stringDate.slice(10) + '/' + stringDate.slice(0, 2) + '/' + stringDate.slice(5, 7))
-            if (isNaN(date)) {
+            if (isNaN(Number(date))) {
                 renderDateValid(false)
                 renderInvalid()
             }
@@ -135,7 +147,7 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
      * 
      * @param {string} text The new text entered by the user
      */
-    const checkThisInput = async text => {
+    const checkThisInput = async (text: string): Promise<void> => {
 
         // Get the id's of the input element and error message element
         idError = document.getElementById(inputId + "Error")
@@ -145,8 +157,8 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
         if (!constraints) onChange(text)
         else {
             if (constraints.includes("unique")) {
-                let tempText = text.toLowerCase()
-                let tempUniquesArray = []
+                let tempText: string = text.toLowerCase()
+                let tempUniquesArray: string[] = []
                 uniquesArray.map(item => tempUniquesArray.push(item.toLowerCase()))
                 if (tempUniquesArray.includes(tempText)) {
                     renderInvalid()
@@ -193,7 +205,16 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
                 value={ input }
                 id={ inputId }
             />
-            {!errorMessage ? <FormInputErrorMessage id={ inputId + "Error" } text={ "There is something wrong with your input." }/> : <FormInputErrorMessage id={ inputId + "Error" } text={ errorMessage }/>}
+            {!errorMessage ?
+                <FormInputErrorMessage
+                    id={ inputId + "Error" }
+                    text={ "There is something wrong with your input." }
+                />
+                : <FormInputErrorMessage
+                    id={ inputId + "Error" }
+                    text={ errorMessage }
+                />
+            }
         </div>
     )
 }

@@ -35,22 +35,22 @@ export default function AddBookForm() {
     const { mutate } = useSWRConfig()
 
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
-    const { data, error } = useSWR('/api/owners')
-    if (error) return <div>{ error }</div>
+    const { data, error } = useSWR<object[], Error>('/api/owners')
+    if (error) console.log(error)
     if (!data) return <div>Loading...</div>
 
     // Rename the retrieved owners for specificity later
-    let owners = data
+    let owners: object[] = data
 
     // Create array of the binding type options to be used in the FormSelectInput component
-    let bindingTypeOptions =  [{"display": "Sewn", "store": BindingType.SEWN}, {"display": "Perfect", "store": BindingType.PERFECT}]
+    let bindingTypeOptions: object[] =  [{"display": "Sewn", "store": BindingType.SEWN}, {"display": "Perfect", "store": BindingType.PERFECT}]
 
     /**
      * Submit data to the server upon pressing the submit button in the form
      * 
-     * @param {*} e The event provided when the submit button is pressed
+     * @param {React.FormEvent<HTMLFormElement>} e The event provided when the submit button is pressed
      */
-    const submitData = async e => {
+    const submitData = async (e:  React.FormEvent<HTMLFormElement>): Promise<void> => {
 
         // Prevent the browser from reloading the whole page
         e.preventDefault()
@@ -76,9 +76,9 @@ export default function AddBookForm() {
     /**
      * Clear all the formatting for showing errors in the form
      */
-    const clearErrors = () => {
-        const errorMessages = document.getElementsByClassName("errorMessage")
-        const inputs = document.getElementsByClassName("input")
+    const clearErrors = (): void => {
+        const errorMessages: HTMLCollection = document.getElementsByClassName("errorMessage")
+        const inputs: HTMLCollection = document.getElementsByClassName("input")
 
         for (let i = 0; i < errorMessages.length; ++i) {
             errorMessages[i].classList.remove("visible")
@@ -94,7 +94,7 @@ export default function AddBookForm() {
     /**
      * Clear all the form inputs
      */
-    const cancelInputs = () => {
+    const cancelInputs = (): void => {
         setTitle('')
         setAuthor('')
         setPublisher('')
@@ -115,7 +115,7 @@ export default function AddBookForm() {
         <div className="mt-16">
             <form
                 autoComplete="off"
-                onSubmit={submitData}>
+                onSubmit={(event) => submitData(event)}>
                 
                 <FormTextInput
                     onChange={(value) => setTitle(value)}
@@ -214,7 +214,7 @@ export default function AddBookForm() {
 
                 <FormSubmitButton
                     requiredInputs={ [title, author, bindingType, received, ownerId] }
-                    requiredDates={ [receivedValid ]}
+                    requiredDates={ [receivedValid] }
                     dateValids={ [receivedValid, returnedValid] }
                 />
                 <FormCancelButton

@@ -1,17 +1,22 @@
 import React from 'react'
 
+type FormCancelButtonComponent = {
+    clearInvalids: () => void;
+    cancelClick: () => void;
+}
+
 /**
  * 
- * @param {function} clearInvalids The function to clear form errors in the parent component
- * @param {function} cancelClick The function to clear form inputs in the parent component
+ * @param {() => void} clearInvalids The function to clear form errors in the parent component
+ * @param {() => void} cancelClick The function to clear form inputs in the parent component
  * @returns HTML cancel button
  */
-export default function FormCancelButton({ clearInvalids, cancelClick }) {
+export default function FormCancelButton({ clearInvalids, cancelClick }: FormCancelButtonComponent) {
 
     /**
      * Calls both the {@link clearInvalids} and {@link cancelClick} passed by the parent component
      */
-    const onClick = () => {
+    const onClick = (): void => {
         clearInvalids()
         cancelClick()
     }
