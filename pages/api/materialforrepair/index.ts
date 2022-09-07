@@ -2,13 +2,6 @@ import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    
-    // Create type structure for a material for repair entry
-    type MaterialForRepair = {
-        repairId: string;
-        materialId: string;
-        amountUsed: string | number;
-    }
 
     // Define an array of material for repairs as an array of type MaterialForRepair
     type MaterialForRepairs = MaterialForRepair[]

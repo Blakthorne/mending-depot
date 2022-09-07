@@ -61,7 +61,7 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
         <div>
             <label>{ inputId }</label>
             <select
-                className="shadow shadow-slate-700 rounded w-full p-2 my-2 border border-slate-900 focus:outline-none focus:border-sky-400 valid input"
+                className="bg-gray-900 rounded w-full p-2 my-2 border border-gray-50 focus:outline-none focus:border-sky-400 valid input"
                 onChange={e => onChange(e.target.value)}
                 value={ input }
                 id={ inputId }

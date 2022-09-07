@@ -23,7 +23,7 @@ export default function FormCancelButton({ clearInvalids, cancelClick }: FormCan
 
     return (
         <input
-            className="ml-4 text-slate-900"
+            className="ml-4 text-gray-400"
             onClick={() => onClick()}
             value="or Cancel"
             type="button"

@@ -18,11 +18,11 @@ export default function AddRepairTypeForm() {
 
     // Stores the names of the repair types to be used in the
     // uniqueness check of the FormSubmitButton component
-    let repairTypes = []
+    let repairTypes: string[] = []
 
     // Retrieve the owners for use in the repairTypes[] for the uniqueness check
-    const { data, error } = useSWR('/api/repairtypes')
-    if (error) return <div>{ error }</div>
+    const { data, error } = useSWR<RepairType[], Error>('/api/repairtypes')
+    if (error) console.log(error)
     if (!data) return <div>Loading...</div>
     else {
 
@@ -35,16 +35,16 @@ export default function AddRepairTypeForm() {
     /**
      * Submit data to the server upon pressing the submit button in the form
      * 
-     * @param {*} e The event provided when the submit button is pressed
+     * @param {React.FormEvent<HTMLFormElement>} e The event provided when the submit button is pressed
      */
-    const submitData = async e => {
+    const submitData = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
 
         // Prevent the browser from reloading the whole page
         e.preventDefault()
 
         try {
             // Don't submit id because of default creation by the database
-            const body = { repairTypeName }
+            const body: RepairType = { repairTypeName }
             await fetch('/api/repairtypes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -63,7 +63,7 @@ export default function AddRepairTypeForm() {
     /**
      * Clear all the formatting for showing errors in the form
      */
-    const clearErrors = () => {
+    const clearErrors = (): void => {
         const errorMessages = document.getElementsByClassName("errorMessage")
         const inputs = document.getElementsByClassName("input")
 
@@ -72,8 +72,8 @@ export default function AddRepairTypeForm() {
             errorMessages[i].classList.add("invisible")
         }
         for (let i = 0; i < inputs.length; ++i) {
-            inputs[i].classList.remove("border-red-400")
-            inputs[i].classList.add("border-slate-900")
+            inputs[i].classList.remove("border-red-500")
+            inputs[i].classList.add("border-gray-50")
             inputs[i].classList.add("focus:border-sky-400")
         }
     }
@@ -81,7 +81,7 @@ export default function AddRepairTypeForm() {
     /**
      * Clear all the form inputs
      */
-    const cancelInputs = () => {
+    const cancelInputs = (): void => {
         setRepairTypeName('')
     }
 
@@ -89,11 +89,29 @@ export default function AddRepairTypeForm() {
         <div className="mt-16">
             <form
                 autoComplete="off"
-                onSubmit={submitData}>
-                <FormTextInput onChange={(value) => setRepairTypeName(value)} placeholder={ "'Resewing'" } input={ repairTypeName } inputId={ "Repair Type" } uniquesArray={ repairTypes } constraints={ ["unique"] } errorMessage={ "That repair type already exists. Please enter a new repair type." }/>
+                onSubmit={(event) => submitData(event)}
+            >
 
-                <FormSubmitButton requiredInputs={ [repairTypeName] } uniques={ [{"key": repairTypeName, "values": repairTypes}] }/>
-                <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
+                <FormTextInput
+                    onChange={(value) => setRepairTypeName(value)}
+                    placeholder={ "'Resewing'" }
+                    input={ repairTypeName }
+                    inputId={ "Repair Type" }
+                    uniquesArray={ repairTypes }
+                    constraints={ ["unique"] }
+                    errorMessage={ "That repair type already exists. Please enter a new repair type." }
+                />
+
+                <FormSubmitButton
+                    requiredInputs={ [repairTypeName] }
+                    uniques={ [{"key": repairTypeName, "values": repairTypes}] }
+                    text="Add Repair Type"
+                />
+
+                <FormCancelButton
+                    clearInvalids={() => clearErrors()}
+                    cancelClick={() => cancelInputs()}
+                />
             </form>
         </div>
     )

@@ -4,15 +4,6 @@ import { CoverType } from '@prisma/client';
 import { CoverMaterial } from '@prisma/client';
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    
-    // Create type structure for a replacement cover entry
-    type ReplacementCover = {
-        id?: string;
-        coverType: CoverType | null;
-        spineMaterial: CoverMaterial | null;
-        sideMaterial: CoverMaterial | null;
-        repairId: string;
-    }
 
     // Define an array of replacement covers as an array of type ReplacementCover
     type ReplacementCovers = ReplacementCover[]

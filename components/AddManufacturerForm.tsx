@@ -18,11 +18,11 @@ export default function AddManufacturerForm() {
 
     // Stores the names of the manufacturers to be used in the
     // uniqueness check of the FormSubmitButton component
-    let manufacturers = []
+    let manufacturers: string[] = []
 
     // Retrieve the manufacturers for use in the manufacturers[] for the uniqueness check
-    const { data, error } = useSWR('/api/manufacturers')
-    if (error) return <div>{ error }</div>
+    const { data, error } = useSWR<Manufacturer[], Error>('/api/manufacturers')
+    if (error) console.log(error)
     if (!data) return <div>Loading...</div>
     else {
 
@@ -35,16 +35,16 @@ export default function AddManufacturerForm() {
     /**
      * Submit data to the server upon pressing the submit button in the form
      * 
-     * @param {*} e The event provided when the submit button is pressed
+     * @param {React.FormEvent<HTMLFormElement>} e The event provided when the submit button is pressed
      */
-    const submitData = async e => {
+    const submitData = async (e:  React.FormEvent<HTMLFormElement>): Promise<void> => {
 
         // Prevent the browser from reloading the whole page
         e.preventDefault()
 
         try {
             // Don't submit id because of default creation by the database
-            const body = { manufacturerName }
+            const body: Manufacturer = { manufacturerName }
             await fetch('/api/manufacturers', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -63,17 +63,17 @@ export default function AddManufacturerForm() {
     /**
      * Clear all the formatting for showing errors in the form
      */
-    const clearErrors = () => {
-        const errorMessages = document.getElementsByClassName("errorMessage")
-        const inputs = document.getElementsByClassName("input")
+    const clearErrors = (): void => {
+        const errorMessages: HTMLCollection = document.getElementsByClassName("errorMessage")
+        const inputs: HTMLCollection = document.getElementsByClassName("input")
 
         for (let i = 0; i < errorMessages.length; ++i) {
             errorMessages[i].classList.remove("visible")
             errorMessages[i].classList.add("invisible")
         }
         for (let i = 0; i < inputs.length; ++i) {
-            inputs[i].classList.remove("border-red-400")
-            inputs[i].classList.add("border-slate-900")
+            inputs[i].classList.remove("border-red-500")
+            inputs[i].classList.add("border-gray-50")
             inputs[i].classList.add("focus:border-sky-400")
         }
     }
@@ -81,7 +81,7 @@ export default function AddManufacturerForm() {
     /**
      * Clear all the form inputs
      */
-    const cancelInputs = () => {
+    const cancelInputs = (): void => {
         setManufacturerName('')
     }
 
@@ -89,11 +89,28 @@ export default function AddManufacturerForm() {
         <div className="mt-16">
             <form
                 autoComplete="off"
-                onSubmit={submitData}>
-                <FormTextInput onChange={(value) => setManufacturerName(value)} placeholder={ "'Filmoplast'" } input={ manufacturerName } inputId={ "Manufacturer" } uniquesArray={ manufacturers } constraints={ ["unique"] } errorMessage={ "That manufacturer already exists. Please enter a new manufacturer." }/>
+                onSubmit={(event) => submitData(event)}
+            >
+                <FormTextInput
+                    onChange={(value) => setManufacturerName(value)}
+                    placeholder={ "'Filmoplast'" }
+                    input={ manufacturerName }
+                    inputId={ "Manufacturer" }
+                    uniquesArray={ manufacturers }
+                    constraints={ ["unique"] }
+                    errorMessage={ "That manufacturer already exists. Please enter a new manufacturer." }
+                />
 
-                <FormSubmitButton requiredInputs={ [manufacturerName] } uniques={ [{"key": manufacturerName, "values": manufacturers}] }/>
-                <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
+                <FormSubmitButton
+                    requiredInputs={ [manufacturerName] }
+                    uniques={ [{"key": manufacturerName, "values": manufacturers}] }
+                    text="Add Manufacturer"
+                />
+
+                <FormCancelButton
+                    clearInvalids={() => clearErrors()}
+                    cancelClick={() => cancelInputs()}
+                />
             </form>
         </div>
     )

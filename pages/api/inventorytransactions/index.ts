@@ -2,18 +2,7 @@ import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-
-    // Create type structure for an inventory transaction entry
-    type InventoryTransaction = {
-        id?: string;
-        datePurchased: string | Date;
-        dateReceived: string | Date | null;
-        unitsPurchased: string | number;
-        transactionCost: string | number | null;
-        materialId: string;
-        providerId: string;
-    }
-
+    
     // Define an array of inventory transactions as an array of type InventoryTransaction
     type InventoryTransactions = InventoryTransaction[]
 
@@ -51,14 +40,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         // Ensure the new entries are in the correct format
         // Cannot use 'else if' on string empty checks for type checking reasons - TypeScript thinks they could still be numbers
         if (typeof datePurchased === "string") {
-            datePurchased = new Date(parseInt(datePurchased.slice(10)), parseInt(datePurchased.slice(0, 2)), parseInt(datePurchased.slice(5, 7)))
+            datePurchased = new Date(parseInt(datePurchased.slice(10)), parseInt(datePurchased.slice(0, 2)) - 1, parseInt(datePurchased.slice(5, 7)))
         }
 
         if (dateReceived === '') {
             dateReceived = null
         }
         if (typeof dateReceived === "string") {
-            dateReceived = new Date(parseInt(dateReceived.slice(10)), parseInt(dateReceived.slice(0, 2)), parseInt(dateReceived.slice(5, 7)))
+            dateReceived = new Date(parseInt(dateReceived.slice(10)), parseInt(dateReceived.slice(0, 2)) - 1, parseInt(dateReceived.slice(5, 7)))
         }
 
         if (typeof unitsPurchased === "string") {

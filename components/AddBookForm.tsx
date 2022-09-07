@@ -4,7 +4,6 @@ import FormTextInput from './FormTextInput'
 import FormSelectInput from './FormSelectInput'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
-import { BindingType } from '@prisma/client'
 
 /**
  * 
@@ -18,7 +17,7 @@ export default function AddBookForm() {
     const [publisher, setPublisher] = useState('')
     const [yearPublished, setYearPublished] = useState('')
     const [numberOfPages, setNumberOfPages] = useState('')
-    const [bindingType, setBindingType] = useState('')
+    const [bindingType, setBindingType] = useState(undefined)
     const [received, setReceived] = useState('')
     const [returned, setReturned] = useState('')
     const [bookMaterialsCost, setBookMaterialsCost] = useState('')
@@ -35,29 +34,29 @@ export default function AddBookForm() {
     const { mutate } = useSWRConfig()
 
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
-    const { data, error } = useSWR<object[], Error>('/api/owners')
+    const { data, error } = useSWR<Owner[], Error>('/api/owners')
     if (error) console.log(error)
     if (!data) return <div>Loading...</div>
 
     // Rename the retrieved owners for specificity later
-    let owners: object[] = data
+    let owners: Owner[] = data
 
     // Create array of the binding type options to be used in the FormSelectInput component
-    let bindingTypeOptions: object[] =  [{"display": "Sewn", "store": BindingType.SEWN}, {"display": "Perfect", "store": BindingType.PERFECT}]
+    let bindingTypeOptions: object[] =  [{"display": "Sewn", "store": "SEWN"}, {"display": "Perfect", "store": "PERFECT"}]
 
     /**
      * Submit data to the server upon pressing the submit button in the form
      * 
      * @param {React.FormEvent<HTMLFormElement>} e The event provided when the submit button is pressed
      */
-    const submitData = async (e:  React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const submitData = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
 
         // Prevent the browser from reloading the whole page
         e.preventDefault()
 
         try {
             // Don't submit id because of default creation by the database
-            const body = { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
+            const body: Book = { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
             await fetch('/api/books', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -85,8 +84,8 @@ export default function AddBookForm() {
             errorMessages[i].classList.add("invisible")
         }
         for (let i = 0; i < inputs.length; ++i) {
-            inputs[i].classList.remove("border-red-400")
-            inputs[i].classList.add("border-slate-900")
+            inputs[i].classList.remove("border-red-500")
+            inputs[i].classList.add("border-gray-50")
             inputs[i].classList.add("focus:border-sky-400")
         }
     }
@@ -115,7 +114,8 @@ export default function AddBookForm() {
         <div className="mt-16">
             <form
                 autoComplete="off"
-                onSubmit={(event) => submitData(event)}>
+                onSubmit={(event) => submitData(event)}
+            >
                 
                 <FormTextInput
                     onChange={(value) => setTitle(value)}
@@ -216,7 +216,9 @@ export default function AddBookForm() {
                     requiredInputs={ [title, author, bindingType, received, ownerId] }
                     requiredDates={ [receivedValid] }
                     dateValids={ [receivedValid, returnedValid] }
+                    text="Add Book"
                 />
+
                 <FormCancelButton
                     clearInvalids={() => clearErrors()}
                     cancelClick={() => cancelInputs()}

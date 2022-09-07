@@ -1,24 +1,6 @@
 import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { BindingType } from '@prisma/client';
-
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    
-    // Create type structure for a book entry
-    type Book = {
-        id?: string;
-        title: string;
-        author: string;
-        publisher: string | null;
-        yearPublished: string | number | null;
-        numberOfPages: string | number | null;
-        bindingType: BindingType;
-        received: string | Date;
-        returned: string | Date | null;
-        bookMaterialsCost: string | number | null;
-        amountCharged: string | number | null;
-        ownerId: string;
-    }
 
     // Define an array of books as an array of type Book
     type Books = Book[]
@@ -53,7 +35,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         let { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }: Book = req.body
 
         // Ensure the new entries are in the correct format
-        // Cannot use 'else if' on string empty checks for type checking reasons - TypeScript thinks they could still be numbers
+        // Cannot use 'else if' on string empty checks for type checking reasons - TypeScript thinks they could still be non-strings
         if (publisher === '') publisher = null
 
         if (yearPublished === '') {
@@ -70,17 +52,16 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             numberOfPages = parseInt(numberOfPages, 10)
         }
 
-        bindingType = BindingType[bindingType]
-
         if (typeof received === "string") {
-            received = new Date(parseInt(received.slice(10)), parseInt(received.slice(0, 2)), parseInt(received.slice(5, 7)))
+            received = new Date(parseInt(received.slice(10)), parseInt(received.slice(0, 2)) - 1, parseInt(received.slice(5, 7)))
+            console.log(received)
         }
 
         if (returned === '') {
             returned = null
         }
         if (typeof returned === "string") {
-            returned = new Date(parseInt(returned.slice(10)), parseInt(returned.slice(0, 2)), parseInt(returned.slice(5, 7)))
+            returned = new Date(parseInt(returned.slice(10)), parseInt(returned.slice(0, 2)) - 1, parseInt(returned.slice(5, 7)))
         }
 
         if (bookMaterialsCost === '') {

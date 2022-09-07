@@ -77,8 +77,8 @@ export default function AddMaterialForRepairForm() {
             errorMessages[i].classList.add("invisible")
         }
         for (let i = 0; i < inputs.length; ++i) {
-            inputs[i].classList.remove("border-red-400")
-            inputs[i].classList.add("border-slate-900")
+            inputs[i].classList.remove("border-red-500")
+            inputs[i].classList.add("border-gray-50")
             inputs[i].classList.add("focus:border-sky-400")
         }
     }

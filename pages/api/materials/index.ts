@@ -4,15 +4,6 @@ import { Unit } from '@prisma/client';
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
 
-    // Create type structure for a material entry
-    type Material = {
-        id?: string;
-        materialName: string;
-        units: Unit;
-        unitCost: string | number;
-        manufacturerId: string;
-    }
-
     // Define an array of materials as an array of type Material
     type Materials = Material[]
 

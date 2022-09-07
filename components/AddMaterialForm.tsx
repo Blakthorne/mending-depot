@@ -4,7 +4,6 @@ import FormTextInput from './FormTextInput'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
 import FormSelectInput from './FormSelectInput'
-import { Unit } from '@prisma/client'
 
 /**
  * 
@@ -14,7 +13,7 @@ export default function AddMaterialForm() {
 
     // Create state for the attributes of a repair
     const [materialName, setMaterialName] = useState('')
-    const [units, setUnits] = useState('')
+    const [units, setUnits] = useState(undefined)
     const [unitCost, setUnitCost] = useState('')
     const [manufacturerId, setManufacturerId] = useState('')
 
@@ -22,29 +21,29 @@ export default function AddMaterialForm() {
     const { mutate } = useSWRConfig()
 
     // Retrieve the manufacturers table to get the manufacturer names and ids to be used as the foreign key in the material table
-    const { data, error } = useSWR('/api/manufacturers')
-    if (error) return <div>{ error }</div>
+    const { data, error } = useSWR<Manufacturer[], Error>('/api/manufacturers')
+    if (error) console.log(error)
     if (!data) return <div>Loading...</div>
 
     // Rename the retrieved manufacturers for specificity later
-    let manufacturers = data
+    let manufacturers: Manufacturer[] = data
 
     // Create array of the unit options to be used in the FormSelectInput component
-    let unitOptions =  [{"display": "Inches", "store": Unit.INCHES}, {"display": "Inches Squared", "store": Unit.INCHESSQUARED}, {"display": "Centimeters", "store": Unit.CENTIMETERS}, {"display": "Centimeters Squared", "store": Unit.CENTIMETERSSQUARED}] 
+    let unitOptions =  [{"display": "Inches", "store": "INCHES"}, {"display": "Inches Squared", "store": "INCHESSQUARED"}, {"display": "Centimeters", "store": "CENTIMETERS"}, {"display": "Centimeters Squared", "store": "CENTIMETERSSQUARED"}] 
 
     /**
      * Submit data to the server upon pressing the submit button in the form
      * 
-     * @param {*} e The event provided when the submit button is pressed
+     * @param {React.FormEvent<HTMLFormElement>} e The event provided when the submit button is pressed
      */
-    const submitData = async e => {
+    const submitData = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
 
         // Prevent the browser from reloading the whole page
         e.preventDefault()
 
         try {
             // Don't submit id because of default creation by the database
-            const body = { materialName, units, unitCost, manufacturerId }
+            const body: Material = { materialName, units, unitCost, manufacturerId }
             await fetch('/api/materials', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -63,7 +62,7 @@ export default function AddMaterialForm() {
     /**
      * Clear all the formatting for showing errors in the form
      */
-    const clearErrors = () => {
+    const clearErrors = (): void => {
         const errorMessages = document.getElementsByClassName("errorMessage")
         const inputs = document.getElementsByClassName("input")
 
@@ -72,8 +71,8 @@ export default function AddMaterialForm() {
             errorMessages[i].classList.add("invisible")
         }
         for (let i = 0; i < inputs.length; ++i) {
-            inputs[i].classList.remove("border-red-400")
-            inputs[i].classList.add("border-slate-900")
+            inputs[i].classList.remove("border-red-500")
+            inputs[i].classList.add("border-gray-50")
             inputs[i].classList.add("focus:border-sky-400")
         }
     }
@@ -81,7 +80,7 @@ export default function AddMaterialForm() {
     /**
      * Clear all the form inputs
      */
-    const cancelInputs = () => {
+    const cancelInputs = (): void => {
         setMaterialName('')
         setUnits('')
         setUnitCost('')
@@ -92,17 +91,51 @@ export default function AddMaterialForm() {
         <div className="mt-16">
             <form
                 autoComplete="off"
-                onSubmit={submitData}>
-                <FormTextInput onChange={(value) => setMaterialName(value)} placeholder={ "'Archival Tape P'" } input={ materialName } inputId={ "Material Name" }/>
+                onSubmit={(event) => submitData(event)}
+            >
 
-                <FormSelectInput onChange={(value) => setUnits(value)} input={ units } inputId={ "Units" } options={ unitOptions } displayKey={ "display"} storeKey={ "store" }/>
+                <FormTextInput
+                    onChange={(value) => setMaterialName(value)}
+                    placeholder={ "'Archival Tape P'" }
+                    input={ materialName }
+                    inputId={ "Material Name" }
+                />
 
-                <FormTextInput onChange={(value) => setUnitCost(value)} placeholder={ "'3.00'" } input={ unitCost } inputId={ "Unit Cost" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
+                <FormSelectInput
+                    onChange={(value) => setUnits(value)}
+                    input={ units }
+                    inputId={ "Units" }
+                    options={ unitOptions }
+                    displayKey={ "display"}
+                    storeKey={ "store" }
+                />
 
-                <FormSelectInput onChange={(value) => setManufacturerId(value)} input={ manufacturerId } inputId={ "Manufacturer" } options={ manufacturers } displayKey={ "manufacturerName"} storeKey={ "id" }/>
+                <FormTextInput
+                    onChange={(value) => setUnitCost(value)}
+                    placeholder={ "'3.00'" } input={ unitCost }
+                    inputId={ "Unit Cost" }
+                    constraints={ ["money"] }
+                    errorMessage={ "Please only enter a dollar value here." }
+                />
 
-                <FormSubmitButton requiredInputs={ [materialName, units, unitCost, manufacturerId] }/>
-                <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
+                <FormSelectInput
+                    onChange={(value) => setManufacturerId(value)}
+                    input={ manufacturerId }
+                    inputId={ "Manufacturer" }
+                    options={ manufacturers }
+                    displayKey={ "manufacturerName"}
+                    storeKey={ "id" }
+                />
+
+                <FormSubmitButton
+                    requiredInputs={ [materialName, units, unitCost, manufacturerId] }
+                    text="Add Material"
+                />
+
+                <FormCancelButton
+                    clearInvalids={() => clearErrors()}
+                    cancelClick={() => cancelInputs()}
+                />
             </form>
         </div>
     )

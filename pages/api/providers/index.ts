@@ -2,12 +2,6 @@ import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    
-    // Create type structure for a provider entry
-    type Provider = {
-        id?: string;
-        providerName: string;
-    }
 
     // Define an array of providers as an array of type Provider
     type Providers = Provider[]

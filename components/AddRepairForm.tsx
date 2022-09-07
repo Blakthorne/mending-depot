@@ -20,36 +20,36 @@ export default function AddRepairForm() {
     const { mutate } = useSWRConfig()
 
     // Retrieve the books table to get the book names and ids to be used as the foreign key in the repairs table
-    const { data: booksData, error: booksError } = useSWR('/api/books')
+    const { data: booksData, error: booksError } = useSWR<Book[], Error>('/api/books')
 
     // Retrieve the repairtypes table to get the repair type names and ids to be used as the foreign key in the repairs table
-    const { data: repairTypesData, error: repairTypesError } = useSWR('/api/repairtypes')
+    const { data: repairTypesData, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes')
 
-    if (booksError) return <div>{ booksError }</div>
+    if (booksError) console.log(booksError)
     if (!booksData) return <div>Loading...</div>
 
     // Rename the retrieved books for specificity later
-    let books = booksData
+    let books: Book[] = booksData
 
-    if (repairTypesError) return <div>{ repairTypesError }</div>
+    if (repairTypesError) console.log(repairTypesError)
     if (!repairTypesData) return <div>Loading...</div>
 
     // Rename the retrieved books for specificity later
-    let repairTypes = repairTypesData
+    let repairTypes: RepairType[] = repairTypesData
 
     /**
      * Submit data to the server upon pressing the submit button in the form
      * 
-     * @param {*} e The event provided when the submit button is pressed
+     * @param {React.FormEvent<HTMLFormElement>} e The event provided when the submit button is pressed
      */
-    const submitData = async e => {
+    const submitData = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
 
         // Prevent the browser from reloading the whole page
         e.preventDefault()
 
         try {
             // Don't submit id because of default creation by the database
-            const body = { repairTypeId, repairMaterialsCost, bookId }
+            const body: Repair = { repairTypeId, repairMaterialsCost, bookId }
             await fetch('/api/repairs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -68,7 +68,7 @@ export default function AddRepairForm() {
     /**
      * Clear all the formatting for showing errors in the form
      */
-    const clearErrors = () => {
+    const clearErrors = (): void => {
         const errorMessages = document.getElementsByClassName("errorMessage")
         const inputs = document.getElementsByClassName("input")
 
@@ -77,8 +77,8 @@ export default function AddRepairForm() {
             errorMessages[i].classList.add("invisible")
         }
         for (let i = 0; i < inputs.length; ++i) {
-            inputs[i].classList.remove("border-red-400")
-            inputs[i].classList.add("border-slate-900")
+            inputs[i].classList.remove("border-red-500")
+            inputs[i].classList.add("border-gray-50")
             inputs[i].classList.add("focus:border-sky-400")
         }
     }
@@ -86,7 +86,7 @@ export default function AddRepairForm() {
     /**
      * Clear all the form inputs
      */
-    const cancelInputs = () => {
+    const cancelInputs = (): void => {
         setRepairTypeId('')
         setRepairMaterialsCost('')
         setBookId('')
@@ -96,15 +96,45 @@ export default function AddRepairForm() {
         <div className="mt-16">
             <form
                 autoComplete="off"
-                onSubmit={submitData}>
-                <FormSelectInput onChange={(value) => setRepairTypeId(value)} input={ repairTypeId } inputId={ "Repair Type" } options={ repairTypes } displayKey={ "repairTypeName"} storeKey={ "id" }/>
+                onSubmit={(event) => submitData(event)}
+            >
 
-                <FormTextInput onChange={(value) => setRepairMaterialsCost(value)} placeholder={ "'14.89'" } input={ repairMaterialsCost } inputId={ "Repair Materials Cost" } constraints={ ["money"] } errorMessage={ "Please only enter a dollar value here." }/>
+                <FormSelectInput
+                    onChange={(value) => setRepairTypeId(value)}
+                    input={ repairTypeId }
+                    inputId={ "Repair Type" }
+                    options={ repairTypes }
+                    displayKey={ "repairTypeName"}
+                    storeKey={ "id" }
+                />
 
-                <FormSelectInput onChange={(value) => setBookId(value)} input={ bookId } inputId={ "Associated Book" } options={ books } displayKey={ "title"} storeKey={ "id" }/>
+                <FormTextInput
+                    onChange={(value) => setRepairMaterialsCost(value)}
+                    placeholder={ "'14.89'" }
+                    input={ repairMaterialsCost }
+                    inputId={ "Repair Materials Cost" }
+                    constraints={ ["money"] }
+                    errorMessage={ "Please only enter a dollar value here." }
+                />
 
-                <FormSubmitButton requiredInputs={ [repairTypeId, bookId] }/>
-                <FormCancelButton clearInvalids={() => clearErrors()} cancelClick={() => cancelInputs()}/>
+                <FormSelectInput
+                    onChange={(value) => setBookId(value)}
+                    input={ bookId }
+                    inputId={ "Associated Book" }
+                    options={ books }
+                    displayKey={ "title"}
+                    storeKey={ "id" }
+                />
+
+                <FormSubmitButton
+                    requiredInputs={ [repairTypeId, bookId] }
+                    text="Add Repair"
+                />
+
+                <FormCancelButton
+                    clearInvalids={() => clearErrors()}
+                    cancelClick={() => cancelInputs()}
+                />
             </form>
         </div>
     )
