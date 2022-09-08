@@ -36,8 +36,7 @@ export default function AddBookForm() {
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
     const { data, error } = useSWR<Owner[], Error>('/api/owners')
     if (error) console.log(error)
-    if (!data) return <div>Loading...</div>
-
+    
     // Rename the retrieved owners for specificity later
     let owners: Owner[] = data
 
@@ -111,7 +110,7 @@ export default function AddBookForm() {
     }
 
     return (
-        <div className="mt-16">
+        <div className="mt-16 w-96">
             <form
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}

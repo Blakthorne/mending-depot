@@ -23,7 +23,6 @@ export default function AddOwnerForm() {
     // Retrieve the owners for use in the names[] for the uniqueness check
     const { data, error } = useSWR<Owner[], Error>('/api/owners')
     if (error) console.log(error)
-    if (!data) return <div>Loading...</div>
     else {
 
         // Extract all the names of the owners
@@ -86,7 +85,7 @@ export default function AddOwnerForm() {
     }
 
     return (
-        <div className="mt-16">
+        <div className="mt-16 w-96">
             <form
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}

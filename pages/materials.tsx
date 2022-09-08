@@ -22,11 +22,10 @@ function Materials() {
         </div>
         <div className="mx-auto">
           <AddMaterialForm/>
+        </div>
+        <div className="mx-auto">
           <Table table={"materials"}/>
         </div>
-        <div>
-          
-      </div>
 		  </div>
     </SWRConfig>
   )

@@ -22,11 +22,10 @@ function Books() {
         </div>
         <div className="mx-auto">
           <AddBookForm/>
+        </div>
+        <div className="mx-auto">
           <Table table={"books"}/>
         </div>
-        <div>
-          
-      </div>
 		  </div>
     </SWRConfig>
   )

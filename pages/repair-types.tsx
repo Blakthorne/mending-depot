@@ -22,11 +22,10 @@ function RepairTypes() {
         </div>
         <div className="mx-auto">
           <AddRepairTypeForm/>
+        </div>
+        <div className="mx-auto">
           <Table table={"repairtypes"}/>
         </div>
-        <div>
-          
-      </div>
 		  </div>
     </SWRConfig>
   )

@@ -88,7 +88,7 @@ export default function AddMaterialForm() {
     }
 
     return (
-        <div className="mt-16">
+        <div className="mt-16 w-96">
             <form
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}

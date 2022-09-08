@@ -18,15 +18,14 @@ function Providers() {
 
       <div className="flex flex-col min-h-screen">
         <div className="font-sans text-slate-200 text-3xl text-center drop-shadow-lg tracking-wide">
-            Providers
+          Providers
         </div>
         <div className="mx-auto">
           <AddProviderForm/>
+        </div>
+        <div className="mx-auto">
           <Table table={"providers"}/>
         </div>
-        <div>
-          
-      </div>
 		  </div>
     </SWRConfig>
   )

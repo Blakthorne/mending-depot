@@ -18,15 +18,14 @@ function ReplacementCovers() {
 
       <div className="flex flex-col min-h-screen">
         <div className="font-sans text-slate-200 text-3xl text-center drop-shadow-lg tracking-wide">
-            Replacement Covers
+          Replacement Covers
         </div>
         <div className="mx-auto">
           <AddReplacementCoverForm/>
+        </div>
+        <div className="mx-auto">
           <Table table={"replacementcovers"}/>
         </div>
-        <div>
-          
-      </div>
 		  </div>
     </SWRConfig>
   )

@@ -22,11 +22,10 @@ function InventoryTransactions() {
         </div>
         <div className="mx-auto">
           <AddInventoryTransactionForm/>
+        </div>
+        <div className="mx-auto">
           <Table table={"inventorytransactions"}/>
         </div>
-        <div>
-          
-      </div>
 		  </div>
     </SWRConfig>
   )

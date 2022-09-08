@@ -22,11 +22,10 @@ function Owners() {
         </div>
         <div className="mx-auto">
           <AddOwnerForm/>
+        </div>
+        <div className="mx-auto">
           <Table table={"owners"}/>
         </div>
-        <div>
-          
-      </div>
 		  </div>
     </SWRConfig>
   )

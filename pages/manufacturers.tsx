@@ -22,11 +22,10 @@ function Manufacturers() {
         </div>
         <div className="mx-auto">
           <AddManufacturerForm/>
+        </div>
+        <div className="mx-auto">
           <Table table={"manufacturers"}/>
         </div>
-        <div>
-          
-      </div>
 		  </div>
     </SWRConfig>
   )
