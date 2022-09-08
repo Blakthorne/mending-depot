@@ -13,6 +13,21 @@ export default function Navbar() {
 							Start New Repair
 						</a>
 					</Link>
+					<Link href="/replacement-covers">
+						<a className="hover:text-gray-100">
+							Add Replacement Cover
+						</a>
+					</Link>
+					<Link href="/material-for-repair">
+						<a className="hover:text-gray-100">
+							Add Material For Repair
+						</a>
+					</Link>
+					<Link href="/inventory-transactions">
+						<a className="hover:text-gray-100">
+							Manage Inventory
+						</a>
+					</Link>
 				</div>
 				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
 					<Link href="/owners">

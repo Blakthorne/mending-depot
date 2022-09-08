@@ -14,6 +14,7 @@ type FormSubmitButtonComponent = {
  * @param {boolean[]} [requiredDates] Optional - The list of boolean date state variables which must be "true" to submit the form
  * @param {boolean[]} [dateValids] Optional - The list of boolean date state variables which must be "true" to submit the form
  * @param {object[]} [uniques] Optional - The list of objects where key = state variable to check against values = array of values from the database
+ * @param {string} text The to be displayed in the submit button
  * @returns HTML submit button
  */
 export default function FormSubmitButton({ requiredInputs, requiredDates, dateValids, uniques, text }: FormSubmitButtonComponent) {

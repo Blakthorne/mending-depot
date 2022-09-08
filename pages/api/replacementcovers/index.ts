@@ -1,7 +1,5 @@
 import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { CoverType } from '@prisma/client';
-import { CoverMaterial } from '@prisma/client';
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
 
@@ -15,29 +13,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     }
     if (req.method == 'POST')
     {
-        let { coverType, spineMaterial, sideMaterial, repairId }: ReplacementCover = req.body
-
-        // Ensure the new entries are in the correct format
-        if (coverType in CoverType) {
-            coverType = CoverType[coverType]
-        }
-        else {
-            coverType = null
-        }
-        
-        if (spineMaterial in CoverMaterial) {
-            spineMaterial = CoverMaterial[spineMaterial]
-        }
-        else {
-            spineMaterial = null
-        }
-
-        if (sideMaterial in CoverMaterial) {
-            sideMaterial = CoverMaterial[sideMaterial]
-        }
-        else {
-            sideMaterial = null
-        }
+        const { coverType, spineMaterial, sideMaterial, repairId }: ReplacementCover = req.body
 
         const replacementCover: ReplacementCover = await prisma.replacementCover.create({
             data: {
