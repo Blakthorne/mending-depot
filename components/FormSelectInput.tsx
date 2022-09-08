@@ -11,6 +11,7 @@ type FormSelectInputComponent = {
     errorMessage?: string;
     uniquesArray?: string[];
     containts?: string[];
+    required: boolean;
 }
 
 /**
@@ -24,9 +25,10 @@ type FormSelectInputComponent = {
  * @param {string} [errorMessage] Optional - The error message to display to the user when there is something wrong with the input
  * @param {string[]} [uniquesArray] Optional - The list of values against which to check new input to enforce uniqueness when required
  * @param {string[]} [constraints] Optional - The list of strings representing the constraints on the input
+ * @param {boolean} required True if input is required, false otherwise
  * @returns HTML input of type "select" with label and FormInputErrorMessage component
  */
-export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey, errorMessage, uniquesArray}: FormSelectInputComponent) {
+export default function FormSelectInput({ onChange, input, inputId, options, displayKey, storeKey, errorMessage, uniquesArray, required }: FormSelectInputComponent) {
 
     // Define another array as null to hold the final options to display after filtering
     let finalOptions: object[] | null = null
@@ -59,7 +61,14 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
 
     return (
         <div>
-            <label>{ inputId }</label>
+            <label>
+                { inputId }
+                {required ?
+                    <span className="text-red-300"> *</span>
+                    : <span></span>
+                }
+            </label>
+            
             <select
                 className="bg-gray-900 rounded w-full p-2 my-2 border border-gray-50 focus:outline-none focus:border-sky-400 valid input"
                 onChange={e => onChange(e.target.value)}

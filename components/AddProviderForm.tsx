@@ -99,6 +99,7 @@ export default function AddProviderForm() {
                     uniquesArray={ providers }
                     constraints={ ["unique"] }
                     errorMessage={ "That provider already exists. Please enter a new provider." }
+                    required={ true }
                 />
 
                 <FormSubmitButton

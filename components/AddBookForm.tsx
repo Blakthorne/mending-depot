@@ -122,6 +122,7 @@ export default function AddBookForm() {
                     placeholder={ "'The Divine Comedy'" }
                     input={ title }
                     inputId={ "Title" }
+                    required={ true }
                 />
 
                 <FormTextInput
@@ -129,6 +130,7 @@ export default function AddBookForm() {
                     placeholder={ "'Dante Alighieri'" }
                     input={ author }
                     inputId={ "Author" }
+                    required={ true }
                 />
 
                 <FormTextInput
@@ -136,6 +138,7 @@ export default function AddBookForm() {
                     placeholder={ "'Doubleday & Company, Inc'" }
                     input={ publisher }
                     inputId={ "Publisher" }
+                    required={ false }
                 />
 
                 <FormTextInput
@@ -145,6 +148,7 @@ export default function AddBookForm() {
                     inputId={ "Year Published" }
                     constraints={ ["int"] }
                     errorMessage={ "Please only enter a number here." }
+                    required={ false }
                 />
 
                 <FormTextInput
@@ -154,6 +158,7 @@ export default function AddBookForm() {
                     inputId={ "Number of Pages" }
                     constraints={ ["int"] }
                     errorMessage={ "Please only enter a number here." }
+                    required={ false }
                 />
 
                 <FormSelectInput
@@ -163,6 +168,7 @@ export default function AddBookForm() {
                     options={ bindingTypeOptions }
                     displayKey={ "display"}
                     storeKey={ "store" }
+                    required={ true }
                 />
 
                 <FormTextInput
@@ -173,6 +179,7 @@ export default function AddBookForm() {
                     constraints={ ["date"] }
                     errorMessage={ "Sorry, but that's not a real date." }
                     dateIsValid={(validity) => setReceivedValid(validity)}
+                    required={ true }
                 />
 
                 <FormTextInput
@@ -183,6 +190,7 @@ export default function AddBookForm() {
                     constraints={ ["date"] }
                     errorMessage={ "Sorry, but that's not a real date." }
                     dateIsValid={(validity) => setReturnedValid(validity)}
+                    required={ false }
                 />
 
                 <FormTextInput
@@ -192,6 +200,7 @@ export default function AddBookForm() {
                     inputId={ "Materials Cost" }
                     constraints={ ["money"] }
                     errorMessage={ "Please only enter a dollar value here." }
+                    required={ false }
                 />
 
                 <FormTextInput
@@ -201,6 +210,7 @@ export default function AddBookForm() {
                     inputId={ "Amount Charged" }
                     constraints={ ["money"] }
                     errorMessage={ "Please only enter a dollar value here." }
+                    required={ false }
                 />
 
                 <FormSelectInput
@@ -210,6 +220,7 @@ export default function AddBookForm() {
                     options={ owners }
                     displayKey={ "ownerName"}
                     storeKey={ "id" }
+                    required={ true }
                 />
 
                 <FormSubmitButton

@@ -8,20 +8,16 @@ function Home() {
         fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
       }}
     >
+
       <Head>
         <title>Mending Depot</title>
         <meta name="description" content="Helpful for the book mending business" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="flex flex-col">
-        <div className="font-sans text-slate-200 text-3xl text-center drop-shadow-lg tracking-wide">
-          I meet your book mending needs.
-        </div>
-      <div>
-          
+      <div className="text-gray-200 text-3xl text-center tracking-wide m-auto">
+        I meet your book mending needs.
       </div>
-		  </div>
     </SWRConfig>
   )
 }

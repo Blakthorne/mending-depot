@@ -124,6 +124,7 @@ export default function AddInventoryTransactionForm() {
                     constraints={ ["date"] }
                     errorMessage={ "Sorry, but that's not a real date." }
                     dateIsValid={(validity) => setDatePurchasedValid(validity)}
+                    required={ true }
                 />
 
                 <FormTextInput
@@ -134,6 +135,7 @@ export default function AddInventoryTransactionForm() {
                     constraints={ ["date"] }
                     errorMessage={ "Sorry, but that's not a real date." }
                     dateIsValid={(validity) => setDateReceivedValid(validity)}
+                    required={ false }
                 />
 
                 <FormTextInput
@@ -143,6 +145,7 @@ export default function AddInventoryTransactionForm() {
                     inputId={ "Units Purchased" }
                     constraints={ ["decimal"] }
                     errorMessage={ "Please only enter a decimal value here." }
+                    required={ true }
                 />
 
                 <FormTextInput
@@ -152,6 +155,7 @@ export default function AddInventoryTransactionForm() {
                     inputId={ "Transaction Cost" }
                     constraints={ ["money"] }
                     errorMessage={ "Please only enter a dollar value here." }
+                    required={ false }
                 />
 
                 <FormSelectInput
@@ -161,6 +165,7 @@ export default function AddInventoryTransactionForm() {
                     options={ materials }
                     displayKey={ "materialName"}
                     storeKey={ "id" }
+                    required={ true }
                 />
 
                 <FormSelectInput
@@ -170,6 +175,7 @@ export default function AddInventoryTransactionForm() {
                     options={ providers }
                     displayKey={ "providerName"}
                     storeKey={ "id" }
+                    required={ true }
                 />
 
                 <FormSubmitButton

@@ -26,7 +26,7 @@ export default function Table({ table }: TableComponent) {
             <div className="table-row">
                 {Object.keys(data[0])
                     .map(item => (
-                    <div key={item.toString()} className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-0 text-left capitalize">{item.split(/(?=[A-Z])/).join(" ")}</div>
+                    <div key={item.toString()} className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-2 text-left capitalize">{item.split(/(?=[A-Z])/).join(" ")}</div>
                 ))}
             </div>
         </div>

@@ -100,6 +100,7 @@ export default function AddRepairTypeForm() {
                     uniquesArray={ repairTypes }
                     constraints={ ["unique"] }
                     errorMessage={ "That repair type already exists. Please enter a new repair type." }
+                    required={ true }
                 />
 
                 <FormSubmitButton

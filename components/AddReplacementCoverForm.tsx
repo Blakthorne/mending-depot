@@ -121,6 +121,7 @@ export default function AddReplacementCoverForm() {
                     options={ coverTypeOptions }
                     displayKey={ "display"}
                     storeKey={ "store" }
+                    required={ false }
                 />
 
                 <FormSelectInput
@@ -130,6 +131,7 @@ export default function AddReplacementCoverForm() {
                     options={ coverMaterialOptions }
                     displayKey={ "display"}
                     storeKey={ "store" }
+                    required={ false }
                 />
 
                 <FormSelectInput
@@ -139,6 +141,7 @@ export default function AddReplacementCoverForm() {
                     options={ coverMaterialOptions }
                     displayKey={ "display"}
                     storeKey={ "store" }
+                    required={ false }
                 />
 
                 <FormSelectInput
@@ -149,6 +152,7 @@ export default function AddReplacementCoverForm() {
                     displayKey={ "id"}
                     storeKey={ "id" }
                     uniquesArray={ curRepairs }
+                    required={ true }
                 />
 
                 <FormSubmitButton

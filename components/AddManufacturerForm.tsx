@@ -99,6 +99,7 @@ export default function AddManufacturerForm() {
                     uniquesArray={ manufacturers }
                     constraints={ ["unique"] }
                     errorMessage={ "That manufacturer already exists. Please enter a new manufacturer." }
+                    required={ true }
                 />
 
                 <FormSubmitButton

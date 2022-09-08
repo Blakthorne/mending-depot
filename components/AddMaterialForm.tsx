@@ -99,6 +99,7 @@ export default function AddMaterialForm() {
                     placeholder={ "'Archival Tape P'" }
                     input={ materialName }
                     inputId={ "Material Name" }
+                    required={ true }
                 />
 
                 <FormSelectInput
@@ -108,6 +109,7 @@ export default function AddMaterialForm() {
                     options={ unitOptions }
                     displayKey={ "display"}
                     storeKey={ "store" }
+                    required={ true }
                 />
 
                 <FormTextInput
@@ -116,6 +118,7 @@ export default function AddMaterialForm() {
                     inputId={ "Unit Cost" }
                     constraints={ ["money"] }
                     errorMessage={ "Please only enter a dollar value here." }
+                    required={ true }
                 />
 
                 <FormSelectInput
@@ -125,6 +128,7 @@ export default function AddMaterialForm() {
                     options={ manufacturers }
                     displayKey={ "manufacturerName"}
                     storeKey={ "id" }
+                    required={ true }
                 />
 
                 <FormSubmitButton

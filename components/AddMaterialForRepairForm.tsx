@@ -106,6 +106,7 @@ export default function AddMaterialForRepairForm() {
                     options={ repairs }
                     displayKey={ "id"}
                     storeKey={ "id" }
+                    required={ true }
                 />
 
                 <FormSelectInput
@@ -115,6 +116,7 @@ export default function AddMaterialForRepairForm() {
                     options={ materials }
                     displayKey={ "materialName"}
                     storeKey={ "id" }
+                    required={ true }
                 />
 
                 <FormTextInput
@@ -124,6 +126,7 @@ export default function AddMaterialForRepairForm() {
                     inputId={ "Amount Used" }
                     constraints={ ["decimal"] }
                     errorMessage={ "Please only enter a decimal value here." }
+                    required={ true }
                 />
 
                 <FormSubmitButton

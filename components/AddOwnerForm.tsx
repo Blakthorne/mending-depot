@@ -99,6 +99,7 @@ export default function AddOwnerForm() {
                     uniquesArray={ names }
                     constraints={ ["unique"] }
                     errorMessage={ "That name already exists. Please enter a new name." }
+                    required={ true }
                 />
 
                 <FormSubmitButton

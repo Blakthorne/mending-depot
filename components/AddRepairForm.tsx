@@ -106,6 +106,7 @@ export default function AddRepairForm() {
                     options={ repairTypes }
                     displayKey={ "repairTypeName"}
                     storeKey={ "id" }
+                    required={ true }
                 />
 
                 <FormTextInput
@@ -115,6 +116,7 @@ export default function AddRepairForm() {
                     inputId={ "Repair Materials Cost" }
                     constraints={ ["money"] }
                     errorMessage={ "Please only enter a dollar value here." }
+                    required={ false }
                 />
 
                 <FormSelectInput
@@ -124,6 +126,7 @@ export default function AddRepairForm() {
                     options={ books }
                     displayKey={ "title"}
                     storeKey={ "id" }
+                    required={ true }
                 />
 
                 <FormSubmitButton
