@@ -21,12 +21,8 @@ export default function AddMaterialForm() {
     const { mutate } = useSWRConfig()
 
     // Retrieve the manufacturers table to get the manufacturer names and ids to be used as the foreign key in the material table
-    const { data, error } = useSWR<Manufacturer[], Error>('/api/manufacturers')
+    const { data: manufacturers, error } = useSWR<Manufacturer[], Error>('/api/manufacturers')
     if (error) console.log(error)
-    if (!data) return <div>Loading...</div>
-
-    // Rename the retrieved manufacturers for specificity later
-    let manufacturers: Manufacturer[] = data
 
     // Create array of the unit options to be used in the FormSelectInput component
     let unitOptions =  [{"display": "Inches", "store": "INCHES"}, {"display": "Inches Squared", "store": "INCHESSQUARED"}, {"display": "Centimeters", "store": "CENTIMETERS"}, {"display": "Centimeters Squared", "store": "CENTIMETERSSQUARED"}] 

@@ -8,24 +8,31 @@ export default function Navbar() {
 					<Link href="/">Mending Depot</Link>
 				</div>
 				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
-					<Link href="/repairs">
+					<Link href="/new-repair">
 						<a className="hover:text-gray-100">
 							Start New Repair
 						</a>
 					</Link>
+				</div>
+				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
+					<Link href="/repairs">
+						<a className="hover:text-gray-100">
+							Repairs
+						</a>
+					</Link>
 					<Link href="/replacement-covers">
 						<a className="hover:text-gray-100">
-							Add Replacement Cover
+							Replacement Covers
 						</a>
 					</Link>
 					<Link href="/material-for-repair">
 						<a className="hover:text-gray-100">
-							Add Material For Repair
+							Material For Repairs
 						</a>
 					</Link>
 					<Link href="/inventory-transactions">
 						<a className="hover:text-gray-100">
-							Manage Inventory
+							Inventory Transactions
 						</a>
 					</Link>
 				</div>

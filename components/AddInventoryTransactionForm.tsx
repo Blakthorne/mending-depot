@@ -1,5 +1,7 @@
 import useSWR, { useSWRConfig } from 'swr'
 import React, { useState } from 'react'
+import CircularProgress from '@mui/material/CircularProgress'
+import Backdrop from '@mui/material/Backdrop';
 import FormTextInput from './FormTextInput'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
@@ -30,23 +32,12 @@ export default function AddInventoryTransactionForm() {
     const { mutate } = useSWRConfig()
 
     // Retrieve the provider table to get the provider names and ids to be used as the foreign key in the inventory transactions table
-    const { data: providersData, error: providersError } = useSWR<Provider[], Error>('/api/providers')
+    const { data: providers, error: providersError } = useSWR<Provider[], Error>('/api/providers')
+    if (providersError) console.log(providersError)
 
     // Retrieve the materials table to get the material names and ids to be used as the foreign key in the inventory transactions table
-    const { data: materialsData, error: materialsError } = useSWR<Material[], Error>('/api/materials')
-
-    if (providersError) console.log(providersError)
-    if (!providersData) return <div>Loading...</div>
-
-    // Rename the retrieved providers for specificity later
-    let providers: Provider[] = providersData
-
-    
+    const { data: materials, error: materialsError } = useSWR<Material[], Error>('/api/materials')
     if (materialsError) console.log(materialsError)
-    if (!materialsData) return <div>Loading...</div>
-
-    // Rename the retrieved materials for specificity later
-    let materials: Material[] = materialsData
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -180,6 +171,8 @@ export default function AddInventoryTransactionForm() {
 
                 <FormSubmitButton
                     requiredInputs={ [datePurchased, unitsPurchased, materialId, providerId] }
+                    requiredDates={ [datePurchasedValid] }
+                    dateValids={ [datePurchasedValid, dateReceivedValid] }
                     text="Add Inventory Transaction"
                 />
 

@@ -23,7 +23,6 @@ export default function AddManufacturerForm() {
     // Retrieve the manufacturers for use in the manufacturers[] for the uniqueness check
     const { data, error } = useSWR<Manufacturer[], Error>('/api/manufacturers')
     if (error) console.log(error)
-    if (!data) return <div>Loading...</div>
     else {
 
         // Extract all the names of the owners

@@ -24,16 +24,14 @@ export default function AddReplacementCoverForm() {
     let curRepairs: string[] = []
 
     // Retrieve the repair table to get the repair ids to be used as the foreign key in the replacement cover table
-    const { data: repairData, error: repairError } = useSWR<Repair[], Error>('/api/repairs')
+    const { data: repairs, error: repairError } = useSWR<Repair[], Error>('/api/repairs')
 
     // Retrieve the replacementcovers for use in the curRepairs[] for the uniqueness check
     const { data: replacementCoversData, error: replacementCoversError } = useSWR<ReplacementCover[], Error>('/api/replacementcovers')
 
     if (repairError) console.log(repairError)
-    if (!repairData) return <div>Loading...</div>
 
     if (replacementCoversError) console.log(replacementCoversError)
-    if (!replacementCoversData) return <div>Loading...</div>
     else {
 
         // Extract all the ids of the repairs
@@ -41,9 +39,6 @@ export default function AddReplacementCoverForm() {
             curRepairs.push(replacementCoversData[entry].repairId)
         }
     }
-
-    // Rename the retrieved repairs for specificity later
-    let repairs: Repair[] = repairData
 
     // Create array of the cover type options to be used in the FormSelectInput component
     let coverTypeOptions =  [{"display": "Full Bound", "store": "FULL"}, {"display": "Quarter Bound", "store": "QUARTER"}, {"display": "Three Quarter Bound", "store": "THREEQUARTER"}]

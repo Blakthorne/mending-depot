@@ -20,22 +20,12 @@ export default function AddMaterialForRepairForm() {
     const { mutate } = useSWRConfig()
 
     // Retrieve the repairs table to get the repair names and ids to be used as the foreign key in the materialforrepair table
-    const { data: repairsData, error: repairsError } = useSWR<Repair[], Error>('/api/repairs')
+    const { data: repairs, error: repairsError } = useSWR<Repair[], Error>('/api/repairs')
+    if (repairsError) console.log(repairsError)
 
     // Retrieve the materials table to get the material names and ids to be used as the foreign key in the materialforrepair table
-    const { data: materialsData, error: materialsError } = useSWR<Material[], Error>('/api/materials')
-
-    if (repairsError) console.log(repairsError)
-    if (!repairsData) return <div>Loading...</div>
-
-    // Rename the retrieved books for specificity later
-    let repairs: Repair[] = repairsData
-
+    const { data: materials, error: materialsError } = useSWR<Material[], Error>('/api/materials')
     if (materialsError) console.log(materialsError)
-    if (!materialsData) return <div>Loading...</div>
-
-    // Rename the retrieved books for specificity later
-    let materials: Material[] = materialsData
 
     /**
      * Submit data to the server upon pressing the submit button in the form

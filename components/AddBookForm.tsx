@@ -9,7 +9,7 @@ import FormCancelButton from './FormCancelButton'
  * 
  * @returns HTML form for adding a book to the database, along with submit and cancel buttons
  */
-export default function AddBookForm() {
+export default function AddBookForm({ buttonText = "Add Book"}) {
 
     // Create state for the attributes of a book
     const [title, setTitle] = useState('')
@@ -34,11 +34,8 @@ export default function AddBookForm() {
     const { mutate } = useSWRConfig()
 
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
-    const { data, error } = useSWR<Owner[], Error>('/api/owners')
+    const { data: owners, error } = useSWR<Owner[], Error>('/api/owners')
     if (error) console.log(error)
-    
-    // Rename the retrieved owners for specificity later
-    let owners: Owner[] = data
 
     // Create array of the binding type options to be used in the FormSelectInput component
     let bindingTypeOptions: object[] =  [{"display": "Sewn", "store": "SEWN"}, {"display": "Perfect", "store": "PERFECT"}]
@@ -110,7 +107,7 @@ export default function AddBookForm() {
     }
 
     return (
-        <div className="mt-16 w-96">
+        <div className="mt-16">
             <form
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}
@@ -226,7 +223,7 @@ export default function AddBookForm() {
                     requiredInputs={ [title, author, bindingType, received, ownerId] }
                     requiredDates={ [receivedValid] }
                     dateValids={ [receivedValid, returnedValid] }
-                    text="Add Book"
+                    text={ buttonText }
                 />
 
                 <FormCancelButton

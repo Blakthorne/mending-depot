@@ -20,22 +20,12 @@ export default function AddRepairForm() {
     const { mutate } = useSWRConfig()
 
     // Retrieve the books table to get the book names and ids to be used as the foreign key in the repairs table
-    const { data: booksData, error: booksError } = useSWR<Book[], Error>('/api/books')
+    const { data: books, error: booksError } = useSWR<Book[], Error>('/api/books')
+    if (booksError) console.log(booksError)
 
     // Retrieve the repairtypes table to get the repair type names and ids to be used as the foreign key in the repairs table
-    const { data: repairTypesData, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes')
-
-    if (booksError) console.log(booksError)
-    if (!booksData) return <div>Loading...</div>
-
-    // Rename the retrieved books for specificity later
-    let books: Book[] = booksData
-
+    const { data: repairTypes, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes')
     if (repairTypesError) console.log(repairTypesError)
-    if (!repairTypesData) return <div>Loading...</div>
-
-    // Rename the retrieved books for specificity later
-    let repairTypes: RepairType[] = repairTypesData
 
     /**
      * Submit data to the server upon pressing the submit button in the form
