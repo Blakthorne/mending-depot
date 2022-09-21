@@ -10,13 +10,22 @@ function If(props) {
     return props.condition ? <>{props.children}</> : null;
 }
 
+function createNewSpine(props) {
+    return (
+        <div>
+
+        </div>
+    )
+}
+
 function NewRepair() {
 
     // Create state for stage of the new repair process
-    const [stage, setStage] = useState('book')
+    const [stage, setStage] = useState('newRepairs')
 
     // Create state for the specific repairs needed
-    const [newRepairs, setNewRepairs] = useState([])
+    const [newRepairTypes, setNewRepairTypes] = useState([])
+    const [newRepairsInfo, setNewRepairsInfo] = useState([])
 
     // Create state for the attributes of a book
     const [title, setTitle] = useState('')
@@ -93,7 +102,7 @@ function NewRepair() {
      * 
      * @param {React.FormEvent<HTMLFormElement>} e The event provided when the submit button is pressed
      */
-     const submitNumRepairsData = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+     const submitNewRepairsData = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
 
         // Prevent the browser from reloading the whole page
         e.preventDefault()
@@ -163,6 +172,30 @@ function NewRepair() {
     const toPrevStep = () => {
         if (stage === 'book') setStage('newRepairs')
         if (stage === 'newRepairs') setStage('book')
+    }
+
+    const addNewRepairType = (newRepairType) => {
+        setNewRepairTypes(repairTypes => repairTypes.concat(newRepairType))
+        console.log(newRepairType)
+        console.log(newRepairTypes)
+    }
+
+    const addRepairForm = () => {
+        // document.getElementById("repairForm").appendChild(document.createElement("div")
+        // let newForm = document.createElement("div");
+        // document.create
+        // newForm = (
+        //     <FormSelectInput
+        //         onChange={(value) => addNewRepairType(value)}
+        //         input={ repairTypeId }
+        //         inputId={ "Repair Type" }
+        //         options={ repairTypes }
+        //         displayKey={ "repairTypeName"}
+        //         storeKey={ "id" }
+        //         required={ true }
+        //     />
+        // )
+        // ))
     }
 
     return (
@@ -287,23 +320,29 @@ function NewRepair() {
                         </div>
                         <div className="m-auto">
                             <form
+                                id="repairForm"
                                 autoComplete="off"
-                                onSubmit={(event) => submitNumRepairsData(event)}
+                                onSubmit={(event) => submitNewRepairsData(event)}
                             >
-                                
-                                <FormSelectInput
-                                    onChange={(value) => setRepairTypeId(value)}
-                                    input={ repairTypeId }
-                                    inputId={ "Repair Type" }
-                                    options={ repairTypes }
-                                    displayKey={ "repairTypeName"}
-                                    storeKey={ "id" }
-                                    required={ true }
-                                />
+                                <div>
+                                    <FormSelectInput
+                                        onChange={(value) => setRepairTypeId(value)}
+                                        input={ repairTypeId }
+                                        inputId={ "Repair Type" }
+                                        options={ repairTypes }
+                                        displayKey={ "repairTypeName"}
+                                        storeKey={ "id" }
+                                        required={ true }
+                                    />
+                                </div>
+
+                                <If condition={repairTypeId === '0252d235-e96c-42c4-b06d-c8278f9ee51a'}>
+                                    
+                                </If>
 
                                 <FormSubmitButton
                                     requiredInputs={ [repairTypeId] }
-                                    text="Save Repair and Continue"
+                                    text="Save Repair"
                                 />
 
                                 <FormCancelButton
@@ -311,6 +350,19 @@ function NewRepair() {
                                     cancelClick={() => cancelRepairTypeInputs()}
                                 />
                             </form>
+
+
+                            <button
+                                    className="block mx-auto mt-16"
+                                    onClick={() => addRepairForm()}
+                                >
+                                    Add Another Repair
+                                </button>
+                                <button
+                                    className="block mx-auto mt-8"
+                                >
+                                    Finish
+                            </button>
                         </div>
                     </If>
                 </div>

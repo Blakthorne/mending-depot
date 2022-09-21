@@ -11,21 +11,26 @@ import FormSelectInput from './FormSelectInput'
  */
 export default function AddMaterialForm() {
 
-    // Create state for the attributes of a repair
+    // Create state for the attributes of a material
     const [materialName, setMaterialName] = useState('')
     const [units, setUnits] = useState(undefined)
     const [unitCost, setUnitCost] = useState('')
     const [manufacturerId, setManufacturerId] = useState('')
+    const [repairTypeId, setRepairTypeId] = useState('')
 
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
     // Retrieve the manufacturers table to get the manufacturer names and ids to be used as the foreign key in the material table
-    const { data: manufacturers, error } = useSWR<Manufacturer[], Error>('/api/manufacturers')
-    if (error) console.log(error)
+    const { data: manufacturers, error: manufacturersError } = useSWR<Manufacturer[], Error>('/api/manufacturers')
+    if (manufacturersError) console.log(manufacturersError)
+
+    // Retrieve the repair types table to get the repair type names and ids to be used as a key in the material for repair type table
+    const { data: repairTypesData, error: repairTypesError } = useSWR<Book[], Error>('/api/repairtypes')
+    if (repairTypesError) console.log(repairTypesError)
 
     // Create array of the unit options to be used in the FormSelectInput component
-    let unitOptions =  [{"display": "Inches", "store": "INCHES"}, {"display": "Inches Squared", "store": "INCHESSQUARED"}, {"display": "Centimeters", "store": "CENTIMETERS"}, {"display": "Centimeters Squared", "store": "CENTIMETERSSQUARED"}] 
+    let unitOptions =  [{"display": "Inches", "store": "INCHES"}, {"display": "Inches Squared", "store": "INCHESSQUARED"}, {"display": "Centimeters", "store": "CENTIMETERS"}, {"display": "Centimeters Squared", "store": "CENTIMETERSSQUARED"}]
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -40,11 +45,21 @@ export default function AddMaterialForm() {
         try {
             // Don't submit id because of default creation by the database
             const body: Material = { materialName, units, unitCost, manufacturerId }
-            await fetch('/api/materials', {
+            const newMaterial: Material = await fetch('/api/materials', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
+            .then(newMaterial => newMaterial.json())
+
+            const materialId = newMaterial.id
+
+            await fetch('/api/materialforrepairtype', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ repairTypeId, materialId }),
+            })
+
             cancelInputs()
             clearErrors()
 
@@ -123,6 +138,16 @@ export default function AddMaterialForm() {
                     inputId={ "Manufacturer" }
                     options={ manufacturers }
                     displayKey={ "manufacturerName"}
+                    storeKey={ "id" }
+                    required={ true }
+                />
+
+                <FormSelectInput
+                    onChange={(value) => setRepairTypeId(value)}
+                    input={ repairTypeId }
+                    inputId={ "Associated Repair Type" }
+                    options={ repairTypesData }
+                    displayKey={ "repairTypeName"}
                     storeKey={ "id" }
                     required={ true }
                 />

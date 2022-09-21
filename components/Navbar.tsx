@@ -30,6 +30,11 @@ export default function Navbar() {
 							Material For Repairs
 						</a>
 					</Link>
+					<Link href="/material-for-repair-type">
+						<a className="hover:text-gray-100">
+							Material For Repair Types
+						</a>
+					</Link>
 					<Link href="/inventory-transactions">
 						<a className="hover:text-gray-100">
 							Inventory Transactions
