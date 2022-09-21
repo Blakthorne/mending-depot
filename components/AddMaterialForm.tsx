@@ -9,7 +9,7 @@ import FormSelectInput from './FormSelectInput'
  * 
  * @returns HTML form for adding a material to the database, along with submit and cancel buttons
  */
-export default function AddMaterialForm() {
+function AddMaterialForm() {
 
     // Create state for the attributes of a material
     const [materialName, setMaterialName] = useState('')
@@ -17,6 +17,9 @@ export default function AddMaterialForm() {
     const [unitCost, setUnitCost] = useState('')
     const [manufacturerId, setManufacturerId] = useState('')
     const [repairTypeId, setRepairTypeId] = useState('')
+
+    // Create state for the repair type form inputs
+    const [repairTypesInputs, setRepairTypeInputs] = useState([''])
 
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
@@ -26,7 +29,7 @@ export default function AddMaterialForm() {
     if (manufacturersError) console.log(manufacturersError)
 
     // Retrieve the repair types table to get the repair type names and ids to be used as a key in the material for repair type table
-    const { data: repairTypesData, error: repairTypesError } = useSWR<Book[], Error>('/api/repairtypes')
+    const { data: repairTypesData, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes')
     if (repairTypesError) console.log(repairTypesError)
 
     // Create array of the unit options to be used in the FormSelectInput component
@@ -52,6 +55,7 @@ export default function AddMaterialForm() {
             })
             .then(newMaterial => newMaterial.json())
 
+            // Get materialId to submit in API request to materialforrepairtype
             const materialId = newMaterial.id
 
             await fetch('/api/materialforrepairtype', {
@@ -98,6 +102,13 @@ export default function AddMaterialForm() {
         setManufacturerId('')
     }
 
+    /**
+     * Add another input field for adding another repair type associated with the material
+     */
+    const addAssociatedRepairInput = () => {
+        setRepairTypeInputs(repairTypes => repairTypes.concat(''))
+    }
+
     return (
         <div className="mt-16 w-96">
             <form
@@ -142,15 +153,24 @@ export default function AddMaterialForm() {
                     required={ true }
                 />
 
-                <FormSelectInput
-                    onChange={(value) => setRepairTypeId(value)}
-                    input={ repairTypeId }
-                    inputId={ "Associated Repair Type" }
-                    options={ repairTypesData }
-                    displayKey={ "repairTypeName"}
-                    storeKey={ "id" }
-                    required={ true }
-                />
+                {repairTypesInputs.map(input => (
+                    <FormSelectInput
+                        onChange={(value) => setRepairTypeId(value)}
+                        input={ input }
+                        inputId={ "Associated Repair Type" }
+                        options={ repairTypesData }
+                        displayKey={ "repairTypeName"}
+                        storeKey={ "id" }
+                        required={ true }
+                    />
+                ))}
+                
+                <button
+                    className="block mx-auto mb-12"
+                    onClick={() => addAssociatedRepairInput()}
+                >
+                    Add Another Associated Repair Type
+                </button>
 
                 <FormSubmitButton
                     requiredInputs={ [materialName, units, unitCost, manufacturerId] }
@@ -165,3 +185,5 @@ export default function AddMaterialForm() {
         </div>
     )
 }
+
+export default AddMaterialForm

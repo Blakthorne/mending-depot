@@ -355,13 +355,14 @@ function NewRepair() {
                             <button
                                     className="block mx-auto mt-16"
                                     onClick={() => addRepairForm()}
-                                >
-                                    Add Another Repair
-                                </button>
-                                <button
-                                    className="block mx-auto mt-8"
-                                >
-                                    Finish
+                            >
+                                Add Another Repair
+                            </button>
+                            
+                            <button
+                                className="block mx-auto mt-8"
+                            >
+                                Finish
                             </button>
                         </div>
                     </If>
