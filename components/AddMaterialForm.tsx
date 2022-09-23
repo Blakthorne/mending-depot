@@ -16,13 +16,14 @@ function AddMaterialForm() {
     const [units, setUnits] = useState(undefined)
     const [unitCost, setUnitCost] = useState('')
     const [manufacturerId, setManufacturerId] = useState('')
-    const [repairTypeId, setRepairTypeId] = useState('')
 
     // Create state for the repair type form inputs
     const [repairTypesInputs, setRepairTypeInputs] = useState([''])
 
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
+
+    let repairNum = 0
 
     // Retrieve the manufacturers table to get the manufacturer names and ids to be used as the foreign key in the material table
     const { data: manufacturers, error: manufacturersError } = useSWR<Manufacturer[], Error>('/api/manufacturers')
@@ -46,22 +47,11 @@ function AddMaterialForm() {
         e.preventDefault()
 
         try {
-            // Don't submit id because of default creation by the database
-            const body: Material = { materialName, units, unitCost, manufacturerId }
-            const newMaterial: Material = await fetch('/api/materials', {
+            const body = { materialName, units, unitCost, manufacturerId, repairTypesInputs }
+            await fetch('/api/materials/process', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
-            })
-            .then(newMaterial => newMaterial.json())
-
-            // Get materialId to submit in API request to materialforrepairtype
-            const materialId = newMaterial.id
-
-            await fetch('/api/materialforrepairtype', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ repairTypeId, materialId }),
             })
 
             cancelInputs()
@@ -100,13 +90,26 @@ function AddMaterialForm() {
         setUnits('')
         setUnitCost('')
         setManufacturerId('')
+        setRepairTypeInputs([''])
     }
 
     /**
      * Add another input field for adding another repair type associated with the material
      */
     const addAssociatedRepairInput = () => {
-        setRepairTypeInputs(repairTypes => repairTypes.concat(''))
+        setRepairTypeInputs(repairTypes => [...repairTypes, ''])
+    }
+
+    /**
+     * Update the repairTypesInputs state with new information selected by the user
+     */
+    const updateRepairTypeInputs = (value, index) => {
+        
+        // Use the ellipses syntax to copy the array and tell React that the state reference has changed
+        let curRepairsArray = [...repairTypesInputs]
+
+        curRepairsArray[index] = value
+        setRepairTypeInputs(curRepairsArray)
     }
 
     return (
@@ -153,24 +156,25 @@ function AddMaterialForm() {
                     required={ true }
                 />
 
-                {repairTypesInputs.map(input => (
+                {repairTypesInputs.map((input, index) => (
                     <FormSelectInput
-                        onChange={(value) => setRepairTypeId(value)}
+                        onChange={(value) => updateRepairTypeInputs(value, index)}
                         input={ input }
                         inputId={ "Associated Repair Type" }
                         options={ repairTypesData }
                         displayKey={ "repairTypeName"}
                         storeKey={ "id" }
                         required={ true }
+                        key={ String(index) }
                     />
                 ))}
                 
-                <button
+                <input
                     className="block mx-auto mb-12"
                     onClick={() => addAssociatedRepairInput()}
-                >
-                    Add Another Associated Repair Type
-                </button>
+                    type="button"
+                    value="Add Another Associated Repair Type"
+                />
 
                 <FormSubmitButton
                     requiredInputs={ [materialName, units, unitCost, manufacturerId] }

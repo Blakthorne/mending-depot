@@ -76,7 +76,7 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
                 id={ inputId }
             >
                 <option hidden></option>
-                {finalOptions != null ? finalOptions.map(selectOption => (
+                {finalOptions !== null ? finalOptions.map(selectOption => (
                     <option
                         key={selectOption[storeKey]}
                         value={selectOption[storeKey]}
