@@ -6,32 +6,10 @@ import Backdrop from '@mui/material/Backdrop';
 
 function MaterialForRepairs() {
 
-    // Create types for organizing and accessing data from the api
-    type MaterialNameEntry = {
-        materialName: string;
-    }
-
-    type MaterialEntry = {
-        material: MaterialNameEntry;
-    }
-
-    type DataEntry = {
-        repairTypeName: string;
-        materials: MaterialEntry[];
-    }
-
-    type Pair = {
-        newType: string;
-        newMaterial: string;
-    }
-
     const fetcher = url => fetch(url).then(r => r.json())
 
-    // Pairs of repairTypeNames and materialNames for display together in a table
-    let pairs: Pair[] = []
-
     // Retrieve the table requested by the parent component
-    const { data, error } = useSWR<DataEntry[], Error>('/api/materialforrepairtype/readable', fetcher)
+    const { data, error } = useSWR<object[], Error>('/api/materialforrepairtype/readable', fetcher)
     if (error) console.log(error)
     if (!data) {
         return (
@@ -44,30 +22,7 @@ function MaterialForRepairs() {
         )
     }
     
-    if (data[0] == undefined) return <div>There is no data in this table</div>
-
-    // Add pairs of repairTypeName and materialName to the pairs array
-    if (data) {
-        for (let repairType of data) {
-            let prevRepairType: string = ''
-            for (let materialEntry of repairType.materials) {
-                let newType: string
-
-                // Only print out a new repairTypeName if it is different from the one previous
-                // This makes the table a lot cleaner and readable
-                if (repairType.repairTypeName !== prevRepairType) {
-                    newType = repairType.repairTypeName
-                }
-                else newType = ''
-
-                let newMaterial = materialEntry.material.materialName
-
-                pairs.push({newType, newMaterial})
-
-                prevRepairType = repairType.repairTypeName
-            }
-        }
-    }
+    if (data[0] == undefined) return <div className="mt-16">There is no data in this table</div>
 
     // Used for creating unique html keys in the table cells
     let cellKey = 0
@@ -94,7 +49,7 @@ function MaterialForRepairs() {
                                 </div>
                         </div>
                         <div className="table-row-group">
-                            {pairs.map(pair => (
+                            {data.map(pair => (
                                 <div key={(rowKey += 1).toString()} className="table-row">
                                     {Object.values(pair)
                                         .map(cell => (
