@@ -41,6 +41,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         })
 
         const materialForRepairTypes = await createMaterialForRepairType(material.id, repairTypesInputs)
-        res.status(200).json(materialForRepairTypes)
+        res.status(200).json({ material, materialForRepairTypes })
     }
 }

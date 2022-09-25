@@ -26,7 +26,7 @@ export default function Table({ table }: TableComponent) {
         </Backdrop>
         )
     }
-    if (data[0] == undefined) return <div>There is no data in this table</div>
+    if (data[0] == undefined) return <div className="mt-16">There is no data in this table</div>
 
     // Used for creating unique html keys in the table cells
     let cellKey = 0
