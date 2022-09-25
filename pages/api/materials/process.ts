@@ -2,6 +2,12 @@ import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
 
+/**
+ * Create new entries in the materialForRepairType table in a transaction
+ * 
+ * @param materialId 
+ * @param repairsArray 
+ */
 async function createMaterialForRepairType(materialId: string, repairsArray: string[]) {
     return await prisma.$transaction(async (tx: PrismaClient) => {
         for (let repair of repairsArray) {
