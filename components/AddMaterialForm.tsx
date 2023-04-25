@@ -23,8 +23,6 @@ function AddMaterialForm() {
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
-    let repairNum = 0
-
     // Retrieve the manufacturers table to get the manufacturer names and ids to be used as the foreign key in the material table
     const { data: manufacturers, error: manufacturersError } = useSWR<Manufacturer[], Error>('/api/manufacturers')
     if (manufacturersError) console.log(manufacturersError)
@@ -59,6 +57,7 @@ function AddMaterialForm() {
 
             // Update the UI wherever this API call is referenced
             mutate('/api/materials')
+            mutate('api/materialforrepairtype')
         } catch (error) {
             console.error(error)
         }

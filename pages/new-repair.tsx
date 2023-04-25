@@ -6,6 +6,13 @@ import FormSelectInput from '../components/FormSelectInput'
 import FormSubmitButton from '../components/FormSubmitButton'
 import FormCancelButton from '../components/FormCancelButton'
 
+type MaterialForRepairType = {
+    repairTypeName: string;
+    repairTypeId: string;
+    materialName: string;
+    materialId: string;
+}
+
 function If(props) {
     return props.condition ? <>{props.children}</> : null;
 }
@@ -59,6 +66,10 @@ function NewRepair() {
     // Retrieve the repairtypes table to get the repair type names and ids to be used as the foreign key in the repairs table
     const { data: repairTypes, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes', fetcher)
     if (repairTypesError) console.log(repairTypesError)
+
+    // Retrieve the materials for repair type readable table to get the repair type and material names for material selection
+    const { data: materials, error: materialsError } = useSWR<object[], Error>('/api/materialforrepairtype/pairs', fetcher)
+    if (materialsError) console.log(materialsError)
 
     // Create array of the binding type options to be used in the FormSelectInput component
     let bindingTypeOptions: object[] =  [{"display": "Sewn", "store": "SEWN"}, {"display": "Perfect", "store": "PERFECT"}]
@@ -195,6 +206,15 @@ function NewRepair() {
 
         curRepairsArray[index] = value
         setRepairForms(curRepairsArray)
+    }
+
+    /**
+     * Create a list containing only materials for the currently selected repair
+     */
+    const getMaterialsList = (repairTypeId: string): object[] => {
+        if (materials) {
+            return materials.filter((material: MaterialForRepairType) => material.repairTypeId === repairTypeId)
+        }
     }
 
     const toPrevStep = (): void => {
@@ -356,11 +376,21 @@ function NewRepair() {
 
                                         <FormTextInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineWidth"]: value })}
-                                            placeholder={ "'8'" }
+                                            placeholder={ "'2'" }
                                             input={ repairSpecs.spineWidth }
                                             inputId={ "Spine Width" }
                                             constraints={ ["decimal"] }
                                             errorMessage={ "Please only enter a decimal value here." }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineMaterial"]: value })}
+                                            input={ repairSpecs.spineMaterial }
+                                            inputId={ "Spine Material" }
+                                            options={ getMaterialsList(repairForms[index]) }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
                                             required={ true }
                                         />
                                     </If>
@@ -376,7 +406,6 @@ function NewRepair() {
                                     />
                                 </form>
                             ))}
-
 
                             <button
                                     className="block mx-auto mt-16"

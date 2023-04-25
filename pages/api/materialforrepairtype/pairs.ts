@@ -17,7 +17,9 @@ type DataEntry = {
 
 type Pair = {
     repairTypeName: string;
+    repairTypeId: string;
     materialName: string;
+    materialId: string;
 }
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
@@ -30,11 +32,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         const repairTypeMaterials = await prisma.repairType.findMany({
             select: {
                 repairTypeName: true,
+                id: true,
                 materials: {
                     select: {
                         material: {
                             select: {
                                 materialName: true,
+                                id: true,
                             },
                         },
                     },
@@ -45,18 +49,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         for (let repairType of repairTypeMaterials) {
             let prevRepairType: string = ''
             for (let materialEntry of repairType.materials) {
-                let repairTypeName: string
-
-                // Only print out a new repairTypeName if it is different from the one previous
-                // This makes the table a lot cleaner and readable
-                if (repairType.repairTypeName !== prevRepairType) {
-                    repairTypeName = repairType.repairTypeName
-                }
-                else repairTypeName = ''
-
+                let repairTypeName = repairType.repairTypeName
+                let repairTypeId = repairType.id
                 let materialName = materialEntry.material.materialName
+                let materialId = materialEntry.material.id
 
-                pairs.push({repairTypeName, materialName})
+
+                pairs.push({repairTypeName, repairTypeId, materialName, materialId})
 
                 prevRepairType = repairType.repairTypeName
             }
