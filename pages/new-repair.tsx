@@ -403,6 +403,7 @@ function NewRepair() {
                                     <FormCancelButton
                                         clearInvalids={() => clearErrors()}
                                         cancelClick={() => cancelRepairForm(index)}
+                                        value="Cancel Repair"
                                     />
                                 </form>
                             ))}
