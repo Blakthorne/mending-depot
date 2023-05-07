@@ -414,6 +414,36 @@ function NewRepair() {
                                         />
 
                                         <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineLiningMaterial"]: value })}
+                                            input={ repairSpecs.spineLiningMaterial }
+                                            inputId={ "Spine Lining Material" }
+                                            options={ getMaterialsList(repairForms[index]) }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["caseLiningMaterial"]: value })}
+                                            input={ repairSpecs.caseLiningMaterial }
+                                            inputId={ "Case Lining Material" }
+                                            options={ getMaterialsList(repairForms[index]) }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["bookRibbonMaterial"]: value })}
+                                            input={ repairSpecs.bookRibbonMaterial }
+                                            inputId={ "Book Ribbon" }
+                                            options={ getMaterialsList(repairForms[index]) }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["glueMaterial"]: value })}
                                             input={ repairSpecs.glueMaterial }
                                             inputId={ "Glue Material" }
