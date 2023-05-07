@@ -37,6 +37,12 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
     let idError: Element
     let idField: Element
 
+    // Ensure each input starts out as a controlled input by
+    // preventing the initial value of the input-value from being undefined
+    if (!input) {
+        input = ''
+    }
+
     /**
      * Make the error message in the created in the {@link FormInputErrorMessage} component visible and
      * make the border of the input element red to indicate an error
