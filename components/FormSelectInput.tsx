@@ -54,7 +54,7 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
                 }
             }
 
-            // If there weren't any options added finalOptions, reset it to null for display purposes
+            // If there weren't any options added to finalOptions, reset it to null for display purposes
             if (finalOptions.length == 0) finalOptions = null
         }
     }
