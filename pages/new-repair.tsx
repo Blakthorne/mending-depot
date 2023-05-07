@@ -395,11 +395,6 @@ function NewRepair() {
                                         />
                                     </If>
 
-                                    <FormSubmitButton
-                                        requiredInputs={ [repairForms[index]] }
-                                        text="Save Repair"
-                                    />
-
                                     <FormCancelButton
                                         clearInvalids={() => clearErrors()}
                                         cancelClick={() => cancelRepairForm(index)}
