@@ -72,11 +72,19 @@ model Material {
 	inventoryTransactions	InventoryTransaction[]
 	manufacturer	Manufacturer	@relation(fields: [manufacturerId], references: [id])
 	manufacturerId	String
+	materialType	MaterialType	@relation(fields: [materialTypeId], references: [id])
+	materialTypeId	String
 }
 
 model Manufacturer {
 	id				String		@id @default(uuid())
 	manufacturerName	String	@unique
+	materials		Material[]
+}
+
+model MaterialType {
+	id				String		@id @default(uuid())
+	materialTypeName	String	@unique
 	materials		Material[]
 }
 
