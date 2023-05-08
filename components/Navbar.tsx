@@ -57,6 +57,11 @@ export default function Navbar() {
 							Providers
 						</a>
 					</Link>
+					<Link href="/material-types">
+						<a className="hover:text-gray-100">
+							Material Types
+						</a>
+					</Link>
 				</div>
 				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
 					<Link href="/books">

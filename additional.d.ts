@@ -68,6 +68,12 @@ type Material = {
     manufacturerId: string;
 }
 
+// Create type structure for a material type entry
+type MaterialType = {
+    id?: string;
+    materialTypeName: string;
+}
+
 // Create type structure for a provider entry
 type Provider = {
     id?: string;
