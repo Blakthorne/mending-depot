@@ -20,11 +20,6 @@ export default function Navbar() {
 							Repairs
 						</a>
 					</Link>
-					<Link href="/replacement-covers">
-						<a className="hover:text-gray-100">
-							Replacement Covers
-						</a>
-					</Link>
 					<Link href="/material-for-repair">
 						<a className="hover:text-gray-100">
 							Material For Repairs
