@@ -6,28 +6,28 @@ import FormCancelButton from './FormCancelButton'
 
 /**
  * 
- * @returns HTML form for adding a material type to the database, along with submit and cancel buttons
+ * @returns HTML form for adding a binding type to the database, along with submit and cancel buttons
  */
-export default function AddMaterialTypeForm() {
+export default function AddBindingTypeForm() {
 
-    // Create state for the attribute of an material type
-    const [materialTypeName, setMaterialTypeName] = useState('')
+    // Create state for the attribute of an binding type
+    const [bindingTypeName, setBindingTypeName] = useState('')
 
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
-    // Stores the names of the material types to be used in the
+    // Stores the names of the binding types to be used in the
     // uniqueness check of the FormSubmitButton component
-    let materialTypes: string[] = []
+    let bindingTypes: string[] = []
 
-    // Retrieve the material types for use in the materialTypes[] for the uniqueness check
-    const { data, error } = useSWR<MaterialType[], Error>('/api/materialtypes')
+    // Retrieve the bidning types for use in the bindingTypes[] for the uniqueness check
+    const { data, error } = useSWR<BindingType[], Error>('/api/bindingtypes')
     if (error) console.log(error)
     else {
 
-        // Extract all the names of the material types
+        // Extract all the names of the binding types
         for (const entry in data) {
-            materialTypes.push(data[entry].materialTypeName)
+            bindingTypes.push(data[entry].bindingTypeName)
         }
     }
 
@@ -43,8 +43,8 @@ export default function AddMaterialTypeForm() {
 
         try {
             // Don't submit id because of default creation by the database
-            const body: MaterialType = { materialTypeName }
-            await fetch('/api/materialtypes', {
+            const body: BindingType = { bindingTypeName }
+            await fetch('/api/bindingtypes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
@@ -53,7 +53,7 @@ export default function AddMaterialTypeForm() {
             clearErrors()
 
             // Update the UI wherever this API call is referenced
-            mutate('/api/materialtypes')
+            mutate('/api/bindingtypes')
         } catch (error) {
             console.error(error)
         }
@@ -81,7 +81,7 @@ export default function AddMaterialTypeForm() {
      * Clear all the form inputs
      */
     const cancelInputs = (): void => {
-        setMaterialTypeName('')
+        setBindingTypeName('')
     }
 
     return (
@@ -92,20 +92,20 @@ export default function AddMaterialTypeForm() {
             >
 
                 <FormTextInput
-                    onChange={(value) => setMaterialTypeName(value)}
-                    placeholder={ "'Japanese Paper'" }
-                    input={ materialTypeName }
-                    inputId={ "Material Type" }
-                    uniquesArray={ materialTypes }
+                    onChange={(value) => setBindingTypeName(value)}
+                    placeholder={ "'Smyth Sewn'" }
+                    input={ bindingTypeName }
+                    inputId={ "Binding Type" }
+                    uniquesArray={ bindingTypes }
                     constraints={ ["unique"] }
-                    errorMessage={ "That repair type already exists. Please enter a new material type." }
+                    errorMessage={ "That binding type already exists. Please enter a new binding type." }
                     required={ true }
                 />
 
                 <FormSubmitButton
-                    requiredInputs={ [materialTypeName] }
-                    uniques={ [{"key": materialTypeName, "values": materialTypes}] }
-                    text="Add Material Type"
+                    requiredInputs={ [bindingTypeName] }
+                    uniques={ [{"key": bindingTypeName, "values": bindingTypes}] }
+                    text="Add Binding Type"
                 />
 
                 <FormCancelButton

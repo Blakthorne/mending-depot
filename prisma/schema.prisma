@@ -24,7 +24,6 @@ model Book {
 	publisher		String?
 	yearPublished	Int?
 	numberOfPages	Int?
-	bindingType		BindingType
 	received		DateTime	@db.Date
 	returned		DateTime?	@db.Date
 	bookMaterialsCost	Float?
@@ -32,6 +31,14 @@ model Book {
 	owner			Owner		@relation(fields: [ownerId], references: [id])
 	ownerId			String
 	repairs			Repair[]
+	bindingType		BindingType	@relation(fields: [bindingTypeId], references: [id])
+	bindingTypeId	String
+}
+
+model BindingType {
+	id				String		@id	@default(uuid())
+	bindingTypeName	String
+	books			Book[]
 }
 
 model Repair {
@@ -104,11 +111,6 @@ model Provider {
 }
 
 // Change types in additional.d.ts when changing these enums
-enum BindingType {
-	SEWN
-	PERFECT
-}
-
 enum CoverType {
 	FULL
 	QUARTER

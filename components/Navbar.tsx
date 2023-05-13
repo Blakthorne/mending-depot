@@ -74,6 +74,11 @@ export default function Navbar() {
 							Repair Types
 						</a>
 					</Link>
+					<Link href="/binding-types">
+						<a className="hover:text-gray-100">
+							Binding Types
+						</a>
+					</Link>
 				</div>
 			</div>
 		</div>

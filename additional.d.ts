@@ -1,5 +1,3 @@
-type BindingType = 'SEWN' | 'PERFECT';
-
 type Unit = "INCHES" | "INCHESSQUARED" | "CENTIMETERS" | "CENTIMETERSSQUARED"
 
 type CoverType = "FULL" | "QUARTER" | "THREEQUARTER"
@@ -28,6 +26,11 @@ type Owner = {
     ownerName: string;
 }
 
+// Create type structure for a binding type entry
+type BindingType = {
+    id?: string;
+    bindingTypeName: string;
+}
 
 // Create type structure for an inventory transaction entry
 type InventoryTransaction = {
@@ -92,13 +95,4 @@ type Repair = {
 type RepairType = {
     id?: string;
     repairTypeName: string;
-}
-
-// Create type structure for a replacement cover entry
-type ReplacementCover = {
-    id?: string;
-    coverType: CoverType | null;
-    spineMaterial: CoverMaterial | null;
-    sideMaterial: CoverMaterial | null;
-    repairId: string;
 }

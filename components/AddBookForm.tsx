@@ -37,8 +37,12 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     const { data: owners, error } = useSWR<Owner[], Error>('/api/owners')
     if (error) console.log(error)
 
+    // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
+    const { data: bindingTypes, error: bindingTypeError } = useSWR<BindingType[], Error>('/api/owners')
+    if (bindingTypeError) console.log(bindingTypeError)
+
     // Create array of the binding type options to be used in the FormSelectInput component
-    let bindingTypeOptions: object[] =  [{"display": "Sewn", "store": "SEWN"}, {"display": "Perfect", "store": "PERFECT"}]
+    // let bindingTypeOptions: object[] =  [{"display": "Sewn", "store": "SEWN"}, {"display": "Perfect", "store": "PERFECT"}]
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -161,9 +165,9 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
                     onChange={(value) => setBindingType(value)}
                     input={ bindingType }
                     inputId={ "Binding Type" }
-                    options={ bindingTypeOptions }
-                    displayKey={ "display"}
-                    storeKey={ "store" }
+                    options={ bindingTypes }
+                    displayKey={ "bindingTypeName"}
+                    storeKey={ "id" }
                     required={ true }
                 />
 
