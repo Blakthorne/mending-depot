@@ -39,20 +39,10 @@ model Repair {
 	repairMaterialsCost	Float?
 	book			Book		@relation(fields: [bookId], references: [id])
 	bookId			String
-	replacementCover	ReplacementCover?
 	materials		MaterialForRepair[]
 	repairType		RepairType	@relation(fields: [repairTypeId], references: [id])
 	repairTypeId	String
 
-}
-
-model ReplacementCover {
-	id				String		@id @default(uuid())
-	coverType		CoverType?
-	spineMaterial	CoverMaterial?
-	sideMaterial	CoverMaterial?
-	repair			Repair		@relation(fields: [repairId], references: [id])
-	repairId		String		@unique
 }
 
 model RepairType {
