@@ -5,7 +5,6 @@ import FormTextInput from '../components/FormTextInput'
 import FormSelectInput from '../components/FormSelectInput'
 import FormSubmitButton from '../components/FormSubmitButton'
 import FormCancelButton from '../components/FormCancelButton'
-import { BindingType, CoverType } from '@prisma/client'
 
 type MaterialForRepairType = {
     repairTypeName: string;

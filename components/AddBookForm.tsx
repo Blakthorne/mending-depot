@@ -38,7 +38,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     if (error) console.log(error)
 
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
-    const { data: bindingTypes, error: bindingTypeError } = useSWR<BindingType[], Error>('/api/owners')
+    const { data: bindingTypes, error: bindingTypeError } = useSWR<BindingType[], Error>('/api/bindingtypes')
     if (bindingTypeError) console.log(bindingTypeError)
 
     // Create array of the binding type options to be used in the FormSelectInput component
