@@ -71,25 +71,29 @@ function NewRepair() {
     const { data: materials, error: materialsError } = useSWR<object[], Error>('/api/materialforrepairtype/pairs', fetcher)
     if (materialsError) console.log(materialsError)
 
+    // Retrieve the binding types
+    const { data: bindingTypes, error: bindingTypesError } = useSWR<object[], Error>('/api/bindingtypes', fetcher)
+    if (bindingTypesError) console.log(bindingTypesError)
+
     // Create array of the binding type options to be used in the FormSelectInput component
     // with the format [{"display": "Sewn", "store": "SEWN"}, {"display": "Perfect", "store": "PERFECT"}]
     let bindingTypeOptions: object[] = []
-    for (let curBindType of Object.values(BindingType)) {
-        let curLowerBind = curBindType.toLowerCase()
-        let curBindTypeObj: object = {"display": curLowerBind[0].toUpperCase() + curLowerBind.slice(1), "store": curBindType}
+    // for (let curBindType of Object.values(BindingType)) {
+    //     let curLowerBind = curBindType.toLowerCase()
+    //     let curBindTypeObj: object = {"display": curLowerBind[0].toUpperCase() + curLowerBind.slice(1), "store": curBindType}
 
-        bindingTypeOptions.push(curBindTypeObj)
-    }
+    //     bindingTypeOptions.push(curBindTypeObj)
+    // }
 
     // Create array of the cover type options to be used in the FormSelectInput component
     // with the format [{"display": "Full", "store": "FULL"}, {"display": "Quarter", "store": "QUARTER"}, etc.]
-    let coverTypeOptions: object[] = []
-    for (let curType of Object.values(CoverType)) {
-        let curLower = curType.toLowerCase()
-        let curTypeObj: object = {"display": curLower[0].toUpperCase() + curLower.slice(1), "store": curType}
+    // let coverTypeOptions: object[] = []
+    // for (let curType of Object.values(CoverType)) {
+    //     let curLower = curType.toLowerCase()
+    //     let curTypeObj: object = {"display": curLower[0].toUpperCase() + curLower.slice(1), "store": curType}
 
-        coverTypeOptions.push(curTypeObj)
-    }
+    //     coverTypeOptions.push(curTypeObj)
+    // }
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -314,7 +318,7 @@ function NewRepair() {
                                     onChange={(value) => setBindingType(value)}
                                     input={ bindingType }
                                     inputId={ "Binding Type" }
-                                    options={ bindingTypeOptions }
+                                    options={ bindingTypes }
                                     displayKey={ "display"}
                                     storeKey={ "store" }
                                     required={ true }
@@ -475,7 +479,7 @@ function NewRepair() {
                                             required={ true }
                                         />
 
-                                        <FormSelectInput
+                                        {/* <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["coverType"]: value })}
                                             input={ repairSpecs.coverType }
                                             inputId={ "Cover Type" }
@@ -483,7 +487,7 @@ function NewRepair() {
                                             displayKey={ "display"}
                                             storeKey={ "store" }
                                             required={ true }
-                                        />
+                                        /> */}
 
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineMaterial"]: value })}

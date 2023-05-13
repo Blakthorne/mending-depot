@@ -10,7 +10,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
         // For every book entry in the table, reformat the date entries into the format MM - DD -YYYY
         for (let i = 0; i < books.length; ++i) {
-            let { id, title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }: Book = books[i]
+            let { id, title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }: Book = books[i]
 
             if (received === null) received = ''
             else if (received instanceof Date) {
@@ -24,7 +24,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 returned = returned.slice(5,7) + ' - ' + returned.slice(8,10) + ' - ' + returned.slice(0,4)
             }
 
-            const reformattedBook: Book = { id, title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
+            const reformattedBook: Book = { id, title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }
 
             books[i] = reformattedBook
         }
@@ -32,7 +32,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         res.json(books)
     }
     if (req.method == 'POST') {
-        let { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }: Book = req.body
+        let { title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }: Book = req.body
 
         // Ensure the new entries are in the correct format
         // Cannot use 'else if' on string empty checks for type checking reasons - TypeScript thinks they could still be non-strings
@@ -85,7 +85,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 publisher: publisher,
                 yearPublished: yearPublished,
                 numberOfPages: numberOfPages,
-                bindingType: bindingType,
+                bindingTypeId: bindingTypeId,
                 received: received,
                 returned: returned,
                 bookMaterialsCost: bookMaterialsCost,

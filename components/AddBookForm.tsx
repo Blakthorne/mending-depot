@@ -17,7 +17,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     const [publisher, setPublisher] = useState('')
     const [yearPublished, setYearPublished] = useState('')
     const [numberOfPages, setNumberOfPages] = useState('')
-    const [bindingType, setBindingType] = useState(undefined)
+    const [bindingTypeId, setbindingTypeId] = useState(undefined)
     const [received, setReceived] = useState('')
     const [returned, setReturned] = useState('')
     const [bookMaterialsCost, setBookMaterialsCost] = useState('')
@@ -56,7 +56,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
 
         try {
             // Don't submit id because of default creation by the database
-            const body: Book = { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
+            const body: Book = { title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }
             await fetch('/api/books', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -99,7 +99,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
         setPublisher('')
         setYearPublished('')
         setNumberOfPages('')
-        setBindingType('')
+        setbindingTypeId('')
         setReceived('')
         setReturned('')
         setBookMaterialsCost('')
@@ -162,8 +162,8 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
                 />
 
                 <FormSelectInput
-                    onChange={(value) => setBindingType(value)}
-                    input={ bindingType }
+                    onChange={(value) => setbindingTypeId(value)}
+                    input={ bindingTypeId }
                     inputId={ "Binding Type" }
                     options={ bindingTypes }
                     displayKey={ "bindingTypeName"}
@@ -224,7 +224,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
                 />
 
                 <FormSubmitButton
-                    requiredInputs={ [title, author, bindingType, received, ownerId] }
+                    requiredInputs={ [title, author, bindingTypeId, received, ownerId] }
                     requiredDates={ [receivedValid] }
                     dateValids={ [receivedValid, returnedValid] }
                     text={ buttonText }

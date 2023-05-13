@@ -12,7 +12,7 @@ type Book = {
     publisher: string | null;
     yearPublished: string | number | null;
     numberOfPages: string | number | null;
-    bindingType: BindingType;
+    bindingTypeId: string;
     received: string | Date;
     returned: string | Date | null;
     bookMaterialsCost: string | number | null;
