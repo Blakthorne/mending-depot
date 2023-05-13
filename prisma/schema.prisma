@@ -48,7 +48,6 @@ model Repair {
 model RepairType {
 	id				String		@id @default(uuid())
 	repairTypeName	String		@unique
-	materials		MaterialForRepairType[]
 	repairs			Repair[]
 }
 
@@ -58,7 +57,6 @@ model Material {
 	units			Unit
 	unitCost		Float
 	repairs			MaterialForRepair[]
-	repairTypes		MaterialForRepairType[]
 	inventoryTransactions	InventoryTransaction[]
 	manufacturer	Manufacturer	@relation(fields: [manufacturerId], references: [id])
 	manufacturerId	String
@@ -85,14 +83,6 @@ model MaterialForRepair {
 	materialId		String
 	amountUsed		Float
 	@@id([repairId, materialId])
-}
-
-model MaterialForRepairType {
-	repairType		RepairType	@relation(fields: [repairTypeId], references: [id])
-	repairTypeId	String
-	material		Material	@relation(fields: [materialId], references: [id])
-	materialId		String
-	@@id([repairTypeId, materialId])
 }
 
 model InventoryTransaction {
