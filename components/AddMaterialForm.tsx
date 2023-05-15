@@ -17,8 +17,8 @@ function AddMaterialForm() {
     const [unitCost, setUnitCost] = useState('')
     const [manufacturerId, setManufacturerId] = useState('')
 
-    // Create state for the repair type form inputs
-    const [repairTypesInputs, setRepairTypeInputs] = useState([''])
+    // Create state for the material type form inputs
+    const [materialTypesInputs, setMaterialTypeInputs] = useState([''])
 
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
@@ -27,9 +27,9 @@ function AddMaterialForm() {
     const { data: manufacturers, error: manufacturersError } = useSWR<Manufacturer[], Error>('/api/manufacturers')
     if (manufacturersError) console.log(manufacturersError)
 
-    // Retrieve the repair types table to get the repair type names and ids to be used as a key in the material for repair type table
-    const { data: repairTypesData, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes')
-    if (repairTypesError) console.log(repairTypesError)
+    // Retrieve the material types table to get the material type names and ids to be used as a key in the material type table
+    const { data: materialTypesData, error: materialTypesError } = useSWR<MaterialType[], Error>('/api/materialtypes')
+    if (materialTypesError) console.log(materialTypesError)
 
     // Create array of the unit options to be used in the FormSelectInput component
     let unitOptions =  [{"display": "Inches", "store": "INCHES"}, {"display": "Inches Squared", "store": "INCHESSQUARED"}, {"display": "Centimeters", "store": "CENTIMETERS"}, {"display": "Centimeters Squared", "store": "CENTIMETERSSQUARED"}]
@@ -45,7 +45,7 @@ function AddMaterialForm() {
         e.preventDefault()
 
         try {
-            const body = { materialName, units, unitCost, manufacturerId, repairTypesInputs }
+            const body = { materialName, units, unitCost, manufacturerId, materialTypesInputs }
             await fetch('/api/materials/process', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -57,7 +57,7 @@ function AddMaterialForm() {
 
             // Update the UI wherever this API call is referenced
             mutate('/api/materials')
-            mutate('api/materialforrepairtype')
+            // mutate('api/materialforrepairtype')
         } catch (error) {
             console.error(error)
         }
@@ -89,26 +89,26 @@ function AddMaterialForm() {
         setUnits('')
         setUnitCost('')
         setManufacturerId('')
-        setRepairTypeInputs([''])
+        setMaterialTypeInputs([''])
     }
 
     /**
-     * Add another input field for adding another repair type associated with the material
+     * Add another input field for adding another material type associated with the material
      */
     const addAssociatedRepairInput = () => {
-        setRepairTypeInputs(repairTypes => [...repairTypes, ''])
+        setMaterialTypeInputs(materialTypes => [...materialTypes, ''])
     }
 
     /**
-     * Update the repairTypesInputs state with new information selected by the user
+     * Update the materialTypesInputs state with new information selected by the user
      */
-    const updateRepairTypeInputs = (value, index) => {
+    const updateMaterialTypeInputs = (value, index) => {
         
         // Use the ellipses syntax to copy the array and tell React that the state reference has changed
-        let curRepairsArray = [...repairTypesInputs]
+        let curMaterialsArray = [...materialTypesInputs]
 
-        curRepairsArray[index] = value
-        setRepairTypeInputs(curRepairsArray)
+        curMaterialsArray[index] = value
+        setMaterialTypeInputs(curMaterialsArray)
     }
 
     return (
@@ -155,13 +155,13 @@ function AddMaterialForm() {
                     required={ true }
                 />
 
-                {repairTypesInputs.map((input, index) => (
+                {materialTypesInputs.map((input, index) => (
                     <FormSelectInput
-                        onChange={(value) => updateRepairTypeInputs(value, index)}
+                        onChange={(value) => updateMaterialTypeInputs(value, index)}
                         input={ input }
-                        inputId={ "Associated Repair Type" }
-                        options={ repairTypesData }
-                        displayKey={ "repairTypeName"}
+                        inputId={ "Associated Material Type" }
+                        options={ materialTypesData }
+                        displayKey={ "materialTypeName"}
                         storeKey={ "id" }
                         required={ true }
                         key={ String(index) }
@@ -172,7 +172,7 @@ function AddMaterialForm() {
                     className="block mx-auto mb-12"
                     onClick={() => addAssociatedRepairInput()}
                     type="button"
-                    value="Add Another Associated Repair Type"
+                    value="Add Another Associated Material Type"
                 />
 
                 <FormSubmitButton

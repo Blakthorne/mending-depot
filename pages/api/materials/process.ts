@@ -24,7 +24,7 @@ async function createMaterialForRepairType(materialId: string, repairsArray: str
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     if (req.method == 'POST')
     {
-        let { materialName, units, unitCost, manufacturerId, repairTypesInputs } = req.body
+        let { materialName, units, unitCost, manufacturerId, materialTypesInputs } = req.body
 
         // Ensure the new entries are in the correct format
         if (typeof unitCost === "string") {

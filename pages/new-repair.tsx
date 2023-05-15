@@ -77,7 +77,7 @@ function NewRepair() {
 
     // Create array of the binding type options to be used in the FormSelectInput component
     // with the format [{"display": "Sewn", "store": "SEWN"}, {"display": "Perfect", "store": "PERFECT"}]
-    let bindingTypeOptions: object[] = []
+    // let bindingTypeOptions: object[] = []
     // for (let curBindType of Object.values(BindingType)) {
     //     let curLowerBind = curBindType.toLowerCase()
     //     let curBindTypeObj: object = {"display": curLowerBind[0].toUpperCase() + curLowerBind.slice(1), "store": curBindType}
