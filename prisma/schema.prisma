@@ -118,18 +118,6 @@ model Provider {
 }
 
 // Change types in additional.d.ts when changing these enums
-enum CoverType {
-	FULL
-	QUARTER
-	THREEQUARTER
-}
-
-enum CoverMaterial {
-	BUCKRAM
-	BOOKCLOTH
-	LEATHER
-}
-
 enum Unit {
 	INCHES
 	INCHESSQUARED

@@ -1,9 +1,5 @@
 type Unit = "INCHES" | "INCHESSQUARED" | "CENTIMETERS" | "CENTIMETERSSQUARED"
 
-type CoverType = "FULL" | "QUARTER" | "THREEQUARTER"
-
-type CoverMaterial = "BUCKRAM" | "BOOKCLOTH" | "LEATHER"
-
 // Create type structure for a book entry
 type Book = {
     id?: string;
