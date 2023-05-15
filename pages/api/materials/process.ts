@@ -25,7 +25,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
     type ProcessedMaterials = {
         materialName: string;
-        units: Unit;
+        unitTypeId: string;
         unitCost: string | number;
         manufacturerId: string;
         materialTypesInputs: string[]
@@ -33,7 +33,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
     if (req.method == 'POST')
     {
-        let { materialName, units, unitCost, manufacturerId, materialTypesInputs }: ProcessedMaterials = req.body
+        let { materialName, unitTypeId, unitCost, manufacturerId, materialTypesInputs }: ProcessedMaterials = req.body
 
         // Ensure the new entries are in the correct format
         if (typeof unitCost === "string") {
@@ -43,7 +43,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         const material: Material = await prisma.material.create({
             data: {
                 materialName: materialName,
-                units: units,
+                unitTypeId: unitTypeId,
                 unitCost: unitCost,
                 manufacturerId: manufacturerId,
             }

@@ -6,28 +6,28 @@ import FormCancelButton from './FormCancelButton'
 
 /**
  * 
- * @returns HTML form for adding a material type to the database, along with submit and cancel buttons
+ * @returns HTML form for adding a unit type to the database, along with submit and cancel buttons
  */
-export default function AddMaterialTypeForm() {
+export default function AddUnitTypeForm() {
 
-    // Create state for the attribute of an material type
-    const [materialTypeName, setMaterialTypeName] = useState('')
+    // Create state for the attribute of an unit type
+    const [unitTypeName, setUnitTypeName] = useState('')
 
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
-    // Stores the names of the material types to be used in the
+    // Stores the names of the unit types to be used in the
     // uniqueness check of the FormSubmitButton component
-    let materialTypes: string[] = []
+    let unitTypes: string[] = []
 
-    // Retrieve the material types for use in the materialTypes[] for the uniqueness check
-    const { data, error } = useSWR<MaterialType[], Error>('/api/materialtypes')
+    // Retrieve the unit types for use in the unitTypes[] for the uniqueness check
+    const { data, error } = useSWR<UnitType[], Error>('/api/unittypes')
     if (error) console.log(error)
     else {
 
-        // Extract all the names of the material types
+        // Extract all the names of the unit types
         for (const entry in data) {
-            materialTypes.push(data[entry].materialTypeName)
+            unitTypes.push(data[entry].unitTypeName)
         }
     }
 
@@ -43,8 +43,8 @@ export default function AddMaterialTypeForm() {
 
         try {
             // Don't submit id because of default creation by the database
-            const body: MaterialType = { materialTypeName }
-            await fetch('/api/materialtypes', {
+            const body: UnitType = { unitTypeName }
+            await fetch('/api/unittypes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
@@ -53,7 +53,7 @@ export default function AddMaterialTypeForm() {
             clearErrors()
 
             // Update the UI wherever this API call is referenced
-            mutate('/api/materialtypes')
+            mutate('/api/unittypes')
         } catch (error) {
             console.error(error)
         }
@@ -81,7 +81,7 @@ export default function AddMaterialTypeForm() {
      * Clear all the form inputs
      */
     const cancelInputs = (): void => {
-        setMaterialTypeName('')
+        setUnitTypeName('')
     }
 
     return (
@@ -92,20 +92,20 @@ export default function AddMaterialTypeForm() {
             >
 
                 <FormTextInput
-                    onChange={(value) => setMaterialTypeName(value)}
-                    placeholder={ "'Japanese Paper'" }
-                    input={ materialTypeName }
-                    inputId={ "Material Type" }
-                    uniquesArray={ materialTypes }
+                    onChange={(value) => setUnitTypeName(value)}
+                    placeholder={ "'Inches Squared'" }
+                    input={ unitTypeName }
+                    inputId={ "Unit Type" }
+                    uniquesArray={ unitTypes }
                     constraints={ ["unique"] }
-                    errorMessage={ "That material type already exists. Please enter a new material type." }
+                    errorMessage={ "That unit type already exists. Please enter a new unit type." }
                     required={ true }
                 />
 
                 <FormSubmitButton
-                    requiredInputs={ [materialTypeName] }
-                    uniques={ [{"key": materialTypeName, "values": materialTypes}] }
-                    text="Add Material Type"
+                    requiredInputs={ [unitTypeName] }
+                    uniques={ [{"key": unitTypeName, "values": unitTypes}] }
+                    text="Add Unit Type"
                 />
 
                 <FormCancelButton

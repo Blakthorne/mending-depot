@@ -13,7 +13,7 @@ function AddMaterialForm() {
 
     // Create state for the attributes of a material
     const [materialName, setMaterialName] = useState('')
-    const [units, setUnits] = useState(undefined)
+    const [unitTypeId, setUnitTypeId] = useState('')
     const [unitCost, setUnitCost] = useState('')
     const [manufacturerId, setManufacturerId] = useState('')
 
@@ -31,8 +31,9 @@ function AddMaterialForm() {
     const { data: materialTypesData, error: materialTypesError } = useSWR<MaterialType[], Error>('/api/materialtypes')
     if (materialTypesError) console.log(materialTypesError)
 
-    // Create array of the unit options to be used in the FormSelectInput component
-    let unitOptions =  [{"display": "Inches", "store": "INCHES"}, {"display": "Inches Squared", "store": "INCHESSQUARED"}, {"display": "Centimeters", "store": "CENTIMETERS"}, {"display": "Centimeters Squared", "store": "CENTIMETERSSQUARED"}]
+    // Retrieve the unit types table to get the unit type names and ids to be used as a key in the unit type table
+    const { data: unitTypesData, error: unitTypesError } = useSWR<MaterialType[], Error>('/api/unittypes')
+    if (unitTypesError) console.log(unitTypesError)
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -45,7 +46,7 @@ function AddMaterialForm() {
         e.preventDefault()
 
         try {
-            const body = { materialName, units, unitCost, manufacturerId, materialTypesInputs }
+            const body = { materialName, unitTypeId, unitCost, manufacturerId, materialTypesInputs }
             await fetch('/api/materials/process', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -86,7 +87,7 @@ function AddMaterialForm() {
      */
     const cancelInputs = (): void => {
         setMaterialName('')
-        setUnits('')
+        setUnitTypeId('')
         setUnitCost('')
         setManufacturerId('')
         setMaterialTypeInputs([''])
@@ -127,12 +128,12 @@ function AddMaterialForm() {
                 />
 
                 <FormSelectInput
-                    onChange={(value) => setUnits(value)}
-                    input={ units }
-                    inputId={ "Units" }
-                    options={ unitOptions }
-                    displayKey={ "display"}
-                    storeKey={ "store" }
+                    onChange={(value) => setUnitTypeId(value)}
+                    input={ unitTypeId }
+                    inputId={ "Unit Type" }
+                    options={ unitTypesData }
+                    displayKey={ "unitTypeName" }
+                    storeKey={ "id" }
                     required={ true }
                 />
 
@@ -176,7 +177,7 @@ function AddMaterialForm() {
                 />
 
                 <FormSubmitButton
-                    requiredInputs={ [materialName, units, unitCost, manufacturerId] }
+                    requiredInputs={ [materialName, unitTypeId, unitCost, manufacturerId] }
                     text="Add Material"
                 />
 

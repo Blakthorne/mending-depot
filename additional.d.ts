@@ -1,5 +1,3 @@
-type Unit = "INCHES" | "INCHESSQUARED" | "CENTIMETERS" | "CENTIMETERSSQUARED"
-
 // Create type structure for a book entry
 type Book = {
     id?: string;
@@ -45,6 +43,12 @@ type Manufacturer = {
     manufacturerName: string;
 }
 
+// Create type structure for a unit type entry
+type UnitType = {
+    id?: string;
+    unitTypeName: string;
+}
+
 // Create type structure for a material for repair entry
 type MaterialForRepair = {
     repairId: string;
@@ -62,8 +66,8 @@ type TypeForMaterial = {
 type Material = {
     id?: string;
     materialName: string;
-    units: Unit;
     unitCost: string | number;
+    unitTypeId: string;
     manufacturerId: string;
 }
 

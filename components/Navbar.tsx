@@ -79,6 +79,11 @@ export default function Navbar() {
 							Binding Types
 						</a>
 					</Link>
+					<Link href="/unit-types">
+						<a className="hover:text-gray-100">
+							Unit Types
+						</a>
+					</Link>
 				</div>
 			</div>
 		</div>

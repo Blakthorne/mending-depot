@@ -61,8 +61,9 @@ model RepairType {
 model Material {
 	id				String		@id @default(uuid())
 	materialName	String
-	units			Unit
 	unitCost		Float
+	unitType		UnitType	@relation(fields: [unitTypeId], references: [id])
+	unitTypeId		String
 	repairs			MaterialForRepair[]
 	inventoryTransactions	InventoryTransaction[]
 	types			TypesForMaterials[]
@@ -80,6 +81,12 @@ model MaterialType {
 	id				String		@id @default(uuid())
 	materialTypeName	String	@unique
 	materials		TypesForMaterials[]
+}
+
+model UnitType {
+	id				String		@id @default(uuid())
+	unitTypeName	String		@unique
+	materials		Material[]
 }
 
 model TypesForMaterials {
@@ -117,10 +124,4 @@ model Provider {
 	inventoryTransactions	InventoryTransaction[]
 }
 
-// Change types in additional.d.ts when changing these enums
-enum Unit {
-	INCHES
-	INCHESSQUARED
-	CENTIMETERS
-	CENTIMETERSSQUARED
-}
+// Change types in additional.d.ts if adding any enums
