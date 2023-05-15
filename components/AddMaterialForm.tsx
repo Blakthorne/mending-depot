@@ -57,7 +57,7 @@ function AddMaterialForm() {
 
             // Update the UI wherever this API call is referenced
             mutate('/api/materials')
-            // mutate('api/materialforrepairtype')
+            mutate('api/typesformaterials')
         } catch (error) {
             console.error(error)
         }

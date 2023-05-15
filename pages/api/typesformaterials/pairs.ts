@@ -11,30 +11,34 @@ type MaterialEntry = {
 }
 
 type DataEntry = {
-    repairTypeName: string;
+    materialTypeName: string;
     materials: MaterialEntry[];
 }
 
 type Pair = {
-    repairTypeName: string;
+    materialTypeName: string;
+    materialTypeId: string;
     materialName: string;
+    materialId: string;
 }
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     if (req.method == 'GET')
     {
 
-        // Pairs of repairTypeNames and materialNames for display together in a table
+        // Pairs of materialTypeNames and materialNames for display together in a table
         let pairs: Pair[] = []
 
-        const repairTypeMaterials = await prisma.repairType.findMany({
+        const materialTypeMaterials = await prisma.materialType.findMany({
             select: {
-                repairTypeName: true,
+                materialTypeName: true,
+                id: true,
                 materials: {
                     select: {
                         material: {
                             select: {
                                 materialName: true,
+                                id: true,
                             },
                         },
                     },
@@ -42,23 +46,18 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             },
         })
 
-        for (let repairType of repairTypeMaterials) {
-            let prevRepairType: string = ''
-            for (let materialEntry of repairType.materials) {
-                let repairTypeName: string
-
-                // Only print out a new repairTypeName if it is different from the one previous
-                // This makes the table a lot cleaner and readable
-                if (repairType.repairTypeName !== prevRepairType) {
-                    repairTypeName = repairType.repairTypeName
-                }
-                else repairTypeName = ''
-
+        for (let materialType of materialTypeMaterials) {
+            let prevMaterialType: string = ''
+            for (let materialEntry of materialType.materials) {
+                let materialTypeName = materialType.materialTypeName
+                let materialTypeId = materialType.id
                 let materialName = materialEntry.material.materialName
+                let materialId = materialEntry.material.id
 
-                pairs.push({repairTypeName, materialName})
 
-                prevRepairType = repairType.repairTypeName
+                pairs.push({materialTypeName, materialTypeId, materialName, materialId})
+
+                prevMaterialType = materialType.materialTypeName
             }
         }
 

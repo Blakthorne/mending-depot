@@ -56,10 +56,10 @@ type MaterialForRepair = {
     amountUsed: string | number;
 }
 
-// Create type structure for a material for repair type entry
-type MaterialForRepairType = {
-    repairTypeId: string;
+// Create type structure for a type for materials type entry
+type TypeForMaterial = {
     materialId: string;
+    materialTypeId: string;
 }
 
 // Create type structure for a material entry

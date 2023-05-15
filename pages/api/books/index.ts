@@ -78,7 +78,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             amountCharged = parseInt(amountCharged, 10)
         }
 
-        const book = await prisma.book.create({
+        const book: Book = await prisma.book.create({
             data: {
                 title: title,
                 author: author,

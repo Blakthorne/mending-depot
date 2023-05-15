@@ -4,12 +4,12 @@ import Table from '../components/Table'
 import CircularProgress from '@mui/material/CircularProgress'
 import Backdrop from '@mui/material/Backdrop';
 
-function MaterialForRepairs() {
+function TypesForMaterials() {
 
     const fetcher = url => fetch(url).then(r => r.json())
 
     // Retrieve the table requested by the parent component
-    const { data, error } = useSWR<object[], Error>('/api/materialforrepairtype/readable', fetcher)
+    const { data, error } = useSWR<object[], Error>('/api/typesformaterials/readable', fetcher)
     if (error) console.log(error)
     if (!data) {
         return (
@@ -31,20 +31,20 @@ function MaterialForRepairs() {
     return (
         <div>
             <Head>
-                <title>Material For Repair Types</title>
-                <meta name="description" content="Manage Material For Repair Types" />
+                <title>Types For Materials</title>
+                <meta name="description" content="Manage Types For Materials" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <div className="flex flex-col min-h-screen">
                 <div className="font-sans text-slate-200 text-3xl text-center drop-shadow-lg tracking-wide">
-                    Material For Repair Types
+                    Types For Materials
                 </div>
                 <div className="mx-auto">
                     <div className="table border-collapse table-auto text-sm mt-16 mb-32">
                         <div className="table-header-group">
                                 <div className="table-row">
-                                        <div key="Repair Type Name" className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-2 text-left capitalize">Repair Type Name</div>
+                                        <div key="Material Type Name" className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-2 text-left capitalize">Material Type Name</div>
                                         <div key="Material Name" className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-2 text-left capitalize">Material Name</div>
                                 </div>
                         </div>
@@ -65,4 +65,4 @@ function MaterialForRepairs() {
     )
 }
 
-export default MaterialForRepairs
+export default TypesForMaterials
