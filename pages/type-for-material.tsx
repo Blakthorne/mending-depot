@@ -44,7 +44,7 @@ function TypesForMaterials() {
                     <div className="table border-collapse table-auto text-sm mt-16 mb-32">
                         <div className="table-header-group">
                                 <div className="table-row">
-                                        <div key="Material Type Name" className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-2 text-left capitalize">Material Type Name</div>
+                                        <div key="Material Type" className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-2 text-left capitalize">Material Type</div>
                                         <div key="Material Name" className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-2 text-left capitalize">Material Name</div>
                                 </div>
                         </div>

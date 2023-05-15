@@ -6,9 +6,9 @@ import FormSelectInput from '../components/FormSelectInput'
 import FormSubmitButton from '../components/FormSubmitButton'
 import FormCancelButton from '../components/FormCancelButton'
 
-type MaterialForRepairType = {
-    repairTypeName: string;
-    repairTypeId: string;
+type TypeForMaterial = {
+    materialTypeName: string;
+    materialTypeId: string;
     materialName: string;
     materialId: string;
 }
@@ -67,8 +67,8 @@ function NewRepair() {
     const { data: repairTypes, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes', fetcher)
     if (repairTypesError) console.log(repairTypesError)
 
-    // Retrieve the materials for repair type readable table to get the repair type and material names for material selection
-    const { data: materials, error: materialsError } = useSWR<object[], Error>('/api/materialforrepairtype/pairs', fetcher)
+    // Retrieve the type for materials pairs table to get the material type and material names for material selection
+    const { data: materials, error: materialsError } = useSWR<object[], Error>('/api/typesformaterials/pairs', fetcher)
     if (materialsError) console.log(materialsError)
 
     // Retrieve the binding types
@@ -230,11 +230,11 @@ function NewRepair() {
     }
 
     /**
-     * Create a list containing only materials for the currently selected repair
+     * Create a list containing only materials for the given material type
      */
-    const getMaterialsList = (repairTypeId: string): object[] => {
+    const getMaterialsList = (materialTypeName: string): object[] => {
         if (materials) {
-            return materials.filter((material: MaterialForRepairType) => material.repairTypeId === repairTypeId)
+            return materials.filter((material: TypeForMaterial) => material.materialTypeName === materialTypeName)
         }
     }
 
@@ -410,7 +410,7 @@ function NewRepair() {
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineMaterial"]: value })}
                                             input={ repairSpecs.spineMaterial }
                                             inputId={ "Spine Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            options={ getMaterialsList("Cover Material") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -419,8 +419,8 @@ function NewRepair() {
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineLiningMaterial"]: value })}
                                             input={ repairSpecs.spineLiningMaterial }
-                                            inputId={ "Spine Lining Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            inputId={ "Spine Lining" }
+                                            options={ getMaterialsList("Spine Lining") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -429,8 +429,8 @@ function NewRepair() {
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["caseLiningMaterial"]: value })}
                                             input={ repairSpecs.caseLiningMaterial }
-                                            inputId={ "Case Lining Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            inputId={ "Case Lining" }
+                                            options={ getMaterialsList("Case Lining") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -440,7 +440,7 @@ function NewRepair() {
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["bookRibbonMaterial"]: value })}
                                             input={ repairSpecs.bookRibbonMaterial }
                                             inputId={ "Book Ribbon" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            options={ getMaterialsList("Book Ribbon") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -449,8 +449,8 @@ function NewRepair() {
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["glueMaterial"]: value })}
                                             input={ repairSpecs.glueMaterial }
-                                            inputId={ "Glue Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            inputId={ "Glue" }
+                                            options={ getMaterialsList("Glue") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -493,7 +493,7 @@ function NewRepair() {
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineMaterial"]: value })}
                                             input={ repairSpecs.spineMaterial }
                                             inputId={ "Spine Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            options={ getMaterialsList("Cover Material") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -503,7 +503,7 @@ function NewRepair() {
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["sideMaterial"]: value })}
                                             input={ repairSpecs.sideMaterial }
                                             inputId={ "Side Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            options={ getMaterialsList("Cover Material") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -512,8 +512,8 @@ function NewRepair() {
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["bookBoardMaterial"]: value })}
                                             input={ repairSpecs.bookBoardMaterial }
-                                            inputId={ "Book Board Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            inputId={ "Book Board" }
+                                            options={ getMaterialsList("Book Board") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -522,8 +522,8 @@ function NewRepair() {
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineLiningMaterial"]: value })}
                                             input={ repairSpecs.spineLiningMaterial }
-                                            inputId={ "Spine Lining Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            inputId={ "Spine Lining" }
+                                            options={ getMaterialsList("Spine Lining") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -532,8 +532,8 @@ function NewRepair() {
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["caseLiningMaterial"]: value })}
                                             input={ repairSpecs.caseLiningMaterial }
-                                            inputId={ "Case Lining Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            inputId={ "Case Lining" }
+                                            options={ getMaterialsList("Case Lining") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -542,8 +542,8 @@ function NewRepair() {
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["flysheetMaterial"]: value })}
                                             input={ repairSpecs.flysheetMaterial }
-                                            inputId={ "Flysheet Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            inputId={ "Flysheet" }
+                                            options={ getMaterialsList("Flysheet") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -553,7 +553,7 @@ function NewRepair() {
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["japanesePaperMaterial"]: value })}
                                             input={ repairSpecs.japanesePaperMaterial }
                                             inputId={ "Japanese Paper" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            options={ getMaterialsList("Japanese Paper") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -563,7 +563,7 @@ function NewRepair() {
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["cheeseclothMaterial"]: value })}
                                             input={ repairSpecs.cheeseclothMaterial }
                                             inputId={ "Cheesecloth" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            options={ getMaterialsList("Cheesecloth") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -573,7 +573,7 @@ function NewRepair() {
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["bookRibbonMaterial"]: value })}
                                             input={ repairSpecs.bookRibbonMaterial }
                                             inputId={ "Book Ribbon" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            options={ getMaterialsList("Book Ribbon") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
@@ -582,8 +582,8 @@ function NewRepair() {
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["glueMaterial"]: value })}
                                             input={ repairSpecs.glueMaterial }
-                                            inputId={ "Glue Material" }
-                                            options={ getMaterialsList(repairForms[index]) }
+                                            inputId={ "Glue" }
+                                            options={ getMaterialsList("Glue") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
