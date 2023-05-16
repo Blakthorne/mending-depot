@@ -75,6 +75,9 @@ function NewRepair() {
     const { data: bindingTypes, error: bindingTypesError } = useSWR<object[], Error>('/api/bindingtypes', fetcher)
     if (bindingTypesError) console.log(bindingTypesError)
 
+    // Create array of the cover type options to be used in its FormSelectInput component
+    let coverTypeOptions: object[] =  [{"display": "Full Bound", "store": "Full Bound"}, {"display": "Quarter Bound", "store": "Quarter Bound"}, {"display": "Three-Quarter Bound", "store": "Three-Quarter Bound"}]
+
     /**
      * Submit data to the server upon pressing the submit button in the form
      * 
@@ -460,6 +463,16 @@ function NewRepair() {
                                         />
 
                                         <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["coverType"]: value })}
+                                            input={ repairSpecs.coverType }
+                                            inputId={ "Cover Type" }
+                                            options={ coverTypeOptions }
+                                            displayKey={ "display"}
+                                            storeKey={ "store" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineMaterial"]: value })}
                                             input={ repairSpecs.spineMaterial }
                                             inputId={ "Spine Material" }
@@ -556,6 +569,171 @@ function NewRepair() {
                                             options={ getMaterialsList("Glue") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+                                    </If>
+
+                                    {/* Flysheet Replacement Form */}
+                                    <If condition={repairForms[index] === 'a9b47354-b892-48e1-a3ce-bdb7e535b91e'}>
+                                        <FormTextInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["textBlockHeight"]: value })}
+                                            placeholder={ "'8'" }
+                                            input={ repairSpecs.textBlockHeight }
+                                            inputId={ "Text Block Height" }
+                                            constraints={ ["decimal"] }
+                                            errorMessage={ "Please only enter a decimal value here." }
+                                            required={ true }
+                                        />
+
+                                        <FormTextInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineWidth"]: value })}
+                                            placeholder={ "'2'" }
+                                            input={ repairSpecs.spineWidth }
+                                            inputId={ "Spine Width" }
+                                            constraints={ ["decimal"] }
+                                            errorMessage={ "Please only enter a decimal value here." }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineLiningMaterial"]: value })}
+                                            input={ repairSpecs.spineLiningMaterial }
+                                            inputId={ "Spine Lining" }
+                                            options={ getMaterialsList("Spine Lining") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["caseLiningMaterial"]: value })}
+                                            input={ repairSpecs.caseLiningMaterial }
+                                            inputId={ "Case Lining" }
+                                            options={ getMaterialsList("Case Lining") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["flysheetMaterial"]: value })}
+                                            input={ repairSpecs.flysheetMaterial }
+                                            inputId={ "Flysheet" }
+                                            options={ getMaterialsList("Flysheet") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["japanesePaperMaterial"]: value })}
+                                            input={ repairSpecs.japanesePaperMaterial }
+                                            inputId={ "Japanese Paper" }
+                                            options={ getMaterialsList("Japanese Paper") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["cheeseclothMaterial"]: value })}
+                                            input={ repairSpecs.cheeseclothMaterial }
+                                            inputId={ "Cheesecloth" }
+                                            options={ getMaterialsList("Cheesecloth") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["bookRibbonMaterial"]: value })}
+                                            input={ repairSpecs.bookRibbonMaterial }
+                                            inputId={ "Book Ribbon" }
+                                            options={ getMaterialsList("Book Ribbon") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["glueMaterial"]: value })}
+                                            input={ repairSpecs.glueMaterial }
+                                            inputId={ "Glue" }
+                                            options={ getMaterialsList("Glue") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+                                    </If>
+                                    
+                                    {/* Base Hinge Tightening Form */}
+                                    <If condition={repairForms[index] === '9fd756df-83af-4556-87b5-78493cc131bd'}>
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["glueMaterial"]: value })}
+                                            input={ repairSpecs.glueMaterial }
+                                            inputId={ "Glue" }
+                                            options={ getMaterialsList("Glue") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+                                    </If>
+
+                                    {/* Tip-In Form */}
+                                    <If condition={repairForms[index] === 'f0053585-ecdf-422a-9c00-af015d19d316'}>
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["glueMaterial"]: value })}
+                                            input={ repairSpecs.glueMaterial }
+                                            inputId={ "Glue" }
+                                            options={ getMaterialsList("Glue") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+                                    </If>
+
+                                    {/* Paper Repair Form */}
+                                    <If condition={repairForms[index] === 'f63bc7dd-ac8e-4abe-9526-242fd3a54a15'}>
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["archivalTapeMaterial"]: value })}
+                                            input={ repairSpecs.archivalTapeMaterial }
+                                            inputId={ "Archival Tape" }
+                                            options={ getMaterialsList("Archival Tape") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+                                    </If>
+
+                                    {/* Resewing Form */}
+                                    <If condition={repairForms[index] === '953a3ba2-4586-4977-a0ad-de45afafccfb'}>
+                                        <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["threadMaterial"]: value })}
+                                            input={ repairSpecs.threadMaterial }
+                                            inputId={ "Thread" }
+                                            options={ getMaterialsList("Thread") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ true }
+                                        />
+
+                                        <FormTextInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["textBlockHeight"]: value })}
+                                            placeholder={ "'8'" }
+                                            input={ repairSpecs.textBlockHeight }
+                                            inputId={ "Text Block Height" }
+                                            constraints={ ["decimal"] }
+                                            errorMessage={ "Please only enter a decimal value here." }
+                                            required={ true }
+                                        />
+
+                                        <FormTextInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineWidth"]: value })}
+                                            placeholder={ "'2'" }
+                                            input={ repairSpecs.spineWidth }
+                                            inputId={ "Spine Width" }
+                                            constraints={ ["decimal"] }
+                                            errorMessage={ "Please only enter a decimal value here." }
                                             required={ true }
                                         />
                                     </If>
