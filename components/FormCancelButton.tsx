@@ -4,6 +4,7 @@ type FormCancelButtonComponent = {
     clearInvalids: () => void;
     cancelClick: () => void;
     value?: string;
+    isAdjacent?: boolean;
 }
 
 /**
@@ -11,12 +12,15 @@ type FormCancelButtonComponent = {
  * @param {() => void} clearInvalids The function to clear form errors in the parent component
  * @param {() => void} cancelClick The function to clear form inputs in the parent component
  * @param {string} [value] Optional - The text to display for the cancel button
+ * @param {boolean} [isAdjacent] Optional - True if the text will be next to another button, False if not
  * @returns HTML cancel button
  */
-export default function FormCancelButton({ clearInvalids, cancelClick, value }: FormCancelButtonComponent) {
+export default function FormCancelButton({ clearInvalids, cancelClick, value, isAdjacent }: FormCancelButtonComponent) {
 
     // Set default text for the button if nothing is provided
     let stringValue: string = "or Cancel"
+
+    let format: string = isAdjacent ? "text-gray-400" : "ml-4 text-gray-400"
 
     if (value) stringValue = value;
 
@@ -30,7 +34,7 @@ export default function FormCancelButton({ clearInvalids, cancelClick, value }: 
 
     return (
         <input
-            className="ml-4 text-gray-400"
+            className={format}
             onClick={() => onClick()}
             value={stringValue}
             type="button"

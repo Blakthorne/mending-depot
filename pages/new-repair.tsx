@@ -75,7 +75,7 @@ function NewRepair() {
     const { data: bindingTypes, error: bindingTypesError } = useSWR<object[], Error>('/api/bindingtypes', fetcher)
     if (bindingTypesError) console.log(bindingTypesError)
 
-    // Create array of the cover type options to be used in its FormSelectInput component
+    // Create array of the cover type options to be used in the Cover Replacement form
     let coverTypeOptions: object[] =  [{"display": "Full Bound", "store": "Full Bound"}, {"display": "Quarter Bound", "store": "Quarter Bound"}, {"display": "Three-Quarter Bound", "store": "Three-Quarter Bound"}]
 
     /**
@@ -703,6 +703,16 @@ function NewRepair() {
                                             storeKey={ "materialId" }
                                             required={ true }
                                         />
+
+                                        <FormTextInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["tapeLength"]: value })}
+                                            placeholder={ "'3'" }
+                                            input={ repairSpecs.tapeLength }
+                                            inputId={ "Approximate Tape Amount (cm)" }
+                                            constraints={ ["decimal"] }
+                                            errorMessage={ "Please only enter a decimal value here." }
+                                            required={ true }
+                                        />
                                     </If>
 
                                     {/* Resewing Form */}
@@ -742,6 +752,7 @@ function NewRepair() {
                                         clearInvalids={() => clearErrors()}
                                         cancelClick={() => cancelRepairForm(index)}
                                         value="Cancel Repair"
+                                        isAdjacent={ true }
                                     />
                                 </form>
                             ))}

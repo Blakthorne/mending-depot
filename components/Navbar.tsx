@@ -37,6 +37,11 @@ export default function Navbar() {
 					</Link>
 				</div>
 				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
+					<Link href="/books">
+						<a className="hover:text-gray-100">
+							Books
+						</a>
+					</Link>
 					<Link href="/owners">
 						<a className="hover:text-gray-100">
 							Owners
@@ -52,21 +57,16 @@ export default function Navbar() {
 							Providers
 						</a>
 					</Link>
-					<Link href="/material-types">
+					<Link href="/materials">
 						<a className="hover:text-gray-100">
-							Material Types
+							Materials
 						</a>
 					</Link>
 				</div>
 				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
-					<Link href="/books">
+					<Link href="/material-types">
 						<a className="hover:text-gray-100">
-							Books
-						</a>
-					</Link>
-					<Link href="/materials">
-						<a className="hover:text-gray-100">
-							Materials
+							Material Types
 						</a>
 					</Link>
 					<Link href="/repair-types">
