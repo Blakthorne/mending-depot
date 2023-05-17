@@ -6,6 +6,7 @@ type FormSubmitButtonComponent = {
     dateValids?: boolean[];
     uniques?: object[];
     text: string;
+    id?: string;
 }
 
 /**
@@ -15,9 +16,10 @@ type FormSubmitButtonComponent = {
  * @param {boolean[]} [dateValids] Optional - The list of boolean date state variables which must be "true" to submit the form
  * @param {object[]} [uniques] Optional - The list of objects where key = state variable to check against values = array of values from the database
  * @param {string} text The to be displayed in the submit button
+ * @param {string} [id] Optional - The specified id of the HTML button element
  * @returns HTML submit button
  */
-export default function FormSubmitButton({ requiredInputs, requiredDates, dateValids, uniques, text }: FormSubmitButtonComponent) {
+export default function FormSubmitButton({ requiredInputs, requiredDates, dateValids, uniques, text, id }: FormSubmitButtonComponent) {
 
     /**
      * Determines whether the submit button should be disabled
@@ -57,11 +59,14 @@ export default function FormSubmitButton({ requiredInputs, requiredDates, dateVa
         return false
     }
 
+    if (!id) id = ''
+
     return (
         <button
             disabled={disable()}
             className="bg-slate-800 hover:bg-slate-700 py-2 px-4 shadow-sm shadow-slate-800 disabled:shadow-none disabled:bg-slate-600"
             type="submit"
+            id={id}
         >
             {text}
         </button>

@@ -222,8 +222,11 @@ function NewRepair() {
     }
 
     const toPrevStep = (): void => {
-        if (stage === 'book') setStage('newRepairs')
         if (stage === 'newRepairs') setStage('book')
+    }
+
+    const toRepairStep = (): void => {
+        if (stage === 'book') setStage('newRepairs')
     }
 
     return (
@@ -302,8 +305,8 @@ function NewRepair() {
                                     input={ bindingType }
                                     inputId={ "Binding Type" }
                                     options={ bindingTypes }
-                                    displayKey={ "display"}
-                                    storeKey={ "store" }
+                                    displayKey={ "bindingTypeName"}
+                                    storeKey={ "id" }
                                     required={ true }
                                 />
 
@@ -332,7 +335,8 @@ function NewRepair() {
                                     requiredInputs={ [title, author, bindingType, received, ownerId] }
                                     requiredDates={ [receivedValid] }
                                     dateValids={ [receivedValid, returnedValid] }
-                                    text="Save Book and Continue"
+                                    text="Start Adding Repairs"
+                                    id='bookSubmitButton'
                                 />
 
                                 <FormCancelButton
@@ -774,6 +778,22 @@ function NewRepair() {
                         </div>
                     </If>
                 </div>
+
+                {/* Only show the Continue button if the Submit button is enabled */}
+                {typeof document !== 'undefined' ? 
+                    <If condition={stage !== 'newRepairs'}>
+                        {document.getElementById("bookSubmitButton") !== null ?
+                            <If condition={(document.getElementById("bookSubmitButton") as HTMLButtonElement).disabled}>
+                            <button
+                                className="mx-auto place-self-start"
+                                onClick={() => toRepairStep()}
+                            >Continue &gt;</button>
+                            </If> :
+                            ''
+                        }
+                    </If> :
+                    ''
+                }
 
                 <div className="cols-span-1"></div>
             </div>
