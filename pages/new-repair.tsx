@@ -779,22 +779,6 @@ function NewRepair() {
                     </If>
                 </div>
 
-                {/* Only show the Continue button if the Submit button is enabled */}
-                {typeof document !== 'undefined' ? 
-                    <If condition={stage !== 'newRepairs'}>
-                        {document.getElementById("bookSubmitButton") !== null ?
-                            <If condition={(document.getElementById("bookSubmitButton") as HTMLButtonElement).disabled}>
-                            <button
-                                className="mx-auto place-self-start"
-                                onClick={() => toRepairStep()}
-                            >Continue &gt;</button>
-                            </If> :
-                            ''
-                        }
-                    </If> :
-                    ''
-                }
-
                 <div className="cols-span-1"></div>
             </div>
         </div>
