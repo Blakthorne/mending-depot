@@ -13,6 +13,16 @@ type TypeForMaterial = {
     materialId: string;
 }
 
+type RepairSpecsType = {
+    [key: string]: string;
+}
+
+type submitRepairsType = {
+    bookBody: Book;
+    repairForms: string[];
+    repairSpecs: RepairSpecsType;
+}
+
 function If(props) {
     return props.condition ? <>{props.children}</> : null;
 }
@@ -28,7 +38,7 @@ function NewRepair() {
     const [publisher, setPublisher] = useState('')
     const [yearPublished, setYearPublished] = useState('')
     const [numberOfPages, setNumberOfPages] = useState('')
-    const [bindingType, setBindingType] = useState(undefined)
+    const [bindingTypeId, setBindingTypeId] = useState(undefined)
     const [received, setReceived] = useState('')
     const [ownerId, setOwnerId] = useState('')
 
@@ -39,10 +49,6 @@ function NewRepair() {
 
     // Create state for the repair type form inputs
     const [repairForms, setRepairForms] = useState([''])
-
-    type RepairSpecsType = {
-        [key: string]: string;
-    }
 
     const tempObj: RepairSpecsType = {}
 
@@ -72,8 +78,8 @@ function NewRepair() {
     if (materialsError) console.log(materialsError)
 
     // Retrieve the binding types
-    const { data: bindingTypes, error: bindingTypesError } = useSWR<object[], Error>('/api/bindingtypes', fetcher)
-    if (bindingTypesError) console.log(bindingTypesError)
+    const { data: bindingTypeIds, error: bindingTypeIdsError } = useSWR<object[], Error>('/api/bindingtypes', fetcher)
+    if (bindingTypeIdsError) console.log(bindingTypeIdsError)
 
     // Create array of the cover type options to be used in the Cover Replacement form
     let coverTypeOptions: object[] =  [{"display": "Full Bound", "store": "Full Bound"}, {"display": "Quarter Bound", "store": "Quarter Bound"}, {"display": "Three-Quarter Bound", "store": "Three-Quarter Bound"}]
@@ -89,53 +95,33 @@ function NewRepair() {
         e.preventDefault()
 
         setStage('newRepairs')
-
-        // try {
-        //     // Don't submit id because of default creation by the database
-        //     const body: Book = { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
-        //     await fetch('/api/books', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify(body),
-        //     })
-        //     cancelBookInputs()
-        //     clearErrors()
-
-        //     // Update the UI wherever this API call is referenced
-        //     mutate('/api/books')
-        // } catch (error) {
-        //     console.error(error)
-        // }
     }
 
     /**
      * Submit data to the server upon pressing the submit button in the form
-     * 
-     * @param {React.FormEvent<HTMLFormElement>} e The event provided when the submit button is pressed
      */
-     const submitNewRepairsData = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+     const submitNewRepairsData = async (): Promise<void>  => {
 
-        // Prevent the browser from reloading the whole page
-        e.preventDefault()
+        // Create an object composed of the info from the new Book form
+        const bookBody: Book = { title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }
 
+        try {
+            const body: submitRepairsType = { bookBody, repairForms, repairSpecs }
+            await fetch('/api/repairs/batch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            })
+            // cancelBookInputs()
+            // cancelAllRepairForms()
+            clearErrors()
 
-
-        // try {
-        //     // Don't submit id because of default creation by the database
-        //     const body: Book = { title, author, publisher, yearPublished, numberOfPages, bindingType, received, returned, bookMaterialsCost, amountCharged, ownerId }
-        //     await fetch('/api/books', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify(body),
-        //     })
-        //     cancelBookInputs()
-        //     clearErrors()
-
-        //     // Update the UI wherever this API call is referenced
-        //     mutate('/api/books')
-        // } catch (error) {
-        //     console.error(error)
-        // }
+            // Update the UI wherever this API call is referenced
+            mutate('/api/books')
+            mutate('api/repairs')
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     /**
@@ -165,7 +151,7 @@ function NewRepair() {
         setPublisher('')
         setYearPublished('')
         setNumberOfPages('')
-        setBindingType('')
+        setBindingTypeId('')
         setReceived('')
         setOwnerId('')
 
@@ -191,6 +177,13 @@ function NewRepair() {
 
             setRepairForms(frontForms)
         }
+    }
+
+    /**
+     * Clear all the repair forms upon submission
+     */
+    const cancelAllRepairForms = (): void => {
+        setRepairForms(['']);
     }
 
     /**
@@ -301,10 +294,10 @@ function NewRepair() {
                                 />
 
                                 <FormSelectInput
-                                    onChange={(value) => setBindingType(value)}
-                                    input={ bindingType }
+                                    onChange={(value) => setBindingTypeId(value)}
+                                    input={ bindingTypeId }
                                     inputId={ "Binding Type" }
-                                    options={ bindingTypes }
+                                    options={ bindingTypeIds }
                                     displayKey={ "bindingTypeName"}
                                     storeKey={ "id" }
                                     required={ true }
@@ -332,7 +325,7 @@ function NewRepair() {
                                 />
 
                                 <FormSubmitButton
-                                    requiredInputs={ [title, author, bindingType, received, ownerId] }
+                                    requiredInputs={ [title, author, bindingTypeId, received, ownerId] }
                                     requiredDates={ [receivedValid] }
                                     dateValids={ [receivedValid, returnedValid] }
                                     text="Start Adding Repairs"
@@ -356,7 +349,6 @@ function NewRepair() {
                                     className="mb-16"
                                     id="repairForm"
                                     autoComplete="off"
-                                    onSubmit={(event) => submitNewRepairsData(event)}
                                     key={ index }
                                 >
                                     <div>
@@ -772,6 +764,9 @@ function NewRepair() {
                             
                             <button
                                 className="block mx-auto mt-8"
+                                onClick={() => submitNewRepairsData()}
+                                    type="button"
+                                    value="Finish"
                             >
                                 Finish
                             </button>
