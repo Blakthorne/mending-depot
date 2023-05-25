@@ -14,6 +14,7 @@ type BatchReceived = {
 
 // Constant variables
 const TIPIN_GLUE_WEIGHT: number = .01
+const BASEHINGE_GLUE_WEIGHT: number = .05
 
 /**
  * Perform operations necessary when for a paper repair, inluding--
@@ -111,6 +112,54 @@ async function createTipinRepair(tx: PrismaClient, repair: string, repairSpecs: 
     })
 }
 
+/**
+ * Perform operations necessary when for a base hinge tightening repair, inluding--
+ *      Retrieving the material specified,
+ *      Calculating cost for the repair,
+ *      Adding a new entry in the Repair table,
+ *      Adding a new entry in the MaterialForRepair table
+ * 
+ * @param tx the given instance of PrismaClient
+ * @param repair the current repair in the iteration of repairForms
+ * @param repairSpecs all the specs given in the form for all repairs on the book
+ * @param book the book entry
+ */
+async function createBaseHingeRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+    // Retrieve the entry for the material used
+    let material: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.glueMaterial,
+        },
+    })
+
+    // Ensure unitCost is an Int
+    if (typeof material.unitCost === "string") {
+        material.unitCost = parseInt(material.unitCost, 10)
+    }
+
+    // Calculate the materials cost
+    let glueCost: number = material.unitCost * BASEHINGE_GLUE_WEIGHT
+
+    // Create a new repair entry
+    // Can add repairMaterialsCost already because only one material used in this repair
+    const baseHingeRepair: Repair = await tx.repair.create({
+        data: {
+            bookId: book.id,
+            repairTypeId: repair,
+            repairMaterialsCost: glueCost,
+        }
+    })
+
+    // Create a new Material For Repair entry
+    const materialForRepair: MaterialForRepair = await tx.materialForRepair.create({
+        data: {
+            repairId: baseHingeRepair.id,
+            materialId: material.id,
+            amountUsed: BASEHINGE_GLUE_WEIGHT,
+        }
+    })
+}
+
 async function handle(req: NextApiRequest, res: NextApiResponse) {
 
     if (req.method == 'POST')
@@ -192,6 +241,11 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
                 // Tip In
                 if (repair === 'f0053585-ecdf-422a-9c00-af015d19d316') {
                     await createTipinRepair(tx, repair, repairSpecs, newBook)
+                }
+
+                // Base Hinge Tightening
+                if (repair === '9fd756df-83af-4556-87b5-78493cc131bd') {
+                    await createBaseHingeRepair(tx, repair, repairSpecs, newBook)
                 }
             }
         })
