@@ -12,12 +12,110 @@ type BatchReceived = {
     repairSpecs: RepairSpecsType;
 }
 
+// Constant variables
+const TIPIN_GLUE_WEIGHT: number = .01
+
+/**
+ * Perform operations necessary when for a paper repair, inluding--
+ *      Retrieving the material specified,
+ *      Calculating cost for the repair,
+ *      Adding a new entry in the Repair table,
+ *      Adding a new entry in the MaterialForRepair table
+ * 
+ * @param tx the given instance of PrismaClient
+ * @param repair the current repair in the iteration of repairForms
+ * @param repairSpecs all the specs given in the form for all repairs on the book
+ * @param book the book entry
+ */
+async function createPaperRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+    // Retrieve the entry for the material used
+    let material: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.archivalTapeMaterial,
+        },
+    })
+
+    // Ensure unitCost is an Int
+    if (typeof material.unitCost === "string") {
+        material.unitCost = parseInt(material.unitCost, 10)
+    }
+
+    // Calculate the materials cost
+    let tapeCost: number = material.unitCost * parseInt(repairSpecs.tapeLength, 10)
+
+    // Create a new repair entry
+    // Can add repairMaterialsCost already because only one material used in this repair
+    const paperRepair: Repair = await tx.repair.create({
+        data: {
+            bookId: book.id,
+            repairTypeId: repair,
+            repairMaterialsCost: tapeCost,
+        }
+    })
+
+    // Create a new Material For Repair entry
+    const materialForRepair: MaterialForRepair = await tx.materialForRepair.create({
+        data: {
+            repairId: paperRepair.id,
+            materialId: material.id,
+            amountUsed: parseInt(repairSpecs.tapeLength, 10)
+        }
+    })
+}
+
+/**
+ * Perform operations necessary when for a tipin repair, inluding--
+ *      Retrieving the material specified,
+ *      Calculating cost for the repair,
+ *      Adding a new entry in the Repair table,
+ *      Adding a new entry in the MaterialForRepair table
+ * 
+ * @param tx the given instance of PrismaClient
+ * @param repair the current repair in the iteration of repairForms
+ * @param repairSpecs all the specs given in the form for all repairs on the book
+ * @param book the book entry
+ */
+async function createTipinRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+    // Retrieve the entry for the material used
+    let material: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.glueMaterial,
+        },
+    })
+
+    // Ensure unitCost is an Int
+    if (typeof material.unitCost === "string") {
+        material.unitCost = parseInt(material.unitCost, 10)
+    }
+
+    // Calculate the materials cost
+    let glueCost: number = material.unitCost * TIPIN_GLUE_WEIGHT
+
+    // Create a new repair entry
+    // Can add repairMaterialsCost already because only one material used in this repair
+    const tipinRepair: Repair = await tx.repair.create({
+        data: {
+            bookId: book.id,
+            repairTypeId: repair,
+            repairMaterialsCost: glueCost,
+        }
+    })
+
+    // Create a new Material For Repair entry
+    const materialForRepair: MaterialForRepair = await tx.materialForRepair.create({
+        data: {
+            repairId: tipinRepair.id,
+            materialId: material.id,
+            amountUsed: TIPIN_GLUE_WEIGHT,
+        }
+    })
+}
+
 async function handle(req: NextApiRequest, res: NextApiResponse) {
+
     if (req.method == 'POST')
     {
         let { bookBody, repairForms, repairSpecs }: BatchReceived = req.body
-
-        let tapeCost: number = 0
 
         const repairAdditions = await prisma.$transaction(async (tx: PrismaClient) => {
 
@@ -88,40 +186,12 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
 
                 // Paper Repair
                 if (repair === 'f63bc7dd-ac8e-4abe-9526-242fd3a54a15') {
+                    await createPaperRepair(tx, repair, repairSpecs, newBook)
+                }
 
-                    // Retrieve the entry for the material used
-                    let tapeMaterial: Material = await prisma.material.findUnique({
-                        where: {
-                            id: repairSpecs.archivalTapeMaterial,
-                        },
-                    })
-
-                    // Ensure unitCost is an Int
-                    if (typeof tapeMaterial.unitCost === "string") {
-                        tapeMaterial.unitCost = parseInt(tapeMaterial.unitCost, 10)
-                    }
-
-                    // Calculate the materials cost
-                    tapeCost = tapeMaterial.unitCost * parseInt(repairSpecs.tapeLength, 10)
-
-                    // Create a new repair entry
-                    // Can add repairMaterialsCost already because only one material used in this repair
-                    const paperRepair: Repair = await tx.repair.create({
-                        data: {
-                            bookId: newBook.id,
-                            repairTypeId: repair,
-                            repairMaterialsCost: tapeCost,
-                        }
-                    })
-
-                    // Create a new Material For Repair entry
-                    await tx.materialForRepair.create({
-                        data: {
-                            repairId: paperRepair.id,
-                            materialId: tapeMaterial.id,
-                            amountUsed: parseInt(repairSpecs.tapeLength, 10)
-                        }
-                    })
+                // Tip In
+                if (repair === 'f0053585-ecdf-422a-9c00-af015d19d316') {
+                    await createTipinRepair(tx, repair, repairSpecs, newBook)
                 }
             }
         })
