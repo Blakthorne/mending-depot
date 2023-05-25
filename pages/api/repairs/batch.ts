@@ -14,7 +14,11 @@ type BatchReceived = {
 
 // Constant variables
 const TIPIN_GLUE_WEIGHT: number = .01
-const BASEHINGE_GLUE_WEIGHT: number = .05
+const BASEHINGE_GLUE_WEIGHT: number = .03
+const SPINE_REPLACEMENT_GLUE_WEIGHT = .08
+const SPINE_EXTRA_HEIGHT: number = 2
+const SPINE_EXTRA_WIDTH: number = 3
+const CASE_LINING_HEIGHT_SUBTRACTION = .25
 
 /**
  * Perform operations necessary when for a paper repair, inluding--
@@ -158,6 +162,147 @@ async function createBaseHingeRepair(tx: PrismaClient, repair: string, repairSpe
             amountUsed: BASEHINGE_GLUE_WEIGHT,
         }
     })
+}
+
+/**
+ * Perform operations necessary when for a spine replacement, inluding--
+ *      Retrieving the material specified,
+ *      Calculating cost for the repair,
+ *      Adding a new entry in the Repair table,
+ *      Adding a new entry in the MaterialForRepair table
+ * 
+ * @param tx the given instance of PrismaClient
+ * @param repair the current repair in the iteration of repairForms
+ * @param repairSpecs all the specs given in the form for all repairs on the book
+ * @param book the book entry
+ */
+async function createSpineReplacementRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+    // Retrieve the entries for the materials used
+    let spineMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.spineMaterial,
+        },
+    })
+
+    let spineLiningMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.spineLiningMaterial,
+        },
+    })
+
+    let caseLiningMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.caseLiningMaterial,
+        },
+    })
+
+    let bookRibbonMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.bookRibbonMaterial,
+        },
+    })
+
+    let glueMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.glueMaterial,
+        },
+    })
+
+    // Ensure unitCost of all materials is an Int
+    if (typeof spineMaterial.unitCost === "string") {
+        spineMaterial.unitCost = parseInt(spineMaterial.unitCost, 10)
+    }
+
+    if (typeof spineLiningMaterial.unitCost === "string") {
+        spineLiningMaterial.unitCost = parseInt(spineLiningMaterial.unitCost, 10)
+    }
+
+    if (typeof caseLiningMaterial.unitCost === "string") {
+        caseLiningMaterial.unitCost = parseInt(caseLiningMaterial.unitCost, 10)
+    }
+
+    if (typeof bookRibbonMaterial.unitCost === "string") {
+        bookRibbonMaterial.unitCost = parseInt(bookRibbonMaterial.unitCost, 10)
+    }
+
+    if (typeof glueMaterial.unitCost === "string") {
+        glueMaterial.unitCost = parseInt(glueMaterial.unitCost, 10)
+    }
+
+    // Calculate the amount of materials used
+    let spineMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) + SPINE_EXTRA_HEIGHT) * (parseInt(repairSpecs.spineWidth, 10) + SPINE_EXTRA_WIDTH)
+
+    let spineLiningMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * parseInt(repairSpecs.spineWidth, 10)
+
+    let caseLiningMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) - CASE_LINING_HEIGHT_SUBTRACTION) * parseInt(repairSpecs.spineWidth, 10)
+
+    let bookRibbonMaterialUsed: number = parseInt(repairSpecs.spineWidth, 10)
+
+    let glueMaterialUsed: number = SPINE_REPLACEMENT_GLUE_WEIGHT
+
+    // Create a new repair entry
+    // Cannot add repairMaterialsCost already because there are multiple materials used in this repair
+    const spineReplacementRepair: Repair = await tx.repair.create({
+        data: {
+            bookId: book.id,
+            repairTypeId: repair,
+        }
+    })
+
+    // Create new Material For Repair entries
+    const spineMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
+        data: {
+            repairId: spineReplacementRepair.id,
+            materialId: spineMaterial.id,
+            amountUsed: spineMaterialUsed,
+        }
+    })
+
+    const spineLiningMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
+        data: {
+            repairId: spineReplacementRepair.id,
+            materialId: spineLiningMaterial.id,
+            amountUsed: spineLiningMaterialUsed,
+        }
+    })
+
+    const caseLiningMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
+        data: {
+            repairId: spineReplacementRepair.id,
+            materialId: caseLiningMaterial.id,
+            amountUsed: caseLiningMaterialUsed,
+        }
+    })
+
+    const bookRibbonMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
+        data: {
+            repairId: spineReplacementRepair.id,
+            materialId: bookRibbonMaterial.id,
+            amountUsed: bookRibbonMaterialUsed,
+        }
+    })
+
+    const glueMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
+        data: {
+            repairId: spineReplacementRepair.id,
+            materialId: glueMaterial.id,
+            amountUsed: glueMaterialUsed,
+        }
+    })
+
+    const totalRepairCost: number = 5
+
+    // Calculate total cost for the repair
+    // and update the repair entry
+    const spineReplacementRepairWithCost: Repair = await tx.repair.update({
+        where: {
+            id: spineReplacementRepair.id
+        },
+        data: {
+            repairMaterialsCost: totalRepairCost
+        }
+    })
+
 }
 
 async function handle(req: NextApiRequest, res: NextApiResponse) {
