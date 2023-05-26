@@ -734,10 +734,10 @@ function NewRepair() {
                                         />
 
                                         <FormTextInput
-                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineWidth"]: value })}
-                                            placeholder={ "'2'" }
-                                            input={ repairSpecs.spineWidth }
-                                            inputId={ "Spine Width" }
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["numberOfSignatures"]: value })}
+                                            placeholder={ "'14'" }
+                                            input={ repairSpecs.numberOfSignatures }
+                                            inputId={ "Number of Signatures" }
                                             constraints={ ["decimal"] }
                                             errorMessage={ "Please only enter a decimal value here." }
                                             required={ true }

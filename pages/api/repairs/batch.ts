@@ -18,7 +18,7 @@ const BASEHINGE_GLUE_WEIGHT: number = .03
 const SPINE_REPLACEMENT_GLUE_WEIGHT = .08
 const SPINE_EXTRA_HEIGHT: number = 2
 const SPINE_EXTRA_WIDTH: number = 3
-const CASE_LINING_HEIGHT_SUBTRACTION = .25
+const CASE_LINING_HEIGHT_SUBTRACTION: number = .25
 
 /**
  * Perform operations necessary when for a paper repair, inluding--
@@ -295,6 +295,58 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
     })
 }
 
+/**
+ * Perform operations necessary when for a resewing, inluding--
+ *      Retrieving the material specified,
+ *      Calculating cost for the repair,
+ *      Adding a new entry in the Repair table,
+ *      Adding a new entry in the MaterialForRepair table
+ * 
+ * @param tx the given instance of PrismaClient
+ * @param repair the current repair in the iteration of repairForms
+ * @param repairSpecs all the specs given in the form for all repairs on the book
+ * @param book the book entry
+ */
+async function createResewingRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+
+    // Retrieve the entries for the materials used
+    let material: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.threadMaterial,
+        },
+    })
+
+    // Ensure unitCost is an Int
+    if (typeof material.unitCost === "string") {
+        material.unitCost = parseInt(material.unitCost, 10)
+    }
+
+    // Calculate the amount of materials used
+    let threadMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * parseInt(repairSpecs.numberOfSignatures, 10)
+
+    // Calculate the materials cost
+    let threadCost: number = material.unitCost * threadMaterialUsed
+
+    // Create a new repair entry
+    // Can add repairMaterialsCost already because only one material used in this repair
+    const resewRepair: Repair = await tx.repair.create({
+        data: {
+            bookId: book.id,
+            repairTypeId: repair,
+            repairMaterialsCost: threadCost,
+        }
+    })
+
+    // Create a new Material For Repair entry
+    const materialForRepair: MaterialForRepair = await tx.materialForRepair.create({
+        data: {
+            repairId: resewRepair.id,
+            materialId: material.id,
+            amountUsed: threadMaterialUsed,
+        }
+    })
+}
+
 async function handle(req: NextApiRequest, res: NextApiResponse) {
 
     if (req.method == 'POST')
@@ -386,6 +438,11 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
                 // Spine Replacement
                 if (repair === '0252d235-e96c-42c4-b06d-c8278f9ee51a') {
                     await createSpineReplacementRepair(tx, repair, repairSpecs, newBook)
+                }
+
+                // Resewing
+                if (repair === '953a3ba2-4586-4977-a0ad-de45afafccfb') {
+                    await createResewingRepair(tx, repair, repairSpecs, newBook)
                 }
             }
         })
