@@ -177,6 +177,7 @@ async function createBaseHingeRepair(tx: PrismaClient, repair: string, repairSpe
  * @param book the book entry
  */
 async function createSpineReplacementRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+
     // Retrieve the entries for the materials used
     let spineMaterial: Material = await tx.material.findUnique({
         where: {
@@ -240,12 +241,15 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
 
     let glueMaterialUsed: number = SPINE_REPLACEMENT_GLUE_WEIGHT
 
+    // Calculate total cost for the repair
+    const totalRepairCost: number = (spineMaterialUsed * spineMaterial.unitCost) + (spineLiningMaterialUsed * spineLiningMaterial.unitCost) + (caseLiningMaterialUsed * caseLiningMaterial.unitCost) + (bookRibbonMaterialUsed * bookRibbonMaterial.unitCost) + (glueMaterialUsed * glueMaterial.unitCost)
+
     // Create a new repair entry
-    // Cannot add repairMaterialsCost already because there are multiple materials used in this repair
     const spineReplacementRepair: Repair = await tx.repair.create({
         data: {
             bookId: book.id,
             repairTypeId: repair,
+            repairMaterialsCost: totalRepairCost,
         }
     })
 
@@ -289,20 +293,6 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
             amountUsed: glueMaterialUsed,
         }
     })
-
-    const totalRepairCost: number = 5
-
-    // Calculate total cost for the repair
-    // and update the repair entry
-    const spineReplacementRepairWithCost: Repair = await tx.repair.update({
-        where: {
-            id: spineReplacementRepair.id
-        },
-        data: {
-            repairMaterialsCost: totalRepairCost
-        }
-    })
-
 }
 
 async function handle(req: NextApiRequest, res: NextApiResponse) {
@@ -391,6 +381,11 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
                 // Base Hinge Tightening
                 if (repair === '9fd756df-83af-4556-87b5-78493cc131bd') {
                     await createBaseHingeRepair(tx, repair, repairSpecs, newBook)
+                }
+
+                // Spine Replacement
+                if (repair === '0252d235-e96c-42c4-b06d-c8278f9ee51a') {
+                    await createSpineReplacementRepair(tx, repair, repairSpecs, newBook)
                 }
             }
         })
