@@ -98,12 +98,27 @@ model TypesForMaterials {
 }
 
 model MaterialForRepair {
+	id 				String		@id @default(uuid())
 	repair			Repair		@relation(fields: [repairId], references: [id])
 	repairId		String
 	material		Material	@relation(fields: [materialId], references: [id])
 	materialId		String
 	amountUsed		Float
-	@@id([repairId, materialId])
+	materialCost	Float
+	materialHeight	MaterialHeight?
+	materialWidth	MaterialWidth?
+}
+
+model MaterialHeight {
+	materialForRepair	MaterialForRepair	@relation(fields: [materialForRepairId], references: [id])
+	materialForRepairId	String	@id
+	measurement			Float
+}
+
+model MaterialWidth {
+	materialForRepair	MaterialForRepair	@relation(fields: [materialForRepairId], references: [id])
+	materialForRepairId	String	@id
+	measurement			Float
 }
 
 model InventoryTransaction {
