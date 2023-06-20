@@ -1,4 +1,5 @@
 import prisma from '../../../lib/prisma'
+import { Prisma } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
@@ -6,8 +7,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     // Define an array of repair types as an array of type RepairType
     type RepairTypes = RepairType[]
 
-    if (req.method == 'GET')
-    {
+    if (req.method == 'GET') {
         const repairTypes: RepairTypes = await prisma.repairType.findMany()
         res.json(repairTypes)
     }
