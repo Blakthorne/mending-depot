@@ -274,7 +274,8 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
         }
     })
 
-    // Create new Material For Repair entries
+    // Create new Material For Repair entries, along with necessary MaterialWidth and MaterialHeight entries
+    // Spine Material
     const spineMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: spineReplacementRepair.id,
@@ -284,6 +285,21 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
         }
     })
 
+    const spineMaterialWidth: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: spineMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.spineWidth, 10) + SPINE_EXTRA_WIDTH,
+        }
+    })
+
+    const spineMaterialHeight: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: spineMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10) + SPINE_EXTRA_HEIGHT,
+        }
+    })
+
+    // Spine Lining
     const spineLiningMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: spineReplacementRepair.id,
@@ -293,6 +309,21 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
         }
     })
 
+    const spineLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: spineLiningMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.spineWidth, 10),
+        }
+    })
+
+    const spineLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: spineLiningMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10) - SPINE_LINING_HEIGHT_SUBTRACTION,
+        }
+    })
+
+    // Case Lining
     const caseLiningMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: spineReplacementRepair.id,
@@ -302,6 +333,21 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
         }
     })
 
+    const caseLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: caseLiningMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.spineWidth, 10),
+        }
+    })
+
+    const caseLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: caseLiningMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+        }
+    })
+
+    // Book Ribbon 1
     const bookRibbonMaterialForRepair1: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: spineReplacementRepair.id,
@@ -311,6 +357,7 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
         }
     })
 
+    // Book Ribbon 2
     const bookRibbonMaterialForRepair2: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: spineReplacementRepair.id,
@@ -320,7 +367,7 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
         }
     })
 
-
+    // Glue
     const glueMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: spineReplacementRepair.id,
@@ -519,7 +566,8 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
-    // Create new Material For Repair entries
+    // Create new Material For Repair entries, along with with necessary MaterialWidth and MaterialHeigth entries
+    // Spine Lining
     const spineLiningMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -529,6 +577,21 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
+    const spineLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: spineLiningMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.spineWidth, 10),
+        }
+    })
+
+    const spineLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: spineLiningMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10) - SPINE_LINING_HEIGHT_SUBTRACTION,
+        }
+    })
+
+    // Case Lining
     const caseLiningMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -538,6 +601,21 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
+    const caseLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: caseLiningMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.spineWidth, 10),
+        }
+    })
+
+    const caseLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: caseLiningMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+        }
+    })
+
+    // Flysheet 1
     const flysheetMaterialForRepair1: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -547,6 +625,21 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
+    const flysheetMaterialWidth1: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: flysheetMaterialForRepair1.id,
+            measurement: parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+        }
+    })
+
+    const flysheetMaterialHeight1: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: flysheetMaterialForRepair1.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+        }
+    })
+
+    // Flysheet 2
     const flysheetMaterialForRepair2: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -556,6 +649,21 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
+    const flysheetMaterialWidth2: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: flysheetMaterialForRepair2.id,
+            measurement: parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+        }
+    })
+
+    const flysheetMaterialHeight2: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: flysheetMaterialForRepair2.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+        }
+    })
+
+    // Japanese Paper 1
     const japanesePaperMaterialForRepair1: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -565,6 +673,21 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
+    const japanesePaperWidth1: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: japanesePaperMaterialForRepair1.id,
+            measurement: FLYSHEET_JAPANESE_PAPER_WIDTH,
+        }
+    })
+
+    const japanesePaperHeight1: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: japanesePaperMaterialForRepair1.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+        }
+    })
+
+    // Japanese Paper 2
     const japanesePaperMaterialForRepair2: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -574,6 +697,21 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
+    const japanesePaperWidth2: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: japanesePaperMaterialForRepair2.id,
+            measurement: FLYSHEET_JAPANESE_PAPER_WIDTH,
+        }
+    })
+
+    const japanesePaperHeight2: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: japanesePaperMaterialForRepair2.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+        }
+    })
+
+    // Cheesecloth
     const cheeseclothMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -583,6 +721,21 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
+    const cheeseclothWidth: MaterialWidth = await tx.materialWidth.create({
+        data: {
+            materialForRepairId: cheeseclothMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION,
+        }
+    })
+
+    const cheeseclothHeight: MaterialHeight = await tx.materialHeight.create({
+        data: {
+            materialForRepairId: cheeseclothMaterialForRepair.id,
+            measurement: parseInt(repairSpecs.textBlockHeight, 10) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION,
+        }
+    })
+
+    // Book Ribbon 1
     const bookRibbonMaterialForRepair1: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -592,6 +745,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
+    // Book Ribbon 2
     const bookRibbonMaterialForRepair2: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -601,6 +755,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
         }
     })
 
+    // Glue
     const glueMaterialForRepair: MaterialForRepair = await tx.materialForRepair.create({
         data: {
             repairId: flysheetReplacementRepair.id,
@@ -609,6 +764,22 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
             materialCost: glueMaterialCost,
         }
     })
+}
+
+/**
+ * Perform operations necessary when for a cover replacement, inluding--
+ *      Retrieving the material specified,
+ *      Calculating cost for the repair,
+ *      Adding new entries in the Repair table,
+ *      Adding new entries in the MaterialForRepair table
+ * 
+ * @param tx the given instance of PrismaClient
+ * @param repair the current repair in the iteration of repairForms
+ * @param repairSpecs all the specs given in the form for all repairs on the book
+ * @param book the book entry
+ */
+async function createCoverRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+
 }
 
 async function handle(req: NextApiRequest, res: NextApiResponse) {

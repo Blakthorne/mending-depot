@@ -54,6 +54,20 @@ type MaterialForRepair = {
     repairId: string;
     materialId: string;
     amountUsed: string | number;
+    materialCost: string | number;
+    id: string;
+}
+
+// Create type structure for a type for material width entry
+type MaterialWidth = {
+    materialForRepairId: string;
+    measurement: string | number;
+}
+
+// Create type structure for a type for material height entry
+type MaterialHeight = {
+    materialForRepairId: string;
+    measurement: string | number;
 }
 
 // Create type structure for a type for materials type entry
