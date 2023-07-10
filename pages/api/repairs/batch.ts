@@ -24,6 +24,10 @@ const FLYSHEET_EXTRA_WIDTH_HEIGHT: number = 1.5
 const FLYSHEET_JAPANESE_PAPER_WIDTH: number = .25
 const FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION: number = 2
 const FLYSHEET_CHEESECLOTH_WIDTH_ADDITION: number = 4
+const COVER_BOOK_BOARD_EXTRA_HEIGHT: number = .25
+const COVER_BOOK_BOARD_EXTRA_WIDTH: number = .0625
+const COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT: number = .625
+const COVER_LINING_STRIP_WIDTH: number = .125
 
 /**
  * Perform operations necessary when for a paper repair, inluding--
@@ -522,7 +526,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
 
     let caseLiningMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * parseInt(repairSpecs.spineWidth, 10)
 
-    let flysheetMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * (parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT)
+    let flysheetMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * ((parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2)
 
     let japanesePaperMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * FLYSHEET_JAPANESE_PAPER_WIDTH
 
@@ -533,7 +537,6 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
     let glueMaterialUsed: number = FLYSHEET_REPLACEMENT_GLUE_WEIGHT
 
     // Calculate the costs of materials
-
     let spineLiningMaterialCost: number = spineLiningMaterialUsed * spineLiningMaterial.unitCost
 
     let caseLiningMaterialCost: number = caseLiningMaterialUsed * caseLiningMaterial.unitCost
@@ -628,7 +631,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
     const flysheetMaterialWidth1: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair1.id,
-            measurement: parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+            measurement: (parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
         }
     })
 
@@ -652,7 +655,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
     const flysheetMaterialWidth2: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair2.id,
-            measurement: parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+            measurement: (parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
         }
     })
 
@@ -780,6 +783,186 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
  */
 async function createCoverRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
 
+    // Create variables for figuring out how to handle cover materials
+    let fullBoundCoverMaterialUsed: number = 0
+    let quarterBoundSpineMaterialUsed: number = 0
+    let quarterBoundSideMaterialUsed: number = 0
+    let threeQuarterBoundSpineMaterialUsed: number = 0
+    let threeQuarterBoundSideMaterialUsed: number = 0
+    let threeQuarterBoundCornerMaterialUsed: number = 0
+
+    let fullBoundCoverMaterialCost: number = 0
+    let quarterBoundSpineMaterialCost: number = 0
+    let quarterBoundSideMaterialCost: number = 0
+    let threeQuarterBoundSpineMaterialCost: number = 0
+    let threeQuarterBoundSideMaterialCost: number = 0
+    let threeQuarterBoundCornerMaterialCost: number = 0
+
+    // Retrieve the entries for the materials used
+    let spineMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.spineMaterial,
+        },
+    })
+
+    let sideMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.sideMaterial,
+        },
+    })
+
+    let bookBoardMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.bookBoardMaterial,
+        }
+    })
+
+    let spineLiningMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.spineLiningMaterial,
+        },
+    })
+
+    let caseLiningMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.caseLiningMaterial,
+        },
+    })
+
+    let flysheetMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.flysheetMaterial,
+        },
+    })
+
+    let japanesePaperMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.japanesePaperMaterial,
+        },
+    })
+
+    let cheeseclothMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.cheeseclothMaterial,
+        },
+    })
+
+    let bookRibbonMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.bookRibbonMaterial,
+        },
+    })
+
+    let glueMaterial: Material = await tx.material.findUnique({
+        where: {
+            id: repairSpecs.glueMaterial,
+        },
+    })
+
+    // Ensure unitCost is an Int
+    if (typeof spineMaterial.unitCost === "string") {
+        spineMaterial.unitCost = parseInt(spineMaterial.unitCost, 10)
+    }
+
+    if (typeof sideMaterial.unitCost === "string") {
+        sideMaterial.unitCost = parseInt(sideMaterial.unitCost, 10)
+    }
+
+    if (typeof bookBoardMaterial.unitCost === "string") {
+        bookBoardMaterial.unitCost = parseInt(bookBoardMaterial.unitCost, 10)
+    }
+
+    if (typeof spineLiningMaterial.unitCost === "string") {
+        spineLiningMaterial.unitCost = parseInt(spineLiningMaterial.unitCost, 10)
+    }
+
+    if (typeof caseLiningMaterial.unitCost === "string") {
+        caseLiningMaterial.unitCost = parseInt(caseLiningMaterial.unitCost, 10)
+    }
+
+    if (typeof flysheetMaterial.unitCost === "string") {
+        flysheetMaterial.unitCost = parseInt(flysheetMaterial.unitCost, 10)
+    }
+
+    if (typeof japanesePaperMaterial.unitCost === "string") {
+        japanesePaperMaterial.unitCost = parseInt(japanesePaperMaterial.unitCost, 10)
+    }
+
+    if (typeof cheeseclothMaterial.unitCost === "string") {
+        cheeseclothMaterial.unitCost = parseInt(cheeseclothMaterial.unitCost, 10)
+    }
+
+    if (typeof bookRibbonMaterial.unitCost === "string") {
+        bookRibbonMaterial.unitCost = parseInt(bookRibbonMaterial.unitCost, 10)
+    }
+
+    if (typeof glueMaterial.unitCost === "string") {
+        glueMaterial.unitCost = parseInt(glueMaterial.unitCost, 10)
+    }
+
+    // Calculate the amount of materials used
+    if (repairSpecs.coverType === "fullBound") {
+        fullBoundCoverMaterialUsed = (COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT + (parseInt(repairSpecs.textBlockHeight, 10) + COVER_BOOK_BOARD_EXTRA_HEIGHT) + COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT) * (COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT + (parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH) + COVER_LINING_STRIP_WIDTH + parseInt(repairSpecs.spineWidth) + COVER_LINING_STRIP_WIDTH + (parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH) + COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT)
+    }
+    else if (repairSpecs.coverType === "quarterBound") {
+        // TODO
+    }
+    else if (repairSpecs.coverType === "threeQuarterBound") {
+        // TODO
+    }
+    else { }
+
+    let bookBoardMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) + COVER_BOOK_BOARD_EXTRA_HEIGHT) * (parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH);
+
+    let spineLiningMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) - SPINE_LINING_HEIGHT_SUBTRACTION) * parseInt(repairSpecs.spineWidth, 10)
+
+    let caseLiningMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * parseInt(repairSpecs.spineWidth, 10)
+
+    let flysheetMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * ((parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2)
+
+    let japanesePaperMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * FLYSHEET_JAPANESE_PAPER_WIDTH
+
+    let cheeseclothMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION) * (parseInt(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION)
+
+    let bookRibbonMaterialUsed: number = parseInt(repairSpecs.spineWidth, 10)
+
+    let glueMaterialUsed: number = FLYSHEET_REPLACEMENT_GLUE_WEIGHT
+
+    // Calculate the costs of materials
+    if (repairSpecs.coverType === "fullBound") {
+        fullBoundCoverMaterialCost = fullBoundCoverMaterialUsed * sideMaterial.unitCost
+    }
+    else if (repairSpecs.coverType === "quarterBound") {
+        // TODO
+    }
+    else if (repairSpecs.coverType === "threeQuarterBound") {
+        // TODO
+    }
+    else { }
+
+    let bookBoardMaterialCost1: number = bookBoardMaterialUsed * bookBoardMaterial.unitCost
+
+    let bookBoardMaterialCost2: number = bookBoardMaterialUsed * bookBoardMaterial.unitCost
+
+    let spineLiningMaterialCost: number = spineLiningMaterialUsed * spineLiningMaterial.unitCost
+
+    let caseLiningMaterialCost: number = caseLiningMaterialUsed * caseLiningMaterial.unitCost
+
+    let flysheetMaterialCost1: number = flysheetMaterialUsed * flysheetMaterial.unitCost
+
+    let flysheetMaterialCost2: number = flysheetMaterialUsed * flysheetMaterial.unitCost
+
+    let japanesePaperMaterialCost1: number = japanesePaperMaterialUsed * japanesePaperMaterial.unitCost
+
+    let japanesePaperMaterialCost2: number = japanesePaperMaterialUsed * japanesePaperMaterial.unitCost
+
+    let cheeseclothMaterialCost: number = cheeseclothMaterialUsed * cheeseclothMaterial.unitCost
+
+    let bookRibbonMaterialCost1: number = bookRibbonMaterialUsed * bookRibbonMaterial.unitCost
+
+    let bookRibbonMaterialCost2: number = bookRibbonMaterialUsed * bookRibbonMaterial.unitCost
+
+    let glueMaterialCost: number = glueMaterialUsed * glueMaterial.unitCost
 }
 
 async function handle(req: NextApiRequest, res: NextApiResponse) {

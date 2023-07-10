@@ -82,7 +82,7 @@ function NewRepair() {
     if (bindingTypeIdsError) console.log(bindingTypeIdsError)
 
     // Create array of the cover type options to be used in the Cover Replacement form
-    let coverTypeOptions: object[] =  [{"display": "Full Bound", "store": "Full Bound"}, {"display": "Quarter Bound", "store": "Quarter Bound"}, {"display": "Three-Quarter Bound", "store": "Three-Quarter Bound"}]
+    let coverTypeOptions: object[] =  [{"display": "Full Bound", "store": "fullBound"}, {"display": "Quarter Bound", "store": "quarterBound"}, {"display": "Three-Quarter Bound", "store": "threeQuarterBound"}]
 
     /**
      * Submit data to the server upon pressing the submit button in the form
