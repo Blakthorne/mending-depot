@@ -26,8 +26,9 @@ const FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION: number = 2
 const FLYSHEET_CHEESECLOTH_WIDTH_ADDITION: number = 4
 const COVER_BOOK_BOARD_EXTRA_HEIGHT: number = .25
 const COVER_BOOK_BOARD_EXTRA_WIDTH: number = .0625
-const COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT: number = .625
+const COVER_MATERIAL_EXTRA_WIDTH_HEIGHT: number = .625
 const COVER_LINING_STRIP_WIDTH: number = .125
+const COVER_QUARTER_BOUND_SPINE_EXTRA_WIDTH: number = 2
 
 /**
  * Perform operations necessary when for a paper repair, inluding--
@@ -902,10 +903,29 @@ async function createCoverRepair(tx: PrismaClient, repair: string, repairSpecs: 
 
     // Calculate the amount of materials used
     if (repairSpecs.coverType === "fullBound") {
-        fullBoundCoverMaterialUsed = (COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT + (parseInt(repairSpecs.textBlockHeight, 10) + COVER_BOOK_BOARD_EXTRA_HEIGHT) + COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT) * (COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT + (parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH) + COVER_LINING_STRIP_WIDTH + parseInt(repairSpecs.spineWidth) + COVER_LINING_STRIP_WIDTH + (parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH) + COVER_FULL_BOUND_EXTRA_WIDTH_HEIGHT)
+
+        // Calculate height of material
+        let heightBoardCovering: number = parseInt(repairSpecs.textBlockHeight, 10) + COVER_BOOK_BOARD_EXTRA_HEIGHT
+        let heightExtraMargin: number = COVER_MATERIAL_EXTRA_WIDTH_HEIGHT * 2
+        let heightTotal: number = heightBoardCovering + heightExtraMargin
+
+        // Calculate width of material
+        let widthBoardCovering: number = (parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH) * 2
+        let widthExtraMargin: number = (COVER_MATERIAL_EXTRA_WIDTH_HEIGHT * 2) + (COVER_LINING_STRIP_WIDTH * 2)
+        let widthTotal: number = widthBoardCovering + widthExtraMargin + parseInt(repairSpecs.spineWidth, 10)
+
+        fullBoundCoverMaterialUsed = heightTotal * widthTotal
     }
     else if (repairSpecs.coverType === "quarterBound") {
+
+        // Calculate spine material used
+        let heightSpineCovering: number = parseInt(repairSpecs.textBlockHeight, 10) + (COVER_MATERIAL_EXTRA_WIDTH_HEIGHT * 2)
+        let widthSpineCovering: number = parseInt(repairSpecs.spineWidth, 10) + (COVER_LINING_STRIP_WIDTH * 2) + (COVER_QUARTER_BOUND_SPINE_EXTRA_WIDTH * 2)
+        let quarterBoundSpineMaterialUsed: number = heightSpineCovering * widthSpineCovering
+
+        // Calculate side material used
         // TODO
+        // let heightSideCovering: number = 
     }
     else if (repairSpecs.coverType === "threeQuarterBound") {
         // TODO
