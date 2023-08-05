@@ -19,7 +19,7 @@ type RepairSpecsType = {
 
 type submitRepairsType = {
     bookBody: Book;
-    repairForms: string[];
+    repairForms: RepairType[];
     repairSpecs: RepairSpecsType;
 }
 
@@ -47,8 +47,14 @@ function NewRepair() {
     const [receivedValid, setReceivedValid] = useState(false)
     const [returnedValid, setReturnedValid] = useState(false)
 
+    // Create an empty RepairType form entry to be used as a placeholder
+    const blankRepairForm: RepairType = {
+        id: '',
+        repairTypeName: ''
+    }
+
     // Create state for the repair type form inputs
-    const [repairForms, setRepairForms] = useState([''])
+    const [repairForms, setRepairForms] = useState([blankRepairForm])
 
     const tempObj: RepairSpecsType = {}
 
@@ -167,11 +173,11 @@ function NewRepair() {
         // If there is only one form on the page, just blank out the option
         // If there is more than one form on the page, remove the selected form
         if (repairForms.length === 1) {
-            setRepairForms([''])
+            setRepairForms([blankRepairForm])
         }
         else {
-            let frontForms: string[] = repairForms.slice(0, repairNum)
-            let backForms: string[] = repairForms.slice(repairNum + 1, undefined)
+            let frontForms: RepairType[] = repairForms.slice(0, repairNum)
+            let backForms: RepairType[] = repairForms.slice(repairNum + 1, undefined)
 
             frontForms = [...frontForms, ...backForms]
 
@@ -183,25 +189,30 @@ function NewRepair() {
      * Clear all the repair forms upon submission
      */
     const cancelAllRepairForms = (): void => {
-        setRepairForms(['']);
+        setRepairForms([blankRepairForm]);
     }
 
     /**
      * Add another input field for adding another repair associated with the book
      */
      const addRepairForm = (): void => {
-        setRepairForms(repairForms => [...repairForms, ''])
+        setRepairForms(repairForms => [...repairForms, blankRepairForm])
     }
 
     /**
      * Update the repairTypesInputs state with new information selected by the user
      */
-     const updateRepairTypeInputs = (value, index): void => {
+     const updateRepairTypeInputs = (input: string, index: number): void => {
         
         // Use the ellipses syntax to copy the array and tell React that the state reference has changed
         let curRepairsArray = [...repairForms]
 
-        curRepairsArray[index] = value
+        const hasReparTypeId = (item: RepairType) => item.id === input
+
+        const curRepairTypeIndex: number = repairTypes.findIndex(hasReparTypeId)
+
+        curRepairsArray[index] = repairTypes[curRepairTypeIndex]
+
         setRepairForms(curRepairsArray)
     }
 
@@ -354,7 +365,7 @@ function NewRepair() {
                                     <div>
                                         <FormSelectInput
                                             onChange={(value) => updateRepairTypeInputs(value, index)}
-                                            input={ input }
+                                            input={ input.id }
                                             inputId={ "Repair Type" }
                                             options={ repairTypes }
                                             displayKey={ "repairTypeName"}
@@ -364,7 +375,7 @@ function NewRepair() {
                                     </div>
 
                                     {/* Spine Replacement Form */}
-                                    <If condition={repairForms[index] === '0252d235-e96c-42c4-b06d-c8278f9ee51a'}>
+                                    <If condition={repairForms[index].repairTypeName === "Spine Replacement"}>
                                         <FormTextInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["textBlockHeight"]: value })}
                                             placeholder={ "'8'" }
@@ -437,7 +448,7 @@ function NewRepair() {
                                     </If>
 
                                     {/* Cover Replacement Form */}
-                                    <If condition={repairForms[index] === '9135b9d4-f631-4734-a334-b2b2f944639a'}>
+                                    <If condition={repairForms[index].repairTypeName === "Cover Replacement"}>
                                         <FormTextInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["textBlockHeight"]: value })}
                                             placeholder={ "'8'" }
@@ -570,7 +581,7 @@ function NewRepair() {
                                     </If>
 
                                     {/* Flysheet Replacement Form */}
-                                    <If condition={repairForms[index] === 'a9b47354-b892-48e1-a3ce-bdb7e535b91e'}>
+                                    <If condition={repairForms[index].repairTypeName === "Flysheet Replacement"}>
                                         <FormTextInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["textBlockHeight"]: value })}
                                             placeholder={ "'8'" }
@@ -673,7 +684,7 @@ function NewRepair() {
                                     </If>
                                     
                                     {/* Base Hinge Tightening Form */}
-                                    <If condition={repairForms[index] === '9fd756df-83af-4556-87b5-78493cc131bd'}>
+                                    <If condition={repairForms[index].repairTypeName === "Base Hinge Tightening"}>
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["glueMaterial"]: value })}
                                             input={ repairSpecs.glueMaterial }
@@ -686,7 +697,7 @@ function NewRepair() {
                                     </If>
 
                                     {/* Tip-In Form */}
-                                    <If condition={repairForms[index] === 'f0053585-ecdf-422a-9c00-af015d19d316'}>
+                                    <If condition={repairForms[index].repairTypeName === "Tip-In"}>
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["glueMaterial"]: value })}
                                             input={ repairSpecs.glueMaterial }
@@ -699,7 +710,7 @@ function NewRepair() {
                                     </If>
 
                                     {/* Paper Repair Form */}
-                                    <If condition={repairForms[index] === 'f63bc7dd-ac8e-4abe-9526-242fd3a54a15'}>
+                                    <If condition={repairForms[index].repairTypeName === "Paper Repair"}>
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["archivalTapeMaterial"]: value })}
                                             input={ repairSpecs.archivalTapeMaterial }
@@ -722,7 +733,7 @@ function NewRepair() {
                                     </If>
 
                                     {/* Resewing Form */}
-                                    <If condition={repairForms[index] === '953a3ba2-4586-4977-a0ad-de45afafccfb'}>
+                                    <If condition={repairForms[index].repairTypeName === "Resewing"}>
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["threadMaterial"]: value })}
                                             input={ repairSpecs.threadMaterial }

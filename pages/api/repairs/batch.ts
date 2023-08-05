@@ -8,7 +8,7 @@ type RepairSpecsType = {
 
 type BatchReceived = {
     bookBody: Book;
-    repairForms: string[];
+    repairForms: RepairType[];
     repairSpecs: RepairSpecsType;
 }
 
@@ -42,7 +42,7 @@ const COVER_QUARTER_BOUND_SPINE_EXTRA_WIDTH: number = 2
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createPaperRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+async function createPaperRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
     // Retrieve the entry for the material used
     let material: Material = await tx.material.findUnique({
         where: {
@@ -63,7 +63,7 @@ async function createPaperRepair(tx: PrismaClient, repair: string, repairSpecs: 
     const paperRepair: Repair = await tx.repair.create({
         data: {
             bookId: book.id,
-            repairTypeId: repair,
+            repairTypeId: repair.id,
             repairMaterialsCost: tapeCost,
         }
     })
@@ -91,7 +91,7 @@ async function createPaperRepair(tx: PrismaClient, repair: string, repairSpecs: 
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createTipinRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+async function createTipinRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
     // Retrieve the entry for the material used
     let material: Material = await tx.material.findUnique({
         where: {
@@ -112,7 +112,7 @@ async function createTipinRepair(tx: PrismaClient, repair: string, repairSpecs: 
     const tipinRepair: Repair = await tx.repair.create({
         data: {
             bookId: book.id,
-            repairTypeId: repair,
+            repairTypeId: repair.id,
             repairMaterialsCost: glueCost,
         }
     })
@@ -140,7 +140,7 @@ async function createTipinRepair(tx: PrismaClient, repair: string, repairSpecs: 
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createBaseHingeRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+async function createBaseHingeRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
     // Retrieve the entry for the material used
     let material: Material = await tx.material.findUnique({
         where: {
@@ -161,7 +161,7 @@ async function createBaseHingeRepair(tx: PrismaClient, repair: string, repairSpe
     const baseHingeRepair: Repair = await tx.repair.create({
         data: {
             bookId: book.id,
-            repairTypeId: repair,
+            repairTypeId: repair.id,
             repairMaterialsCost: glueCost,
         }
     })
@@ -189,7 +189,7 @@ async function createBaseHingeRepair(tx: PrismaClient, repair: string, repairSpe
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createSpineReplacementRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+async function createSpineReplacementRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
 
     // Retrieve the entries for the materials used
     let spineMaterial: Material = await tx.material.findUnique({
@@ -274,7 +274,7 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
     const spineReplacementRepair: Repair = await tx.repair.create({
         data: {
             bookId: book.id,
-            repairTypeId: repair,
+            repairTypeId: repair.id,
             repairMaterialsCost: totalRepairCost,
         }
     })
@@ -395,7 +395,7 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: string, re
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createResewingRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+async function createResewingRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
 
     // Retrieve the entries for the materials used
     let material: Material = await tx.material.findUnique({
@@ -420,7 +420,7 @@ async function createResewingRepair(tx: PrismaClient, repair: string, repairSpec
     const resewRepair: Repair = await tx.repair.create({
         data: {
             bookId: book.id,
-            repairTypeId: repair,
+            repairTypeId: repair.id,
             repairMaterialsCost: threadCost,
         }
     })
@@ -448,7 +448,7 @@ async function createResewingRepair(tx: PrismaClient, repair: string, repairSpec
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
 
     // Retrieve the entries for the materials used
     let spineLiningMaterial: Material = await tx.material.findUnique({
@@ -565,7 +565,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
     const flysheetReplacementRepair: Repair = await tx.repair.create({
         data: {
             bookId: book.id,
-            repairTypeId: repair,
+            repairTypeId: repair.id,
             repairMaterialsCost: totalRepairCost,
         }
     })
@@ -782,7 +782,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: string, repairSpec
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createCoverRepair(tx: PrismaClient, repair: string, repairSpecs: RepairSpecsType, book: Book) {
+async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
 
     // Create variables for figuring out how to handle cover materials
     let fullBoundCoverMaterialUsed: number = 0
@@ -1059,32 +1059,32 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
             for (let repair of repairForms) {
 
                 // Paper Repair
-                if (repair === 'f63bc7dd-ac8e-4abe-9526-242fd3a54a15') {
+                if (repair.repairTypeName === "Paper Repair") {
                     await createPaperRepair(tx, repair, repairSpecs, newBook)
                 }
 
                 // Tip In
-                if (repair === 'f0053585-ecdf-422a-9c00-af015d19d316') {
+                if (repair.repairTypeName === "Tip-In") {
                     await createTipinRepair(tx, repair, repairSpecs, newBook)
                 }
 
                 // Base Hinge Tightening
-                if (repair === '9fd756df-83af-4556-87b5-78493cc131bd') {
+                if (repair.repairTypeName === "Base Hinge Tightening") {
                     await createBaseHingeRepair(tx, repair, repairSpecs, newBook)
                 }
 
                 // Spine Replacement
-                if (repair === '0252d235-e96c-42c4-b06d-c8278f9ee51a') {
+                if (repair.repairTypeName === "Spine Replacement") {
                     await createSpineReplacementRepair(tx, repair, repairSpecs, newBook)
                 }
 
                 // Resewing
-                if (repair === '953a3ba2-4586-4977-a0ad-de45afafccfb') {
+                if (repair.repairTypeName === "Resewing") {
                     await createResewingRepair(tx, repair, repairSpecs, newBook)
                 }
 
                 // Flysheet Replacement
-                if (repair === 'a9b47354-b892-48e1-a3ce-bdb7e535b91e') {
+                if (repair.repairTypeName === "Flysheet Replacement") {
                     await createFlysheetRepair(tx, repair, repairSpecs, newBook)
                 }
             }
