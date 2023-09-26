@@ -460,6 +460,16 @@ function NewRepair() {
                                         />
 
                                         <FormTextInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["textBlockWidth"]: value })}
+                                            placeholder={ "'5'" }
+                                            input={ repairSpecs.textBlockWidth }
+                                            inputId={ "Text Block Width" }
+                                            constraints={ ["decimal"] }
+                                            errorMessage={ "Please only enter a decimal value here." }
+                                            required={ true }
+                                        />
+
+                                        <FormTextInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineWidth"]: value })}
                                             placeholder={ "'2'" }
                                             input={ repairSpecs.spineWidth }

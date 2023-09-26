@@ -1390,7 +1390,6 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
     {
         let { bookBody, repairForms, repairSpecs }: BatchReceived = req.body
 
-        try {
         const repairAdditions = await prisma.$transaction(async (tx: PrismaClient) => {
 
             // Break out the bookBody object into the respective components
@@ -1493,14 +1492,10 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
                     await createCoverRepair(tx, repair, repairSpecs, newBook)
                 }
             }
-        })} catch (e) {
-            if (e instanceof Prisma.PrismaClientValidationError) {
-                res.status(200).json(e.message)
-            }
-        }
+        })
 
 
-        // res.status(200).json(repairAdditions)
+        res.status(200).json(repairAdditions)
     }
 }
 
