@@ -26,7 +26,6 @@ export default function BookSummary({ bookId }: SummaryComponent) {
         </Backdrop>
         )
     }
-    if (data[0] == undefined) return <div className="mt-16">There is no data for this book</div>
     
     return (
     <div></div>
