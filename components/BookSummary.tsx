@@ -13,6 +13,10 @@ type SummaryComponent = {
  */
 export default function BookSummary({ bookId }: SummaryComponent) {
 
+    if (bookId === undefined) {
+        bookId = ""
+    }
+
     // Retrieve the table requested by the parent component
     const { data, error } = useSWR<object[], Error>('/api/summary/' + bookId)
     if (error) console.log(error)
