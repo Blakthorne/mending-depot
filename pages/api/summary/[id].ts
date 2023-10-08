@@ -8,16 +8,26 @@ type Repairs = Repair[]
 // Define an array of materialForRepairs as an array of type MaterialForRepair
 type MaterialForRepairs = MaterialForRepair[]
 
-// Define an array of materials as an array of type Material
-type Materials = Material[]
+type MaterialData = {
+    materialForRepair: MaterialForRepair;
+    material: Material;
+    unitType: UnitType;
+    materialHeight?: MaterialHeight;
+    materialWidth?: MaterialWidth;
+}
+
+type RepairData = {
+    repair: Repair;
+    repairType: RepairType;
+    materialData: MaterialData[];
+}
 
 // Define a format to return to the client
-type SummaryInfo = {
+type SummaryData = {
     book: Book;
-    owner: string;
-    bindingType: string;
-    repairs: Repair[]
-
+    owner: Owner;
+    bindingType: BindingType;
+    repairData: RepairData[];
 }
 
 // Format the received and returned dates of the Book to be readable
@@ -76,9 +86,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             },
         })
 
-        // Retrieve just the string value
-        let ownerName: string = owner.ownerName
-
         // Pull binding type name from table
         let bindingType: BindingType = await prisma.bindingType.findUnique({
             where: {
@@ -89,9 +96,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             },
         })
 
-        // Retrieve just the string value
-        let bindingTypeName: string = bindingType.bindingTypeName
-
         // Pull all repairs from table for the book
         let repairs: Repairs = await prisma.repair.findMany({
             where: {
@@ -99,21 +103,16 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             }
         })
 
-        let repairsWithMaterials = []
+        let repairDatas: RepairData[]
 
         for (let repair of repairs) {
+
             // Retrieve name of repair type
             let repairType: RepairType = await prisma.repairType.findUnique({
                 where: {
                     id: repair.repairTypeId
-                },
-                select: {
-                    repairTypeName: true,
-                },
+                }
             })
-
-            // Retrieve just the string value
-            let repairTypeName: string = repairType.repairTypeName
 
             let materialForRepairs: MaterialForRepairs = await prisma.materialForRepair.findMany({
                 where: {
@@ -121,12 +120,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 }
             })
 
+            let materialDatas: MaterialData[]
+
             for (let materialForRepair of materialForRepairs) {
-                let materials: Materials = await prisma.material.findMany({
-                    where: {
-                        id: materialForRepair.id
-                    }
-                })
 
                 // Retrieve material height entry
                 let materialHeight: MaterialHeight = await prisma.materialHeight.findUnique({
@@ -135,11 +131,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                     },
                 })
 
-                // Ensure material height is a number
-                if (typeof materialHeight.measurement === "string") {
-                    materialHeight.measurement = parseInt(materialHeight.measurement, 10)
-                }
-
                 // Retrieve material width entry
                 let materialWidth: MaterialWidth = await prisma.materialWidth.findUnique({
                     where: {
@@ -147,30 +138,46 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                     },
                 })
 
-                // Ensure material width is a number
-                if (typeof materialWidth.measurement === "string") {
-                    materialWidth.measurement = parseInt(materialWidth.measurement, 10)
+                let material: Material = await prisma.material.findUnique({
+                    where: {
+                        id: materialForRepair.id
+                    }
+                })
+
+                // Retrieve name of unit type
+                let unitType: UnitType = await prisma.unitType.findUnique({
+                    where: {
+                        id: material.unitTypeId
+                    },
+                })
+
+                let materialData: MaterialData = {
+                    materialForRepair: materialForRepair,
+                    material: material,
+                    unitType: unitType,
+                    materialHeight: materialHeight,
+                    materialWidth: materialWidth,
                 }
 
-                for (let material of materials) {
-                    // Retrieve name of unit type
-                    let unitType: UnitType = await prisma.unitType.findUnique({
-                        where: {
-                            id: material.unitTypeId
-                        },
-                        select: {
-                            unitTypeName: true,
-                        },
-                    })
-
-                    // Retrieve just the string value
-                    let unitTypeName: string = unitType.unitTypeName
-                }
+                materialDatas.push(materialData)
             }
 
-            repairsWithMaterials.push(materialForRepairs)
+            let repairData: RepairData = {
+                repair: repair,
+                repairType: repairType,
+                materialData: materialDatas,
+            }
+
+            repairDatas.push(repairData)
         }
         
-        res.status(200).json(bindingTypeName)
+        let summaryData: SummaryData = {
+            book: book,
+            owner: owner,
+            bindingType: bindingType,
+            repairData: repairDatas,
+        }
+
+        res.status(200).json(summaryData)
     }
 }
