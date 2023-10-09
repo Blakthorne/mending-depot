@@ -32,6 +32,8 @@ export default function BookSummary({ bookId }: SummaryComponent) {
     }
     
     return (
-    <div></div>
+        <div>
+            
+        </div>
     )
 }

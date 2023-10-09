@@ -103,7 +103,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             }
         })
 
-        let repairDatas: RepairData[]
+        let repairDatas: RepairData[] = []
 
         for (let repair of repairs) {
 
@@ -120,7 +120,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 }
             })
 
-            let materialDatas: MaterialData[]
+            let materialDatas: MaterialData[] = []
 
             for (let materialForRepair of materialForRepairs) {
 
@@ -140,7 +140,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
                 let material: Material = await prisma.material.findUnique({
                     where: {
-                        id: materialForRepair.id
+                        id: materialForRepair.materialId
                     }
                 })
 
