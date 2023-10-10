@@ -108,7 +108,15 @@ export default function BookSummary({ bookId }: SummaryComponent) {
                     <div className="table-cell border-b border-slate-600 font-medium p-4 pt-2 pb-2 text-left">{data.book.returned}</div>
                 </div>
             </div>
-            <div className="font-sans text-slate-200 text-center drop-shadow-lg mx-80">
+            <div>
+                <div className="font-sans text-slate-200 text-xl text-center drop-shadow-lg mb-2">
+                    Total Cost of Materials - {data.book.bookMaterialsCost}
+                </div>
+                <div className="font-sans text-slate-200 text-xl text-center drop-shadow-lg">
+                    
+                </div>
+            </div>
+            <div className="font-sans text-slate-200 drop-shadow-lg mx-auto">
                 {data.repairData.map(repair => (
                     <div key={(iterKey += 1)}>
                         <div key={(iterKey += 1)} className="text-left mb-8 mt-16">

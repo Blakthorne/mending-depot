@@ -36,6 +36,41 @@ const COVER_LINING_STRIP_WIDTH: number = .125
 const COVER_QUARTER_BOUND_SPINE_EXTRA_WIDTH: number = 2
 
 /**
+ * 
+ * @param tx 
+ * @param book 
+ * @param costUpdate 
+ */
+async function updateBookMaterialsCost(tx: PrismaClient, book: Book, costUpdate: number) {
+
+    // Set bookMaterialsCost in book entry to `0` since `increment` won't work if it is `null`
+    if (book.bookMaterialsCost === null) {
+        await tx.book.update({
+           where: {
+               id: book.id
+           },
+           data: {
+               bookMaterialsCost: {
+                   set: 0
+               }
+           }
+       })
+   }
+
+   // Update bookMaterialsCost in book entry
+   await tx.book.update({
+       where: {
+           id: book.id
+       },
+       data: {
+           bookMaterialsCost: {
+               increment: costUpdate
+           }
+       }
+   })
+}
+
+/**
  * Perform operations necessary when for a paper repair, inluding--
  *      Retrieving the material specified,
  *      Calculating cost for the repair,
@@ -62,6 +97,8 @@ async function createPaperRepair(tx: PrismaClient, repair: RepairType, repairSpe
 
     // Calculate the materials cost
     let tapeCost: number = material.unitCost * parseInt(repairSpecs.tapeLength, 10)
+
+    updateBookMaterialsCost(tx, book, tapeCost)
 
     // Create a new repair entry
     // Can add repairMaterialsCost already because only one material used in this repair
@@ -111,6 +148,8 @@ async function createTipinRepair(tx: PrismaClient, repair: RepairType, repairSpe
 
     // Calculate the materials cost
     let glueCost: number = material.unitCost * TIPIN_GLUE_WEIGHT
+
+    updateBookMaterialsCost(tx, book, glueCost)
 
     // Create a new repair entry
     // Can add repairMaterialsCost already because only one material used in this repair
