@@ -1,5 +1,6 @@
 import useSWR, { useSWRConfig } from 'swr'
 import Head from 'next/head'
+import { redirect } from 'next/navigation'
 import React, { useState } from 'react'
 import FormTextInput from '../components/FormTextInput'
 import FormSelectInput from '../components/FormSelectInput'
@@ -30,7 +31,7 @@ function If(props) {
 function NewRepair() {
 
     // Create state for stage of the new repair process
-    const [stage, setStage] = useState('newRepairs')
+    const [stage, setStage] = useState('book')
 
     // Create state for the attributes of a book
     const [title, setTitle] = useState('')
@@ -118,13 +119,15 @@ function NewRepair() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
-            // cancelBookInputs()
-            // cancelAllRepairForms()
+            cancelBookInputs()
+            cancelAllRepairForms()
             clearErrors()
 
             // Update the UI wherever this API call is referenced
             mutate('/api/books')
-            mutate('api/repairs')
+            mutate('/api/repairs')
+
+            redirect('/summary/' + bookBody.id)
         } catch (error) {
             console.error(error)
         }
@@ -227,10 +230,6 @@ function NewRepair() {
 
     const toPrevStep = (): void => {
         if (stage === 'newRepairs') setStage('book')
-    }
-
-    const toRepairStep = (): void => {
-        if (stage === 'book') setStage('newRepairs')
     }
 
     return (
