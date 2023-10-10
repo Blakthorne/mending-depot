@@ -1,6 +1,6 @@
 import useSWR, { useSWRConfig } from 'swr'
 import Head from 'next/head'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import FormTextInput from '../components/FormTextInput'
 import FormSelectInput from '../components/FormSelectInput'
@@ -72,6 +72,9 @@ function NewRepair() {
 
     const fetcher = url => fetch(url).then(r => r.json())
 
+    // For redirecting to summary page upon entry completion
+    const router = useRouter()
+
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
     const { data: owners, error } = useSWR<Owner[], Error>('/api/owners', fetcher)
     if (error) console.log(error)
@@ -112,6 +115,8 @@ function NewRepair() {
         // Create an object composed of the info from the new Book form
         const bookBody: Book = { title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }
 
+        let newBook: Book
+
         try {
             const body: submitRepairsType = { bookBody, repairForms, repairSpecs }
             await fetch('/api/repairs/batch', {
@@ -119,6 +124,11 @@ function NewRepair() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
+            .then((response) => response.json())
+            .then((response) => {
+                newBook = response
+            });
+
             cancelBookInputs()
             cancelAllRepairForms()
             clearErrors()
@@ -127,7 +137,9 @@ function NewRepair() {
             mutate('/api/books')
             mutate('/api/repairs')
 
-            redirect('/summary/' + bookBody.id)
+            if (newBook.id !== undefined) {
+                router.push('/summary/' + newBook.id)
+            }
         } catch (error) {
             console.error(error)
         }

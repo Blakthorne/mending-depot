@@ -1390,6 +1390,9 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
     {
         let { bookBody, repairForms, repairSpecs }: BatchReceived = req.body
 
+        // So newBook can be returned
+        let newBook: Book
+
         const repairAdditions = await prisma.$transaction(async (tx: PrismaClient) => {
 
             // Break out the bookBody object into the respective components
@@ -1439,7 +1442,7 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
             }
 
             // Create the new book
-            const newBook: Book = await tx.book.create({
+            newBook = await tx.book.create({
                 data: {
                     title: title,
                     author: author,
@@ -1495,7 +1498,7 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
         })
 
 
-        res.status(200).json(repairAdditions)
+        res.status(200).json(newBook)
     }
 }
 
