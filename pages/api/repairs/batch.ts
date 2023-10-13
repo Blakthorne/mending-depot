@@ -36,9 +36,11 @@ const COVER_LINING_STRIP_WIDTH: number = .125
 const COVER_QUARTER_BOUND_SPINE_EXTRA_WIDTH: number = 2
 
 /**
+ * Update the bookMaterialsCost cost of the provided Book entry
+ * with the given added amount
  * 
- * @param tx 
- * @param book 
+ * @param tx
+ * @param bookId
  * @param costUpdate 
  */
 async function updateBookMaterialsCost(tx: PrismaClient, bookId: string, costUpdate: number) {

@@ -500,25 +500,35 @@ function NewRepair() {
                                             required={ true }
                                         />
 
-                                        <FormSelectInput
+                                        {repairSpecs.coverType === "fullBound" ? '' : <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["spineMaterial"]: value })}
                                             input={ repairSpecs.spineMaterial }
                                             inputId={ "Spine Material" }
                                             options={ getMaterialsList("Cover Material") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
-                                            required={ true }
-                                        />
+                                            required={ repairSpecs.coverType === "fullBound" ? false : true }
+                                        />}
 
                                         <FormSelectInput
-                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["sideMaterial"]: value })}
+                                            onChange={(value) => {repairSpecs.coverType === "fullBound" ? setRepairSpecs({ ...repairSpecs, ["sideMaterial"]: value, ["spineMaterial"]: value}) : setRepairSpecs({ ...repairSpecs, ["sideMaterial"]: value })}}
                                             input={ repairSpecs.sideMaterial }
-                                            inputId={ "Side Material" }
+                                            inputId={ repairSpecs.coverType === "fullBound" ? "Cover Material" : "Side Material"}
                                             options={ getMaterialsList("Cover Material") }
                                             displayKey={ "materialName"}
                                             storeKey={ "materialId" }
                                             required={ true }
                                         />
+
+                                        {repairSpecs.coverType === "threeQuarterBound" ? <FormSelectInput
+                                            onChange={(value) => setRepairSpecs({ ...repairSpecs, ["cornerMaterial"]: value })}
+                                            input={ repairSpecs.cornerMaterial }
+                                            inputId={ "Corner Material" }
+                                            options={ getMaterialsList("Cover Material") }
+                                            displayKey={ "materialName"}
+                                            storeKey={ "materialId" }
+                                            required={ repairSpecs.coverType === "threeQuarterBound" ? true : false }
+                                        /> : ''}
 
                                         <FormSelectInput
                                             onChange={(value) => setRepairSpecs({ ...repairSpecs, ["bookBoardMaterial"]: value })}
