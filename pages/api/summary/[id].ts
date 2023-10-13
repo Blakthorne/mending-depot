@@ -1,6 +1,5 @@
 import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import RepairTypes from '../../repair-types'
 
 // Define an array of repairs as an array of type Repair
 type Repairs = Repair[]

@@ -41,33 +41,38 @@ const COVER_QUARTER_BOUND_SPINE_EXTRA_WIDTH: number = 2
  * @param book 
  * @param costUpdate 
  */
-async function updateBookMaterialsCost(tx: PrismaClient, book: Book, costUpdate: number) {
+async function updateBookMaterialsCost(tx: PrismaClient, bookId: string, costUpdate: number) {
+
+    // Retrieve the book
+    let book: Book = await tx.book.findUnique({
+        where: {
+            id: bookId
+        }
+    })
 
     // Set bookMaterialsCost in book entry to `0` since `increment` won't work if it is `null`
     if (book.bookMaterialsCost === null) {
         await tx.book.update({
-           where: {
-               id: book.id
-           },
-           data: {
-               bookMaterialsCost: {
-                   set: 0
-               }
-           }
-       })
-   }
+            where: {
+                id: book.id
+            },
+            data: {
+                bookMaterialsCost: 0
+            }
+        })
+    }
 
-   // Update bookMaterialsCost in book entry
-   await tx.book.update({
-       where: {
-           id: book.id
-       },
-       data: {
-           bookMaterialsCost: {
-               increment: costUpdate
-           }
-       }
-   })
+    // Update bookMaterialsCost in book entry
+    await tx.book.update({
+        where: {
+            id: book.id
+        },
+        data: {
+            bookMaterialsCost: {
+                increment: costUpdate
+            }
+        }
+    })
 }
 
 /**
@@ -82,7 +87,7 @@ async function updateBookMaterialsCost(tx: PrismaClient, book: Book, costUpdate:
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createPaperRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
+async function createPaperRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, bookId: string) {
     // Retrieve the entry for the material used
     let material: Material = await tx.material.findUnique({
         where: {
@@ -98,13 +103,13 @@ async function createPaperRepair(tx: PrismaClient, repair: RepairType, repairSpe
     // Calculate the materials cost
     let tapeCost: number = material.unitCost * parseInt(repairSpecs.tapeLength, 10)
 
-    updateBookMaterialsCost(tx, book, tapeCost)
+    await updateBookMaterialsCost(tx, bookId, tapeCost)
 
     // Create a new repair entry
     // Can add repairMaterialsCost already because only one material used in this repair
     const paperRepair: Repair = await tx.repair.create({
         data: {
-            bookId: book.id,
+            bookId: bookId,
             repairTypeId: repair.id,
             repairMaterialsCost: tapeCost,
         }
@@ -133,7 +138,8 @@ async function createPaperRepair(tx: PrismaClient, repair: RepairType, repairSpe
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createTipinRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
+async function createTipinRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, bookId: string) {
+
     // Retrieve the entry for the material used
     let material: Material = await tx.material.findUnique({
         where: {
@@ -149,13 +155,13 @@ async function createTipinRepair(tx: PrismaClient, repair: RepairType, repairSpe
     // Calculate the materials cost
     let glueCost: number = material.unitCost * TIPIN_GLUE_WEIGHT
 
-    updateBookMaterialsCost(tx, book, glueCost)
+    await updateBookMaterialsCost(tx, bookId, glueCost)
 
     // Create a new repair entry
     // Can add repairMaterialsCost already because only one material used in this repair
     const tipinRepair: Repair = await tx.repair.create({
         data: {
-            bookId: book.id,
+            bookId: bookId,
             repairTypeId: repair.id,
             repairMaterialsCost: glueCost,
         }
@@ -184,7 +190,8 @@ async function createTipinRepair(tx: PrismaClient, repair: RepairType, repairSpe
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createBaseHingeRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
+async function createBaseHingeRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, bookId: string) {
+
     // Retrieve the entry for the material used
     let material: Material = await tx.material.findUnique({
         where: {
@@ -200,11 +207,13 @@ async function createBaseHingeRepair(tx: PrismaClient, repair: RepairType, repai
     // Calculate the materials cost
     let glueCost: number = material.unitCost * BASEHINGE_GLUE_WEIGHT
 
+    await updateBookMaterialsCost(tx, bookId, glueCost)
+
     // Create a new repair entry
     // Can add repairMaterialsCost already because only one material used in this repair
     const baseHingeRepair: Repair = await tx.repair.create({
         data: {
-            bookId: book.id,
+            bookId: bookId,
             repairTypeId: repair.id,
             repairMaterialsCost: glueCost,
         }
@@ -233,7 +242,7 @@ async function createBaseHingeRepair(tx: PrismaClient, repair: RepairType, repai
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createSpineReplacementRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
+async function createSpineReplacementRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, bookId: string) {
 
     // Retrieve the entries for the materials used
     let spineMaterial: Material = await tx.material.findUnique({
@@ -314,10 +323,12 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: RepairType
     // Calculate total cost for the repair
     const totalRepairCost: number = spineMaterialCost + spineLiningMaterialCost + caseLiningMaterialCost + bookRibbonMaterialCost1 + bookRibbonMaterialCost2 + glueMaterialCost
 
+    await updateBookMaterialsCost(tx, bookId, totalRepairCost)
+
     // Create a new repair entry
     const spineReplacementRepair: Repair = await tx.repair.create({
         data: {
-            bookId: book.id,
+            bookId: bookId,
             repairTypeId: repair.id,
             repairMaterialsCost: totalRepairCost,
         }
@@ -439,7 +450,7 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: RepairType
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createResewingRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
+async function createResewingRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, bookId: string) {
 
     // Retrieve the entries for the materials used
     let material: Material = await tx.material.findUnique({
@@ -459,11 +470,13 @@ async function createResewingRepair(tx: PrismaClient, repair: RepairType, repair
     // Calculate the materials cost
     let threadCost: number = material.unitCost * threadMaterialUsed
 
+    await updateBookMaterialsCost(tx, bookId, threadCost)
+
     // Create a new repair entry
     // Can add repairMaterialsCost already because only one material used in this repair
     const resewRepair: Repair = await tx.repair.create({
         data: {
-            bookId: book.id,
+            bookId: bookId,
             repairTypeId: repair.id,
             repairMaterialsCost: threadCost,
         }
@@ -492,7 +505,7 @@ async function createResewingRepair(tx: PrismaClient, repair: RepairType, repair
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
+async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, bookId: string) {
 
     // Retrieve the entries for the materials used
     let spineLiningMaterial: Material = await tx.material.findUnique({
@@ -605,10 +618,12 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
     // Calculate the total materials cost
     const totalRepairCost: number = spineLiningMaterialCost + caseLiningMaterialCost + flysheetMaterialCost1 + flysheetMaterialCost2 + japanesePaperMaterialCost1 + japanesePaperMaterialCost2 + cheeseclothMaterialCost + bookRibbonMaterialCost1 + bookRibbonMaterialCost2 + glueMaterialCost
 
+    await updateBookMaterialsCost(tx, bookId, totalRepairCost)
+
     // Create a new repair entry
     const flysheetReplacementRepair: Repair = await tx.repair.create({
         data: {
-            bookId: book.id,
+            bookId: bookId,
             repairTypeId: repair.id,
             repairMaterialsCost: totalRepairCost,
         }
@@ -826,7 +841,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
  * @param repairSpecs all the specs given in the form for all repairs on the book
  * @param book the book entry
  */
-async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, book: Book) {
+async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpecs: RepairSpecsType, bookId: string) {
 
     // Create variables for figuring out how to handle cover material amounts
     // Full-Bound vars
@@ -1065,10 +1080,12 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     // Calculate the total materials cost
     const totalRepairCost: number = totalCoverCost + bookBoardMaterialCost1 + bookBoardMaterialCost2 + spineLiningMaterialCost + caseLiningMaterialCost + flysheetMaterialCost1 + flysheetMaterialCost2 + japanesePaperMaterialCost1 + japanesePaperMaterialCost2 + cheeseclothMaterialCost + bookRibbonMaterialCost1 + bookRibbonMaterialCost2 + glueMaterialCost
 
+    await updateBookMaterialsCost(tx, bookId, totalRepairCost)
+
     // Create a new repair entry
     const coverReplacementRepair: Repair = await tx.repair.create({
         data: {
-            bookId: book.id,
+            bookId: bookId,
             repairTypeId: repair.id,
             repairMaterialsCost: totalRepairCost,
         }
@@ -1497,47 +1514,55 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
                 }
             })
 
+            let bookId: string = newBook.id
+
             for (let repair of repairForms) {
 
                 // Paper Repair
                 if (repair.repairTypeName === "Paper Repair") {
-                    await createPaperRepair(tx, repair, repairSpecs, newBook)
+                    await createPaperRepair(tx, repair, repairSpecs, bookId)
                 }
 
                 // Tip In
                 if (repair.repairTypeName === "Tip-In") {
-                    await createTipinRepair(tx, repair, repairSpecs, newBook)
+                    await createTipinRepair(tx, repair, repairSpecs, bookId)
                 }
 
                 // Base Hinge Tightening
                 if (repair.repairTypeName === "Base Hinge Tightening") {
-                    await createBaseHingeRepair(tx, repair, repairSpecs, newBook)
+                    await createBaseHingeRepair(tx, repair, repairSpecs, bookId)
                 }
 
                 // Spine Replacement
                 if (repair.repairTypeName === "Spine Replacement") {
-                    await createSpineReplacementRepair(tx, repair, repairSpecs, newBook)
+                    await createSpineReplacementRepair(tx, repair, repairSpecs, bookId)
                 }
 
                 // Resewing
                 if (repair.repairTypeName === "Resewing") {
-                    await createResewingRepair(tx, repair, repairSpecs, newBook)
+                    await createResewingRepair(tx, repair, repairSpecs, bookId)
                 }
 
                 // Flysheet Replacement
                 if (repair.repairTypeName === "Flysheet Replacement") {
-                    await createFlysheetRepair(tx, repair, repairSpecs, newBook)
+                    await createFlysheetRepair(tx, repair, repairSpecs, bookId)
                 }
 
                 // Cover Replacement
                 if (repair.repairTypeName === "Cover Replacement") {
-                    await createCoverRepair(tx, repair, repairSpecs, newBook)
+                    await createCoverRepair(tx, repair, repairSpecs, bookId)
                 }
             }
         })
 
+        let finalBook: Book = await prisma.book.findUnique({
+            where: {
+                id: newBook.id
+            }
+        })
 
-        res.status(200).json(newBook)
+
+        res.status(200).json(finalBook)
     }
 }
 
