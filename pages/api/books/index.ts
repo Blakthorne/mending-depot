@@ -42,18 +42,18 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             yearPublished = null
         }
         if (typeof yearPublished === "string") {
-            yearPublished = parseInt(yearPublished, 10)
+            yearPublished = parseFloat(yearPublished)
         }
 
         if (numberOfPages === '') {
             numberOfPages = null
         }
         if (typeof numberOfPages === "string") {
-            numberOfPages = parseInt(numberOfPages, 10)
+            numberOfPages = parseFloat(numberOfPages)
         }
 
         if (typeof received === "string") {
-            received = new Date(parseInt(received.slice(10)), parseInt(received.slice(0, 2)) - 1, parseInt(received.slice(5, 7)))
+            received = new Date(parseFloat(received.slice(10)), parseFloat(received.slice(0, 2)) - 1, parseFloat(received.slice(5, 7)))
             console.log(received)
         }
 
@@ -61,21 +61,21 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             returned = null
         }
         if (typeof returned === "string") {
-            returned = new Date(parseInt(returned.slice(10)), parseInt(returned.slice(0, 2)) - 1, parseInt(returned.slice(5, 7)))
+            returned = new Date(parseFloat(returned.slice(10)), parseFloat(returned.slice(0, 2)) - 1, parseFloat(returned.slice(5, 7)))
         }
 
         if (bookMaterialsCost === '') {
             bookMaterialsCost = null
         }
         if (typeof bookMaterialsCost === "string") {
-            bookMaterialsCost = parseInt(bookMaterialsCost, 10)
+            bookMaterialsCost = parseFloat(bookMaterialsCost)
         }
 
         if (amountCharged === '') {
             amountCharged = null
         }
         if (typeof amountCharged === "string") {
-            amountCharged = parseInt(amountCharged, 10)
+            amountCharged = parseFloat(amountCharged)
         }
 
         const book: Book = await prisma.book.create({

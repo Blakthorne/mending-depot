@@ -40,14 +40,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         // Ensure the new entries are in the correct format
         // Cannot use 'else if' on string empty checks for type checking reasons - TypeScript thinks they could still be numbers
         if (typeof datePurchased === "string") {
-            datePurchased = new Date(parseInt(datePurchased.slice(10)), parseInt(datePurchased.slice(0, 2)) - 1, parseInt(datePurchased.slice(5, 7)))
+            datePurchased = new Date(parseFloat(datePurchased.slice(10)), parseFloat(datePurchased.slice(0, 2)) - 1, parseFloat(datePurchased.slice(5, 7)))
         }
 
         if (dateReceived === '') {
             dateReceived = null
         }
         if (typeof dateReceived === "string") {
-            dateReceived = new Date(parseInt(dateReceived.slice(10)), parseInt(dateReceived.slice(0, 2)) - 1, parseInt(dateReceived.slice(5, 7)))
+            dateReceived = new Date(parseFloat(dateReceived.slice(10)), parseFloat(dateReceived.slice(0, 2)) - 1, parseFloat(dateReceived.slice(5, 7)))
         }
 
         if (typeof unitsPurchased === "string") {

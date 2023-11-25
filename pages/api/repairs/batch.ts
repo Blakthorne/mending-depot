@@ -1,9 +1,14 @@
 import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient, Prisma } from '@prisma/client'
+import MaterialTypes from '../../material-types';
 
 type RepairSpecsType = {
     [key: string]: string;
+}
+
+type MaterialsType = {
+    [key: string]: Material;
 }
 
 type BatchReceived = {
@@ -99,11 +104,11 @@ async function createPaperRepair(tx: PrismaClient, repair: RepairType, repairSpe
 
     // Ensure unitCost is an Int
     if (typeof material.unitCost === "string") {
-        material.unitCost = parseInt(material.unitCost, 10)
+        material.unitCost = parseFloat(material.unitCost)
     }
 
     // Calculate the materials cost
-    let tapeCost: number = material.unitCost * parseInt(repairSpecs.tapeLength, 10)
+    let tapeCost: number = material.unitCost * parseFloat(repairSpecs.tapeLength)
 
     await updateBookMaterialsCost(tx, bookId, tapeCost)
 
@@ -122,7 +127,7 @@ async function createPaperRepair(tx: PrismaClient, repair: RepairType, repairSpe
         data: {
             repairId: paperRepair.id,
             materialId: material.id,
-            amountUsed: parseInt(repairSpecs.tapeLength, 10),
+            amountUsed: parseFloat(repairSpecs.tapeLength),
             materialCost: tapeCost,
         }
     })
@@ -151,7 +156,7 @@ async function createTipinRepair(tx: PrismaClient, repair: RepairType, repairSpe
 
     // Ensure unitCost is an Int
     if (typeof material.unitCost === "string") {
-        material.unitCost = parseInt(material.unitCost, 10)
+        material.unitCost = parseFloat(material.unitCost)
     }
 
     // Calculate the materials cost
@@ -203,7 +208,7 @@ async function createBaseHingeRepair(tx: PrismaClient, repair: RepairType, repai
 
     // Ensure unitCost is an Int
     if (typeof material.unitCost === "string") {
-        material.unitCost = parseInt(material.unitCost, 10)
+        material.unitCost = parseFloat(material.unitCost)
     }
 
     // Calculate the materials cost
@@ -279,33 +284,33 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: RepairType
 
     // Ensure unitCost of all materials is an Int
     if (typeof spineMaterial.unitCost === "string") {
-        spineMaterial.unitCost = parseInt(spineMaterial.unitCost, 10)
+        spineMaterial.unitCost = parseFloat(spineMaterial.unitCost)
     }
 
     if (typeof spineLiningMaterial.unitCost === "string") {
-        spineLiningMaterial.unitCost = parseInt(spineLiningMaterial.unitCost, 10)
+        spineLiningMaterial.unitCost = parseFloat(spineLiningMaterial.unitCost)
     }
 
     if (typeof caseLiningMaterial.unitCost === "string") {
-        caseLiningMaterial.unitCost = parseInt(caseLiningMaterial.unitCost, 10)
+        caseLiningMaterial.unitCost = parseFloat(caseLiningMaterial.unitCost)
     }
 
     if (typeof bookRibbonMaterial.unitCost === "string") {
-        bookRibbonMaterial.unitCost = parseInt(bookRibbonMaterial.unitCost, 10)
+        bookRibbonMaterial.unitCost = parseFloat(bookRibbonMaterial.unitCost)
     }
 
     if (typeof glueMaterial.unitCost === "string") {
-        glueMaterial.unitCost = parseInt(glueMaterial.unitCost, 10)
+        glueMaterial.unitCost = parseFloat(glueMaterial.unitCost)
     }
 
     // Calculate the amount of materials used
-    let spineMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) + SPINE_EXTRA_HEIGHT) * (parseInt(repairSpecs.spineWidth, 10) + SPINE_EXTRA_WIDTH)
+    let spineMaterialUsed: number = (parseFloat(repairSpecs.textBlockHeight,) + SPINE_EXTRA_HEIGHT) * (parseFloat(repairSpecs.spineWidth) + SPINE_EXTRA_WIDTH)
 
-    let spineLiningMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) - SPINE_LINING_HEIGHT_SUBTRACTION) * parseInt(repairSpecs.spineWidth, 10)
+    let spineLiningMaterialUsed: number = (parseFloat(repairSpecs.textBlockHeight) - SPINE_LINING_HEIGHT_SUBTRACTION) * parseFloat(repairSpecs.spineWidth)
 
-    let caseLiningMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * parseInt(repairSpecs.spineWidth, 10)
+    let caseLiningMaterialUsed: number = parseFloat(repairSpecs.textBlockHeight) * parseFloat(repairSpecs.spineWidth)
 
-    let bookRibbonMaterialUsed: number = parseInt(repairSpecs.spineWidth, 10)
+    let bookRibbonMaterialUsed: number = parseFloat(repairSpecs.spineWidth)
 
     let glueMaterialUsed: number = SPINE_REPLACEMENT_GLUE_WEIGHT
 
@@ -350,14 +355,14 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: RepairType
     const spineMaterialWidth: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: spineMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.spineWidth, 10) + SPINE_EXTRA_WIDTH,
+            measurement: parseFloat(repairSpecs.spineWidth) + SPINE_EXTRA_WIDTH,
         }
     })
 
     const spineMaterialHeight: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: spineMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) + SPINE_EXTRA_HEIGHT,
+            measurement: parseFloat(repairSpecs.textBlockHeight) + SPINE_EXTRA_HEIGHT,
         }
     })
 
@@ -374,14 +379,14 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: RepairType
     const spineLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: spineLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.spineWidth, 10),
+            measurement: parseFloat(repairSpecs.spineWidth),
         }
     })
 
     const spineLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: spineLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) - SPINE_LINING_HEIGHT_SUBTRACTION,
+            measurement: parseFloat(repairSpecs.textBlockHeight) - SPINE_LINING_HEIGHT_SUBTRACTION,
         }
     })
 
@@ -398,14 +403,14 @@ async function createSpineReplacementRepair(tx: PrismaClient, repair: RepairType
     const caseLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: caseLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.spineWidth, 10),
+            measurement: parseFloat(repairSpecs.spineWidth),
         }
     })
 
     const caseLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: caseLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+            measurement: parseFloat(repairSpecs.textBlockHeight),
         }
     })
 
@@ -463,11 +468,11 @@ async function createResewingRepair(tx: PrismaClient, repair: RepairType, repair
 
     // Ensure unitCost is an Int
     if (typeof material.unitCost === "string") {
-        material.unitCost = parseInt(material.unitCost, 10)
+        material.unitCost = parseFloat(material.unitCost)
     }
 
     // Calculate the amount of materials used
-    let threadMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * parseInt(repairSpecs.numberOfSignatures, 10)
+    let threadMaterialUsed: number = parseFloat(repairSpecs.textBlockHeight) * parseFloat(repairSpecs.numberOfSignatures)
 
     // Calculate the materials cost
     let threadCost: number = material.unitCost * threadMaterialUsed
@@ -554,45 +559,45 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
 
     // Ensure unitCost is an Int
     if (typeof spineLiningMaterial.unitCost === "string") {
-        spineLiningMaterial.unitCost = parseInt(spineLiningMaterial.unitCost, 10)
+        spineLiningMaterial.unitCost = parseFloat(spineLiningMaterial.unitCost)
     }
 
     if (typeof caseLiningMaterial.unitCost === "string") {
-        caseLiningMaterial.unitCost = parseInt(caseLiningMaterial.unitCost, 10)
+        caseLiningMaterial.unitCost = parseFloat(caseLiningMaterial.unitCost)
     }
 
     if (typeof flysheetMaterial.unitCost === "string") {
-        flysheetMaterial.unitCost = parseInt(flysheetMaterial.unitCost, 10)
+        flysheetMaterial.unitCost = parseFloat(flysheetMaterial.unitCost)
     }
 
     if (typeof japanesePaperMaterial.unitCost === "string") {
-        japanesePaperMaterial.unitCost = parseInt(japanesePaperMaterial.unitCost, 10)
+        japanesePaperMaterial.unitCost = parseFloat(japanesePaperMaterial.unitCost)
     }
 
     if (typeof cheeseclothMaterial.unitCost === "string") {
-        cheeseclothMaterial.unitCost = parseInt(cheeseclothMaterial.unitCost, 10)
+        cheeseclothMaterial.unitCost = parseFloat(cheeseclothMaterial.unitCost)
     }
 
     if (typeof bookRibbonMaterial.unitCost === "string") {
-        bookRibbonMaterial.unitCost = parseInt(bookRibbonMaterial.unitCost, 10)
+        bookRibbonMaterial.unitCost = parseFloat(bookRibbonMaterial.unitCost)
     }
 
     if (typeof glueMaterial.unitCost === "string") {
-        glueMaterial.unitCost = parseInt(glueMaterial.unitCost, 10)
+        glueMaterial.unitCost = parseFloat(glueMaterial.unitCost)
     }
 
     // Calculate the amount of materials used
-    let spineLiningMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) - SPINE_LINING_HEIGHT_SUBTRACTION) * parseInt(repairSpecs.spineWidth, 10)
+    let spineLiningMaterialUsed: number = (parseFloat(repairSpecs.textBlockHeight) - SPINE_LINING_HEIGHT_SUBTRACTION) * parseFloat(repairSpecs.spineWidth)
 
-    let caseLiningMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * parseInt(repairSpecs.spineWidth, 10)
+    let caseLiningMaterialUsed: number = parseFloat(repairSpecs.textBlockHeight) * parseFloat(repairSpecs.spineWidth)
 
-    let flysheetMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * ((parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2)
+    let flysheetMaterialUsed: number = (parseFloat(repairSpecs.textBlockHeight) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * ((parseFloat(repairSpecs.textBlockWidth) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2)
 
-    let japanesePaperMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * FLYSHEET_JAPANESE_PAPER_WIDTH
+    let japanesePaperMaterialUsed: number = parseFloat(repairSpecs.textBlockHeight) * FLYSHEET_JAPANESE_PAPER_WIDTH
 
-    let cheeseclothMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION) * (parseInt(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION)
+    let cheeseclothMaterialUsed: number = (parseFloat(repairSpecs.textBlockHeight) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION) * (parseFloat(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION)
 
-    let bookRibbonMaterialUsed: number = parseInt(repairSpecs.spineWidth, 10)
+    let bookRibbonMaterialUsed: number = parseFloat(repairSpecs.spineWidth)
 
     let glueMaterialUsed: number = FLYSHEET_REPLACEMENT_GLUE_WEIGHT
 
@@ -645,14 +650,14 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
     const spineLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: spineLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.spineWidth, 10),
+            measurement: parseFloat(repairSpecs.spineWidth),
         }
     })
 
     const spineLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: spineLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) - SPINE_LINING_HEIGHT_SUBTRACTION,
+            measurement: parseFloat(repairSpecs.textBlockHeight) - SPINE_LINING_HEIGHT_SUBTRACTION,
         }
     })
 
@@ -669,14 +674,14 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
     const caseLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: caseLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.spineWidth, 10),
+            measurement: parseFloat(repairSpecs.spineWidth),
         }
     })
 
     const caseLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: caseLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+            measurement: parseFloat(repairSpecs.textBlockHeight),
         }
     })
 
@@ -693,14 +698,14 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
     const flysheetMaterialWidth1: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair1.id,
-            measurement: (parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
+            measurement: (parseFloat(repairSpecs.textBlockWidth) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
         }
     })
 
     const flysheetMaterialHeight1: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair1.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+            measurement: parseFloat(repairSpecs.textBlockHeight) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
         }
     })
 
@@ -717,14 +722,14 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
     const flysheetMaterialWidth2: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair2.id,
-            measurement: (parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
+            measurement: (parseFloat(repairSpecs.textBlockWidth) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
         }
     })
 
     const flysheetMaterialHeight2: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair2.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+            measurement: parseFloat(repairSpecs.textBlockHeight) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
         }
     })
 
@@ -748,7 +753,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
     const japanesePaperHeight1: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: japanesePaperMaterialForRepair1.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+            measurement: parseFloat(repairSpecs.textBlockHeight),
         }
     })
 
@@ -772,7 +777,7 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
     const japanesePaperHeight2: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: japanesePaperMaterialForRepair2.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+            measurement: parseFloat(repairSpecs.textBlockHeight),
         }
     })
 
@@ -789,14 +794,14 @@ async function createFlysheetRepair(tx: PrismaClient, repair: RepairType, repair
     const cheeseclothWidth: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: cheeseclothMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION,
+            measurement: parseFloat(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION,
         }
     })
 
     const cheeseclothHeight: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: cheeseclothMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION,
+            measurement: parseFloat(repairSpecs.textBlockHeight) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION,
         }
     })
 
@@ -948,71 +953,71 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
 
     // Ensure unitCost is an Int
     if (typeof spineMaterial.unitCost === "string") {
-        spineMaterial.unitCost = parseInt(spineMaterial.unitCost, 10)
+        spineMaterial.unitCost = parseFloat(spineMaterial.unitCost)
     }
 
     if (typeof sideMaterial.unitCost === "string") {
-        sideMaterial.unitCost = parseInt(sideMaterial.unitCost, 10)
+        sideMaterial.unitCost = parseFloat(sideMaterial.unitCost)
     }
 
     if (typeof bookBoardMaterial.unitCost === "string") {
-        bookBoardMaterial.unitCost = parseInt(bookBoardMaterial.unitCost, 10)
+        bookBoardMaterial.unitCost = parseFloat(bookBoardMaterial.unitCost)
     }
 
     if (typeof spineLiningMaterial.unitCost === "string") {
-        spineLiningMaterial.unitCost = parseInt(spineLiningMaterial.unitCost, 10)
+        spineLiningMaterial.unitCost = parseFloat(spineLiningMaterial.unitCost)
     }
 
     if (typeof caseLiningMaterial.unitCost === "string") {
-        caseLiningMaterial.unitCost = parseInt(caseLiningMaterial.unitCost, 10)
+        caseLiningMaterial.unitCost = parseFloat(caseLiningMaterial.unitCost)
     }
 
     if (typeof flysheetMaterial.unitCost === "string") {
-        flysheetMaterial.unitCost = parseInt(flysheetMaterial.unitCost, 10)
+        flysheetMaterial.unitCost = parseFloat(flysheetMaterial.unitCost)
     }
 
     if (typeof japanesePaperMaterial.unitCost === "string") {
-        japanesePaperMaterial.unitCost = parseInt(japanesePaperMaterial.unitCost, 10)
+        japanesePaperMaterial.unitCost = parseFloat(japanesePaperMaterial.unitCost)
     }
 
     if (typeof cheeseclothMaterial.unitCost === "string") {
-        cheeseclothMaterial.unitCost = parseInt(cheeseclothMaterial.unitCost, 10)
+        cheeseclothMaterial.unitCost = parseFloat(cheeseclothMaterial.unitCost)
     }
 
     if (typeof bookRibbonMaterial.unitCost === "string") {
-        bookRibbonMaterial.unitCost = parseInt(bookRibbonMaterial.unitCost, 10)
+        bookRibbonMaterial.unitCost = parseFloat(bookRibbonMaterial.unitCost)
     }
 
     if (typeof glueMaterial.unitCost === "string") {
-        glueMaterial.unitCost = parseInt(glueMaterial.unitCost, 10)
+        glueMaterial.unitCost = parseFloat(glueMaterial.unitCost)
     }
 
     // Calculate the amount of materials used
     if (repairSpecs.coverType === "fullBound") {
 
         // Calculate height of material
-        let heightBoardCovering: number = parseInt(repairSpecs.textBlockHeight, 10) + COVER_BOOK_BOARD_EXTRA_HEIGHT
+        let heightBoardCovering: number = parseFloat(repairSpecs.textBlockHeight) + COVER_BOOK_BOARD_EXTRA_HEIGHT
         let heightExtraMargin: number = COVER_MATERIAL_EXTRA_WIDTH_HEIGHT * 2
         fullBoundHeightTotal = heightBoardCovering + heightExtraMargin
 
         // Calculate width of material
-        let widthBoardCovering: number = (parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH) * 2
+        let widthBoardCovering: number = (parseFloat(repairSpecs.textBlockWidth) + COVER_BOOK_BOARD_EXTRA_WIDTH) * 2
         let widthExtraMargin: number = (COVER_MATERIAL_EXTRA_WIDTH_HEIGHT * 2) + (COVER_LINING_STRIP_WIDTH * 2)
-        fullBoundWidthTotal = widthBoardCovering + widthExtraMargin + parseInt(repairSpecs.spineWidth, 10)
+        fullBoundWidthTotal = widthBoardCovering + widthExtraMargin + parseFloat(repairSpecs.spineWidth)
 
         fullBoundCoverMaterialUsed = fullBoundHeightTotal * fullBoundWidthTotal
     }
     else if (repairSpecs.coverType === "quarterBound") {
 
         // Calculate spine material used
-        quarterBoundHeightSpineCovering = parseInt(repairSpecs.textBlockHeight, 10) + (COVER_MATERIAL_EXTRA_WIDTH_HEIGHT * 2)
-        quarterBoundWidthSpineCovering = parseInt(repairSpecs.spineWidth, 10) + (COVER_LINING_STRIP_WIDTH * 2) + (COVER_QUARTER_BOUND_SPINE_EXTRA_WIDTH * 2)
+        quarterBoundHeightSpineCovering = parseFloat(repairSpecs.textBlockHeight) + (COVER_MATERIAL_EXTRA_WIDTH_HEIGHT * 2)
+        quarterBoundWidthSpineCovering = parseFloat(repairSpecs.spineWidth) + (COVER_LINING_STRIP_WIDTH * 2) + (COVER_QUARTER_BOUND_SPINE_EXTRA_WIDTH * 2)
 
         quarterBoundSpineMaterialUsed = quarterBoundHeightSpineCovering * quarterBoundWidthSpineCovering
 
         // Calculate side material used
-        quarterBoundHeightSideCovering = parseInt(repairSpecs.textBlockHeight, 10) + (COVER_MATERIAL_EXTRA_WIDTH_HEIGHT * 2)
-        quarterBoundWidthSideCovering = parseInt(repairSpecs.textBlockWidth, 10) + COVER_MATERIAL_EXTRA_WIDTH_HEIGHT
+        quarterBoundHeightSideCovering = parseFloat(repairSpecs.textBlockHeight) + (COVER_MATERIAL_EXTRA_WIDTH_HEIGHT * 2)
+        quarterBoundWidthSideCovering = parseFloat(repairSpecs.textBlockWidth) + COVER_MATERIAL_EXTRA_WIDTH_HEIGHT
 
         quarterBoundSideMaterialUsed = quarterBoundHeightSideCovering * quarterBoundWidthSideCovering
     }
@@ -1021,19 +1026,19 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     }
     else { ; }
 
-    let bookBoardMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) + COVER_BOOK_BOARD_EXTRA_HEIGHT) * (parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH);
+    let bookBoardMaterialUsed: number = (parseFloat(repairSpecs.textBlockHeight) + COVER_BOOK_BOARD_EXTRA_HEIGHT) * (parseFloat(repairSpecs.textBlockWidth) + COVER_BOOK_BOARD_EXTRA_WIDTH);
 
-    let spineLiningMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) - SPINE_LINING_HEIGHT_SUBTRACTION) * parseInt(repairSpecs.spineWidth, 10)
+    let spineLiningMaterialUsed: number = (parseFloat(repairSpecs.textBlockHeight) - SPINE_LINING_HEIGHT_SUBTRACTION) * parseFloat(repairSpecs.spineWidth)
 
-    let caseLiningMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * parseInt(repairSpecs.spineWidth, 10)
+    let caseLiningMaterialUsed: number = parseFloat(repairSpecs.textBlockHeight) * parseFloat(repairSpecs.spineWidth)
 
-    let flysheetMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * ((parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2)
+    let flysheetMaterialUsed: number = (parseFloat(repairSpecs.textBlockHeight) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * ((parseFloat(repairSpecs.textBlockWidth) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2)
 
-    let japanesePaperMaterialUsed: number = parseInt(repairSpecs.textBlockHeight, 10) * FLYSHEET_JAPANESE_PAPER_WIDTH
+    let japanesePaperMaterialUsed: number = parseFloat(repairSpecs.textBlockHeight) * FLYSHEET_JAPANESE_PAPER_WIDTH
 
-    let cheeseclothMaterialUsed: number = (parseInt(repairSpecs.textBlockHeight, 10) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION) * (parseInt(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION)
+    let cheeseclothMaterialUsed: number = (parseFloat(repairSpecs.textBlockHeight) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION) * (parseFloat(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION)
 
-    let bookRibbonMaterialUsed: number = parseInt(repairSpecs.spineWidth, 10)
+    let bookRibbonMaterialUsed: number = parseFloat(repairSpecs.spineWidth)
 
     let glueMaterialUsed: number = COVER_REPLACEMENT_GLUE_WEIGHT
 
@@ -1208,14 +1213,14 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     const bookBoardMaterialWidth1: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: bookBoardMaterialForRepair1.id,
-            measurement: parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH,
+            measurement: parseFloat(repairSpecs.textBlockWidth) + COVER_BOOK_BOARD_EXTRA_WIDTH,
         }
     })
 
     const bookBoardMaterialHeight1: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: bookBoardMaterialForRepair1.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) + COVER_BOOK_BOARD_EXTRA_HEIGHT,
+            measurement: parseFloat(repairSpecs.textBlockHeight) + COVER_BOOK_BOARD_EXTRA_HEIGHT,
         }
     })
 
@@ -1232,14 +1237,14 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     const bookBoardMaterialWidth2: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: bookBoardMaterialForRepair2.id,
-            measurement: parseInt(repairSpecs.textBlockWidth, 10) + COVER_BOOK_BOARD_EXTRA_WIDTH,
+            measurement: parseFloat(repairSpecs.textBlockWidth) + COVER_BOOK_BOARD_EXTRA_WIDTH,
         }
     })
 
     const bookBoardMaterialHeight2: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: bookBoardMaterialForRepair2.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) + COVER_BOOK_BOARD_EXTRA_HEIGHT,
+            measurement: parseFloat(repairSpecs.textBlockHeight) + COVER_BOOK_BOARD_EXTRA_HEIGHT,
         }
     })
 
@@ -1256,14 +1261,14 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     const spineLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: spineLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.spineWidth, 10),
+            measurement: parseFloat(repairSpecs.spineWidth),
         }
     })
 
     const spineLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: spineLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) - SPINE_LINING_HEIGHT_SUBTRACTION,
+            measurement: parseFloat(repairSpecs.textBlockHeight) - SPINE_LINING_HEIGHT_SUBTRACTION,
         }
     })
 
@@ -1280,14 +1285,14 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     const caseLiningMaterialWidth: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: caseLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.spineWidth, 10),
+            measurement: parseFloat(repairSpecs.spineWidth),
         }
     })
 
     const caseLiningMaterialHeight: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: caseLiningMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+            measurement: parseFloat(repairSpecs.textBlockHeight),
         }
     })
 
@@ -1304,14 +1309,14 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     const flysheetMaterialWidth1: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair1.id,
-            measurement: (parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
+            measurement: (parseFloat(repairSpecs.textBlockWidth) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
         }
     })
 
     const flysheetMaterialHeight1: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair1.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+            measurement: parseFloat(repairSpecs.textBlockHeight) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
         }
     })
 
@@ -1328,14 +1333,14 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     const flysheetMaterialWidth2: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair2.id,
-            measurement: (parseInt(repairSpecs.textBlockWidth, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
+            measurement: (parseFloat(repairSpecs.textBlockWidth) + FLYSHEET_EXTRA_WIDTH_HEIGHT) * 2,
         }
     })
 
     const flysheetMaterialHeight2: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: flysheetMaterialForRepair2.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
+            measurement: parseFloat(repairSpecs.textBlockHeight) + FLYSHEET_EXTRA_WIDTH_HEIGHT,
         }
     })
 
@@ -1359,7 +1364,7 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     const japanesePaperHeight1: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: japanesePaperMaterialForRepair1.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+            measurement: parseFloat(repairSpecs.textBlockHeight),
         }
     })
 
@@ -1383,7 +1388,7 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     const japanesePaperHeight2: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: japanesePaperMaterialForRepair2.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10),
+            measurement: parseFloat(repairSpecs.textBlockHeight),
         }
     })
 
@@ -1400,14 +1405,14 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
     const cheeseclothWidth: MaterialWidth = await tx.materialWidth.create({
         data: {
             materialForRepairId: cheeseclothMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION,
+            measurement: parseFloat(repairSpecs.spineWidth) + FLYSHEET_CHEESECLOTH_WIDTH_ADDITION,
         }
     })
 
     const cheeseclothHeight: MaterialHeight = await tx.materialHeight.create({
         data: {
             materialForRepairId: cheeseclothMaterialForRepair.id,
-            measurement: parseInt(repairSpecs.textBlockHeight, 10) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION,
+            measurement: parseFloat(repairSpecs.textBlockHeight) - FLYSHEET_CHEESCLOTH_HEIGHT_SUBTRACTION,
         }
     })
 
@@ -1463,18 +1468,18 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
                 yearPublished = null
             }
             if (typeof yearPublished === "string") {
-                yearPublished = parseInt(yearPublished, 10)
+                yearPublished = parseFloat(yearPublished)
             }
 
             if (numberOfPages === '') {
                 numberOfPages = null
             }
             if (typeof numberOfPages === "string") {
-                numberOfPages = parseInt(numberOfPages, 10)
+                numberOfPages = parseFloat(numberOfPages)
             }
 
             if (typeof received === "string") {
-                received = new Date(parseInt(received.slice(10)), parseInt(received.slice(0, 2)) - 1, parseInt(received.slice(5, 7)))
+                received = new Date(parseFloat(received.slice(10)), parseFloat(received.slice(0, 2)) - 1, parseFloat(received.slice(5, 7)))
                 console.log(received)
             }
 
@@ -1482,21 +1487,21 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
                 returned = null
             }
             if (typeof returned === "string") {
-                returned = new Date(parseInt(returned.slice(10)), parseInt(returned.slice(0, 2)) - 1, parseInt(returned.slice(5, 7)))
+                returned = new Date(parseFloat(returned.slice(10)), parseFloat(returned.slice(0, 2)) - 1, parseFloat(returned.slice(5, 7)))
             }
 
             if (bookMaterialsCost === '') {
                 bookMaterialsCost = null
             }
             if (typeof bookMaterialsCost === "string") {
-                bookMaterialsCost = parseInt(bookMaterialsCost, 10)
+                bookMaterialsCost = parseFloat(bookMaterialsCost)
             }
 
             if (amountCharged === '') {
                 amountCharged = null
             }
             if (typeof amountCharged === "string") {
-                amountCharged = parseInt(amountCharged, 10)
+                amountCharged = parseFloat(amountCharged)
             }
 
             // Create the new book
