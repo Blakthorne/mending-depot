@@ -3,7 +3,8 @@ import { SWRConfig } from 'swr'
 import Table from '../components/Table'
 import AddBookForm from '../components/AddBookForm'
 
-function Books() {  
+function Books() {
+
   return (
     <SWRConfig
       value = {{
@@ -24,7 +25,8 @@ function Books() {
           <AddBookForm/>
         </div>
         <div className="mx-auto">
-          <Table table={"books"}/>
+          <Table
+            table={"books"}/>
         </div>
 		  </div>
     </SWRConfig>
