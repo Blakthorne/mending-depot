@@ -1,63 +1,21 @@
-import Link from 'next/link';
-
-export default function Navbar() {
+export default function Navbar({ setTheme, isDark }) {
     return (
-		<div className="fixed w-80 h-full left-0">
-			<div className="flex flex-col mx-auto pt-5">
-				<div className="mx-auto font-semibold text-4xl mb-16 text-gray-100">
-					<Link href="/">Mending Depot</Link>
-				</div>
-				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
-					<Link href="/new-repair" className="hover:text-gray-100">
-						Start New Repair
-					</Link>
-				</div>
-				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
-					<Link href="/repairs" className="hover:text-gray-100">
-						Repairs
-					</Link>
-					<Link href="/material-for-repair" className="hover:text-gray-100">
-						Material For Repairs
-					</Link>
-					<Link href="/type-for-material" className="hover:text-gray-100">
-						Types For Materials
-					</Link>
-					<Link href="/inventory-transactions" className="hover:text-gray-100">
-						Inventory Transactions
-					</Link>
-				</div>
-				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
-					<Link href="/books" className="hover:text-gray-100">
-						Books
-					</Link>
-					<Link href="/owners" className="hover:text-gray-100">
-						Owners
-					</Link>
-					<Link href="/manufacturers" className="hover:text-gray-100">
-						Manufacturers
-					</Link>
-					<Link href="/providers" className="hover:text-gray-100">
-						Providers
-					</Link>
-					<Link href="/materials" className="hover:text-gray-100">
-						Materials
-					</Link>
-				</div>
-				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
-					<Link href="/material-types" className="hover:text-gray-100">
-						Material Types
-					</Link>
-					<Link href="/repair-types" className="hover:text-gray-100">
-						Repair Types
-					</Link>
-					<Link href="/binding-types" className="hover:text-gray-100">
-						Binding Types
-					</Link>
-					<Link href="/unit-types" className="hover:text-gray-100">
-						Unit Types
-					</Link>
-				</div>
-			</div>
-		</div>
-	)
+        <div className="navbar bg-base-100">
+            <div className="flex-1">
+                <a className="btn btn-ghost text-xl">Mending Depot</a>
+            </div>
+            <div className="flex-none">
+            <label className="flex cursor-pointer gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+                <input
+                    type="checkbox"
+                    value="dim"
+                    className="toggle"
+                    onChange={() => setTheme(!isDark)}
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </label>
+            </div>
+        </div>
+    )
 }
