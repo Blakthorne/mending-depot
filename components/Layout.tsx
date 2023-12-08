@@ -2,10 +2,10 @@ import Navbar from './Navbar'
 
 export default function Layout({children}) {
     return  (
-        <div>
+        <div data-theme="dim">
             <Navbar/>
 			<div className="fixed h-full bg-gray-600 w-1 ml-80"></div>
-            <div className="bg-gray-900 pl-80 pt-24 min-h-screen">
+            <div className="pl-80 pt-24 min-h-screen">
                 {children}
             </div>
             

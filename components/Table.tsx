@@ -1,6 +1,4 @@
 import useSWR from 'swr'
-import CircularProgress from '@mui/material/CircularProgress'
-import Backdrop from '@mui/material/Backdrop';
 
 type TableComponent = {
     table: string;
@@ -18,12 +16,7 @@ export default function Table({ table }: TableComponent) {
     if (error) console.log(error)
     if (!data) {
         return (
-        <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={true}
-        >
-            <CircularProgress />
-        </Backdrop>
+            <span className="loading loading-infinity loading-lg text-info mt-16 mb-32"></span>
         )
     }
     if (data[0] == undefined) return <div className="mt-16">There is no data in this table</div>

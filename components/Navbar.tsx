@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Navbar() {
     return (
-		<div className="fixed bg-gray-800 w-80 h-full left-0">
+		<div className="fixed w-80 h-full left-0">
 			<div className="flex flex-col mx-auto pt-5">
 				<div className="mx-auto font-semibold text-4xl mb-16 text-gray-100">
 					<Link href="/">Mending Depot</Link>

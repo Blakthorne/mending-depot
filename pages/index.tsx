@@ -15,7 +15,7 @@ function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="text-gray-200 text-3xl text-center tracking-wide m-auto">
+      <div className="text-3xl text-center tracking-wide m-auto">
         I meet your book mending needs.
       </div>
     </SWRConfig>

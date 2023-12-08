@@ -20,7 +20,7 @@ export default function AddBindingTypeForm() {
     // uniqueness check of the FormSubmitButton component
     let bindingTypes: string[] = []
 
-    // Retrieve the bidning types for use in the bindingTypes[] for the uniqueness check
+    // Retrieve the binding types for use in the bindingTypes[] for the uniqueness check
     const { data, error } = useSWR<BindingType[], Error>('/api/bindingtypes')
     if (error) console.log(error)
     else {
