@@ -1,40 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { themeChange } from 'theme-change';
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
 
 export default function Layout({children}) {
-    
-    let isDarkBool: boolean = false
-    const [themeName, setThemeName] = useState('')
 
-    // Only access local storage if on the client
-    if (typeof window !== 'undefined') {
-        
-        // Allow an empty string to be accepted if the localStorage item hasn't been created yet
-        isDarkBool = JSON.parse(localStorage.getItem('isDark') ?? '{}')
-    }
+    const [isDark, setIsDark] = useState(false)
 
-    // Store theme in localStorage to persist theme on page refresh
-    const [isDark, setIsDark] = useState(() => {
-        typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('isDark')) ?? '{}' : "fantasy"
-    })
-    
     useEffect(() => {
-        localStorage.setItem('isDark', JSON.stringify(isDark))
-        setTheme()
-    }, [isDark])
+        // false parameter is required for react project
+        themeChange(false)
+      }, [])
 
-    const setTheme = () => {
-        if (themeName !== "dim") {
-            setThemeName("dim")
-        }
-        else {
-            setThemeName("fantasy")
-        }
-    }
+      useEffect(() => {
+        setIsDark(JSON.parse(localStorage.getItem("data-theme")) === "dim" ? true : false)
+      })
 
     return  (
-        <div data-theme={themeName}>
+        <div data-theme=''>
             <Navbar 
                 setTheme={setIsDark}
                 isDark={isDark}
