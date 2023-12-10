@@ -71,9 +71,8 @@ export default function AddMaterialTypeForm() {
             errorMessages[i].classList.add("invisible")
         }
         for (let i = 0; i < inputs.length; ++i) {
-            inputs[i].classList.remove("border-red-500")
-            inputs[i].classList.add("border-gray-50")
-            inputs[i].classList.add("focus:border-sky-400")
+            inputs[i].classList.remove("focus:border-error")
+            inputs[i].classList.add("focus:border-info")
         }
     }
 

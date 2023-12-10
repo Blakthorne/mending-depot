@@ -15,7 +15,7 @@ export default function FormInputErrorMessage({ id, text }: FormInputErrorMessag
     return (
         <div
             id={ id }
-            className="w-full pt-0 pb-4 text-xs text-red-300 invisible errorMessage">
+            className="w-full pt-0 pb-4 text-xs text-error invisible errorMessage">
             { text }
         </div>
     )

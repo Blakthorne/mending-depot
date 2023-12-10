@@ -3,16 +3,38 @@ import Link from 'next/link';
 export default function Sidebar() {
     return (
 		<div className="fixed w-80 h-full left-0">
+			<ul className="menu menu-lg bg-base-200">
+				<li><Link href="/new-repair">Start New Repair</Link></li>
+				<li>
+					<details open>
+					<summary>Parent</summary>
+					<ul>
+						<li><a>Submenu 1</a></li>
+						<li><a>Submenu 2</a></li>
+						<li>
+						<details open>
+							<summary>Parent</summary>
+							<ul>
+							<li><a>Submenu 1</a></li>
+							<li><a>Submenu 2</a></li>
+							</ul>
+						</details>
+						</li>
+					</ul>
+					</details>
+				</li>
+				<li><a>Item 3</a></li>
+				</ul>
 			<div className="flex flex-col mx-auto pt-5">
-				<div className="mx-auto font-semibold text-4xl mb-16 text-gray-100">
+				<div className="mx-auto font-semibold text-4xl mb-16">
 					<Link href="/">Mending Depot</Link>
 				</div>
-				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
+				<div className="flex flex-col gap-2 text-2xl pl-10 mb-16">
 					<Link href="/new-repair" className="hover:text-gray-100">
 						Start New Repair
 					</Link>
 				</div>
-				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
+				<div className="flex flex-col gap-2 text-2xl pl-10 mb-16">
 					<Link href="/repairs" className="hover:text-gray-100">
 						Repairs
 					</Link>
@@ -26,7 +48,7 @@ export default function Sidebar() {
 						Inventory Transactions
 					</Link>
 				</div>
-				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
+				<div className="flex flex-col gap-2 text-2xl pl-10 mb-16">
 					<Link href="/books" className="hover:text-gray-100">
 						Books
 					</Link>
@@ -43,7 +65,7 @@ export default function Sidebar() {
 						Materials
 					</Link>
 				</div>
-				<div className="flex flex-col gap-2 text-2xl pl-10 text-gray-400 mb-16">
+				<div className="flex flex-col gap-2 text-2xl pl-10 mb-16">
 					<Link href="/material-types" className="hover:text-gray-100">
 						Material Types
 					</Link>

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import Link from 'next/link';
 
 export default function Navbar({ setTheme, isDark }) {
     return (
         <div className="navbar sticky top-0 bg-base-100">
             <div className="flex-1">
-                <a className="btn btn-ghost text-xl">Mending Depot</a>
+                <Link href="/" className="btn btn-ghost text-xl">Mending Depot</Link>
             </div>
             <div className="flex-none">
             <label className="flex cursor-pointer gap-2">

@@ -51,9 +51,8 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
         idError.classList.remove("invisible")
         idError.classList.add("visible")
 
-        idField.classList.remove("border-gray-50")
-        idField.classList.remove("focus:border-sky-400")
-        idField.classList.add("border-red-500")
+        idField.classList.remove("focus:border-info")
+        idField.classList.add("focus:border-error")
     }
 
     /**
@@ -64,9 +63,8 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
         idError.classList.remove("visible")
         idError.classList.add("invisible")
         
-        idField.classList.remove("border-red-500")
-        idField.classList.add("border-gray-50")
-        idField.classList.add("focus:border-sky-400")
+        idField.classList.remove("focus:border-error")
+        idField.classList.add("focus:border-info")
     }
 
     /**
@@ -207,13 +205,13 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
             <label>
                 { inputId }
                 {required ?
-                    <span className="text-red-300"> *</span>
+                    <span className="text-accent"> *</span>
                     : <span></span>
                 }
             </label>
 
             <input
-                className="bg-gray-900 rounded w-full p-2 my-2 border border-gray-50 focus:outline-none focus:border-sky-400 valid input"
+                className="input input-bordered w-full my-2 focus:outline-none focus:border-info valid"
                 onChange={e => checkThisInput(e.target.value)}
                 placeholder={ placeholder }
                 type="text"

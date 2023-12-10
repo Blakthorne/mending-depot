@@ -10,7 +10,7 @@ export default function Layout({children}) {
     useEffect(() => {
         setIsDark(JSON.parse(localStorage.getItem("isDark")))
         if (isDark === true) {
-            setThemeName("dim")
+            setThemeName("dracula")
         }
         else {
             setThemeName("fantasy")
@@ -24,7 +24,7 @@ export default function Layout({children}) {
             localStorage.setItem('isDark', JSON.stringify(isDark));
         }
         if (isDark === true) {
-            setThemeName("dim")
+            setThemeName("dracula")
         }
         else {
             setThemeName("fantasy")

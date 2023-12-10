@@ -1,7 +1,5 @@
 import useSWR, { useSWRConfig } from 'swr'
 import React, { useState } from 'react'
-import CircularProgress from '@mui/material/CircularProgress'
-import Backdrop from '@mui/material/Backdrop';
 import FormTextInput from './FormTextInput'
 import FormSubmitButton from './FormSubmitButton'
 import FormCancelButton from './FormCancelButton'
@@ -79,9 +77,8 @@ export default function AddInventoryTransactionForm() {
             errorMessages[i].classList.add("invisible")
         }
         for (let i = 0; i < inputs.length; ++i) {
-            inputs[i].classList.remove("border-red-500")
-            inputs[i].classList.add("border-gray-50")
-            inputs[i].classList.add("focus:border-sky-400")
+            inputs[i].classList.remove("focus:border-error")
+            inputs[i].classList.add("focus:border-info")
         }
     }
 

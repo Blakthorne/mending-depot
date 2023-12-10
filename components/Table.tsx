@@ -25,36 +25,36 @@ export default function Table({ table }: TableComponent) {
     let cellKey = 0
 
     return (
-    <div className="table border-collapse table-auto text-sm mt-16 mb-32">
-        <div className="table-header-group">
-            <div className="table-row">
+    <div className="overflow-x-auto">
+    <table className="table table-zebra text-xs mt-16 mb-32">
+        <thead>
+            <tr className="table-row">
                 {Object.keys(data[0])
                     .map(item => (
-                    <div
+                    <th
                         key={item.toString()}
-                        className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-2 text-left capitalize">
+                        className="capitalize">
                             {item.split(/(?=[A-Z])/).join(" ")}
-                    </div>
+                    </th>
                 ))}
-            </div>
-        </div>
-        <div className="table-row-group">
+            </tr>
+        </thead>
+        <tbody>
             {data.map(row => (
-                <div
-                    key={Object.values(row).toString()}
-                    className="table-row hover:bg-gray-700">
+                <tr className="hover"
+                    key={Object.values(row).toString()}>
                     {Object.values(row)
                         .map(maybeNull => maybeNull ? maybeNull : "-")
                         .map(cell => (
-                            <div
-                                key={(cellKey += 1).toString()}
-                                className="table-cell border-b border-slate-600 font-medium p-4 pl-8 pt-2 pb-2 text-left">
+                            <td
+                                key={(cellKey += 1).toString()}>
                                     {cell}
-                            </div>
+                            </td>
                     ))}
-                </div>
+                </tr>
             ))}
-        </div>
+        </tbody>
+    </table>
     </div>
     )
 }

@@ -1,6 +1,4 @@
 import useSWR from 'swr'
-import CircularProgress from '@mui/material/CircularProgress'
-import Backdrop from '@mui/material/Backdrop';
 
 type SummaryComponent = {
     bookId: string
@@ -44,12 +42,7 @@ export default function BookSummary({ bookId }: SummaryComponent) {
     if (error) console.log(error)
     if (!data) {
         return (
-        <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={true}
-        >
-            <CircularProgress />
-        </Backdrop>
+            <span className="loading loading-infinity loading-lg text-info mt-16 mb-32"></span>
         )
     }
 

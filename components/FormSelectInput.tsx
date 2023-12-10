@@ -64,13 +64,13 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
             <label>
                 { inputId }
                 {required ?
-                    <span className="text-red-300"> *</span>
+                    <span className="text-accent"> *</span>
                     : <span></span>
                 }
             </label>
             
             <select
-                className="bg-gray-900 rounded w-full p-2 my-2 border border-gray-50 focus:outline-none focus:border-sky-400 valid input"
+                className="select select-bordered w-full my-2 focus:outline-none focus:border-info valid"
                 onChange={e => onChange(e.target.value)}
                 value={ input }
                 id={ inputId }
