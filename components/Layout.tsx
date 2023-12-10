@@ -1,23 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { themeChange } from 'theme-change';
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
 
 export default function Layout({children}) {
 
-    const [isDark, setIsDark] = useState(false)
+    const [isDark, setIsDark] = useState(true)
+    const [themeName, setThemeName] = useState("")
 
     useEffect(() => {
-        // false parameter is required for react project
-        themeChange(false)
+        setIsDark(JSON.parse(localStorage.getItem("isDark")))
+        if (isDark === true) {
+            setThemeName("dim")
+        }
+        else {
+            setThemeName("fantasy")
+        }
+        console.log("i" + JSON.parse(localStorage.getItem("isDark")))
+        console.log(themeName)
       }, [])
 
-      useEffect(() => {
-        setIsDark(JSON.parse(localStorage.getItem("data-theme")) === "dim" ? true : false)
-      })
+    useEffect(() => {
+        if (JSON.parse(localStorage.getItem("isDark")) !== null) {
+            localStorage.setItem('isDark', JSON.stringify(isDark));
+        }
+        if (isDark === true) {
+            setThemeName("dim")
+        }
+        else {
+            setThemeName("fantasy")
+        }
+        console.log("k" + JSON.parse(localStorage.getItem("isDark")))
+        console.log(themeName)
+      }, [isDark])
 
     return  (
-        <div data-theme=''>
+        <div data-theme={themeName}>
             <Navbar 
                 setTheme={setIsDark}
                 isDark={isDark}
