@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Sidebar() {
     return (
-		<div className="fixed w-80 h-full left-0">
+		<div className="fixed w-80 h-full left-0 overflow-y-auto">
 			<ul className="menu menu-lg bg-base-200">
 				<li><Link href="/new-repair">Start New Repair</Link></li>
 				<li>
@@ -26,14 +26,6 @@ export default function Sidebar() {
 				<li><a>Item 3</a></li>
 				</ul>
 			<div className="flex flex-col mx-auto pt-5">
-				<div className="mx-auto font-semibold text-4xl mb-16">
-					<Link href="/">Mending Depot</Link>
-				</div>
-				<div className="flex flex-col gap-2 text-2xl pl-10 mb-16">
-					<Link href="/new-repair" className="hover:text-gray-100">
-						Start New Repair
-					</Link>
-				</div>
 				<div className="flex flex-col gap-2 text-2xl pl-10 mb-16">
 					<Link href="/repairs" className="hover:text-gray-100">
 						Repairs
