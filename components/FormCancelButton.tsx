@@ -22,7 +22,7 @@ export default function FormCancelButton({ clearInvalids, cancelClick, value, is
 
     // Display with a left margin if the Cancel button is sitting next to another item
     // Otherwise, center it
-    let format: string = isAdjacent ? "text-base-content hover:text-neutral" : "ml-4 text-base-content hover:text-neutral"
+    let format: string = isAdjacent ? "text-base-content hover:text-secondary" : "ml-4 text-base-content hover:text-secondary"
 
     if (value) stringValue = value;
 

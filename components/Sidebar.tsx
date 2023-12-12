@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function Sidebar() {
     return (
 		<div className="fixed w-80 h-full left-0 overflow-y-auto">
-			<ul className="menu menu-md bg-base-200">
+			<ul className="menu menu-md">
 				<li><Link href="/new-repair">Start New Repair</Link></li>
 				<li>
 					<h2 className="menu-title">Books</h2>
