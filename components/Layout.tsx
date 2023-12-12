@@ -4,33 +4,47 @@ import Navbar from './Navbar'
 
 export default function Layout({children}) {
 
+    // Store a boolean value for whether theme is dark or not
     const [isDark, setIsDark] = useState(true)
+
+    // Store the theme name,
+    // Initialize to empty string
     const [themeName, setThemeName] = useState("")
 
-    useEffect(() => {
-        setIsDark(JSON.parse(localStorage.getItem("isDark")))
+    const determineThemeName = (): void => {
         if (isDark === true) {
             setThemeName("dracula")
         }
         else {
             setThemeName("fantasy")
         }
-        console.log("i" + JSON.parse(localStorage.getItem("isDark")))
-        console.log(themeName)
+    }
+
+    // Trigger only on first render of page;
+    // I can only perform these operations in a useEffect() since
+    // localStorage is only present on the client. I get a JSON error
+    // if I try to do it elsewhere
+    useEffect(() => {
+        
+        // Retrieve the isDark boolean from client localStorage
+        setIsDark(JSON.parse(localStorage.getItem("isDark")))
+
+        // Set the themeName based on the isDark boolean
+        determineThemeName()
       }, [])
 
+    // Trigger when isDark is changed by the user in the Navbar component
     useEffect(() => {
+
+        // Only set the isDark variable in localStorage if it's there already;
+        // This prevents it from double setting it on the first render as a side effect
+        // of the other useEffect() above
         if (JSON.parse(localStorage.getItem("isDark")) !== null) {
             localStorage.setItem('isDark', JSON.stringify(isDark));
         }
-        if (isDark === true) {
-            setThemeName("dracula")
-        }
-        else {
-            setThemeName("fantasy")
-        }
-        console.log("k" + JSON.parse(localStorage.getItem("isDark")))
-        console.log(themeName)
+
+        // Set the themeName based on the isDark boolean
+        determineThemeName()
       }, [isDark])
 
     return  (
