@@ -11,6 +11,9 @@ export default function Layout({children}) {
     // Initialize to empty string
     const [themeName, setThemeName] = useState("")
 
+    /**
+     * Set the theme name based on the isDark state value
+     */
     const determineThemeName = (): void => {
         if (isDark === true) {
             setThemeName("dracula")

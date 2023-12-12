@@ -17,9 +17,7 @@ function Providers() {
             </Head>
 
             <div className="flex flex-col min-h-screen">
-                <div className="font-sans text-slate-200 text-3xl text-center drop-shadow-lg tracking-wide">
-                    Providers
-                </div>
+                <div className="text-3xl text-center tracking-wide">Providers</div>
                 <div className="mx-auto">
                     <AddProviderForm/>
                 </div>

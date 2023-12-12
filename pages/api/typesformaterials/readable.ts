@@ -2,19 +2,6 @@ import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 // Create types for organizing and accessing data from the api
-type MaterialNameEntry = {
-    materialName: string;
-}
-
-type MaterialEntry = {
-    material: MaterialNameEntry;
-}
-
-type DataEntry = {
-    materialTypeName: string;
-    materials: MaterialEntry[];
-}
-
 type Pair = {
     materialTypeName: string;
     materialName: string;
