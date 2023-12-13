@@ -2,7 +2,7 @@ import React from 'react'
 import FormInputErrorMessage from './FormInputErrorMessage'
 
 type FormSelectInputComponent = {
-    onChange: (e: string) => void;
+    onChange?: (e: string) => void;
     input: string;
     inputId: string;
     options?: object[];
@@ -16,7 +16,7 @@ type FormSelectInputComponent = {
 
 /**
  * 
- * @param {(e: string) => void} onChange The function to call in the parent component upon selection of an item
+ * @param {(e: string) => void} [onChange] Optional - The function to call in the parent component upon selection of an item
  * @param {string} input Allows state changes from the parent (e.g. in the clear() function) to propagate
  * @param {string} inputId For the HTML element id and the form element label
  * @param {object[]} [options] The database object retreived from the API for displaying the select input options
@@ -70,7 +70,7 @@ export default function FormSelectInput({ onChange, input, inputId, options, dis
             </label>
             
             <select
-                className="select select-bordered w-full my-2 focus:outline-none focus:border-info valid"
+                className="select select-bordered w-full my-2 focus:outline-none focus:border-info hover:border-base-content valid"
                 onChange={e => onChange(e.target.value)}
                 value={ input }
                 id={ inputId }

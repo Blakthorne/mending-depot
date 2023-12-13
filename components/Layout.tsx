@@ -19,7 +19,7 @@ export default function Layout({children}) {
             setThemeName("dracula")
         }
         else {
-            setThemeName("fantasy")
+            setThemeName("light")
         }
     }
 

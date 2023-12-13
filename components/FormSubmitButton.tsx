@@ -64,7 +64,7 @@ export default function FormSubmitButton({ requiredInputs, requiredDates, dateVa
     return (
         <button
             disabled={disable()}
-            className="btn btn-active btn-primary disabled:btn-disabled"
+            className="btn btn-primary disabled:btn-disabled"
             type="submit"
             id={id}
         >

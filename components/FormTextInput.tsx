@@ -211,7 +211,7 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
             </label>
 
             <input
-                className="input input-bordered w-full my-2 focus:outline-none focus:border-info valid"
+                className="input input-bordered w-full my-2 focus:outline-none focus:border-info hover:border-base-content valid"
                 onChange={e => checkThisInput(e.target.value)}
                 placeholder={ placeholder }
                 type="text"

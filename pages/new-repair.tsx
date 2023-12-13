@@ -6,6 +6,7 @@ import FormTextInput from '../components/FormTextInput'
 import FormSelectInput from '../components/FormSelectInput'
 import FormSubmitButton from '../components/FormSubmitButton'
 import FormCancelButton from '../components/FormCancelButton'
+import RepairFormCard from '../components/RepairFormCard'
 
 type TypeForMaterial = {
     materialTypeName: string;
@@ -48,6 +49,14 @@ function NewRepair() {
     // and passed via function through the optional parameter isDateValid
     const [receivedValid, setReceivedValid] = useState(false)
     const [returnedValid, setReturnedValid] = useState(false)
+
+    // To use in selectNewRepairsForm() to keep track of forms
+    const [formIndex, setFormIndex] = useState(0)
+
+    // The currently selected repair type id that is set to be added upon add button clicked
+    const [curSelectedRepairTypeId, setCurSelectedRepairTypeId] = useState('')
+    const [curSelectedRepairTypeName, setCurSelectedRepairTypeName] = useState('')
+    const [addShouldBeDisabled, setAddShouldBeDisabled] = useState(true)
 
     // Create an empty RepairType form entry to be used as a placeholder
     const blankRepairForm: RepairType = {
@@ -205,13 +214,7 @@ function NewRepair() {
      */
     const cancelAllRepairForms = (): void => {
         setRepairForms([blankRepairForm]);
-    }
-
-    /**
-     * Add another input field for adding another repair associated with the book
-     */
-     const addRepairForm = (): void => {
-        setRepairForms(repairForms => [...repairForms, blankRepairForm])
+        setFormIndex(0)
     }
 
     /**
@@ -222,13 +225,24 @@ function NewRepair() {
         // Use the ellipses syntax to copy the array and tell React that the state reference has changed
         let curRepairsArray = [...repairForms]
 
-        const hasReparTypeId = (item: RepairType) => item.id === input
+        // Get the name of the repair type associated with the repair type id
+        const hasRepairTypeId = (item: RepairType) => item.id === input
 
-        const curRepairTypeIndex: number = repairTypes.findIndex(hasReparTypeId)
+        const curRepairTypeIndex: number = repairTypes.findIndex(hasRepairTypeId)
 
         curRepairsArray[index] = repairTypes[curRepairTypeIndex]
 
         setRepairForms(curRepairsArray)
+
+        // Reset user selection
+        setCurSelectedRepairTypeId('')
+        setCurSelectedRepairTypeName('')
+
+        // Disable add button since selection has been cleared
+        setAddShouldBeDisabled(true)
+
+        // Increase state index for use in selectNewRepairsForm()
+        setFormIndex(formIndex + 1)
     }
 
     /**
@@ -817,67 +831,97 @@ function NewRepair() {
         return (
             <div>
                 {repairForms.map((input, index) => (
-                    <form
-                        className="mb-16"
-                        id="repairForm"
-                        autoComplete="off"
-                        key={ index }
+                    <If condition={input.id !== ''}
+                        key={index + input.id }
                     >
-                        <div>
-                            <FormSelectInput
-                                onChange={(value) => updateRepairTypeInputs(value, index)}
-                                input={ input.id }
-                                inputId={ "Repair Type" }
-                                options={ repairTypes }
-                                displayKey={ "repairTypeName"}
-                                storeKey={ "id" }
-                                required={ true }
-                            />
-                        </div>
-
-                        {/* Spine Replacement Form */}
-                        <If condition={repairForms[index].repairTypeName === "Spine Replacement"}>
-                            {spineReplacementForm()}
-                        </If>
-
-                        {/* Cover Replacement Form */}
-                        <If condition={repairForms[index].repairTypeName === "Cover Replacement"}>
-                            {coverReplacementForm()}
-                        </If>
-
-                        {/* Flysheet Replacement Form */}
-                        <If condition={repairForms[index].repairTypeName === "Flysheet Replacement"}>
-                            {flysheetReplacementForm()}
-                        </If>
-                        
-                        {/* Base Hinge Tightening Form */}
-                        <If condition={repairForms[index].repairTypeName === "Base Hinge Tightening"}>
-                            {basehingeTighteningReplacementForm()}
-                        </If>
-
-                        {/* Tip-In Form */}
-                        <If condition={repairForms[index].repairTypeName === "Tip-In"}>
-                            {TipinForm()}
-                        </If>
-
-                        {/* Paper Repair Form */}
-                        <If condition={repairForms[index].repairTypeName === "Paper Repair"}>
-                            {PaperRepairForm()}
-                        </If>
-
-                        {/* Resewing Form */}
-                        <If condition={repairForms[index].repairTypeName === "Resewing"}>
-                            {ResewingForm()}
-                        </If>
-
-                        <FormCancelButton
+                        <RepairFormCard
+                            title={ input.repairTypeName }
                             clearInvalids={() => clearErrors()}
                             cancelClick={() => cancelRepairForm(index)}
-                            value="Cancel Repair"
-                            isAdjacent={ true }
-                        />
-                    </form>
+                        >
+                                {/* Spine Replacement Form */}
+                                <If condition={repairForms[index].repairTypeName === "Spine Replacement"}>
+                                    {spineReplacementForm()}
+                                </If>
+
+                                {/* Cover Replacement Form */}
+                                <If condition={repairForms[index].repairTypeName === "Cover Replacement"}>
+                                    {coverReplacementForm()}
+                                </If>
+
+                                {/* Flysheet Replacement Form */}
+                                <If condition={repairForms[index].repairTypeName === "Flysheet Replacement"}>
+                                    {flysheetReplacementForm()}
+                                </If>
+                                
+                                {/* Base Hinge Tightening Form */}
+                                <If condition={repairForms[index].repairTypeName === "Base Hinge Tightening"}>
+                                    {basehingeTighteningReplacementForm()}
+                                </If>
+
+                                {/* Tip-In Form */}
+                                <If condition={repairForms[index].repairTypeName === "Tip-In"}>
+                                    {TipinForm()}
+                                </If>
+
+                                {/* Paper Repair Form */}
+                                <If condition={repairForms[index].repairTypeName === "Paper Repair"}>
+                                    {PaperRepairForm()}
+                                </If>
+
+                                {/* Resewing Form */}
+                                <If condition={repairForms[index].repairTypeName === "Resewing"}>
+                                    {ResewingForm()}
+                                </If>
+                        </RepairFormCard>
+                    </If>
                 ))}
+            </div>
+        )
+    }
+
+    /**
+     * Set states for the selected repairType ID and Name that the user has selected
+     * @param value The ID of the repairType that the user has selected to add
+     */
+    const setCurSelectedRepairType = (value: string) => {
+
+        // Set the currently queued up repair type id
+        setCurSelectedRepairTypeId(value)
+
+        // Get the name of the repair type associated with the repair type id
+        const hasRepairTypeId = (item: RepairType) => item.id === value
+        const curRepairTypeIndex: number = repairTypes.findIndex(hasRepairTypeId)
+
+        // Set the state to save the repair type name
+        setCurSelectedRepairTypeName(repairTypes[curRepairTypeIndex].id)
+
+        // Also enable the add button
+        setAddShouldBeDisabled(false)
+    }
+
+    /**
+     * Componenets for new repair selection
+     * @returns 
+     */
+    const selectNewRepairsForm = () => {
+        return (
+            <div className="join w-full">
+                <div className="join-item w-full">
+                    <FormSelectInput
+                        onChange={(value) => setCurSelectedRepairType(value)}
+                        input={ curSelectedRepairTypeName }
+                        inputId={ "" }
+                        options={ repairTypes }
+                        displayKey={ "repairTypeName"}
+                        storeKey={ "id" }
+                        required={ false }
+                    />
+                </div>
+                <button className="btn btn-primary disabled:btn-disabled my-2 join-item"
+                        onClick={() => updateRepairTypeInputs(curSelectedRepairTypeId, formIndex)}
+                        disabled={ addShouldBeDisabled }
+                >Add Another Repair</button>
             </div>
         )
     }
@@ -911,13 +955,11 @@ function NewRepair() {
                         <div className="text-3xl text-center pb-10">
                             Create Your Repairs
                         </div>
+                        <div>
+                            {selectNewRepairsForm()}
+                        </div>
                         <div className="m-auto">
                             {addNewRepairsForm()}
-
-                            <button
-                                className="btn btn-neutral block mx-auto mt-16"
-                                onClick={() => addRepairForm()}
-                            >Add Another Repair</button>
                         </div>
                     </If>
                 </div>
