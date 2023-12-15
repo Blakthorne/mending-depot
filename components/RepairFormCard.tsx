@@ -9,7 +9,7 @@ export default function RepairFormCard(props) {
     }
 
     return (
-        <div className="card bg-base-100 shadow-xl mb-16">
+        <div className="card bg-base-100 shadow-md shadow-base-content mb-16">
             <div className="card-body">
                 <div className="flex mb-8">
                     <h2 className="card-title grow">{ props.title }</h2>
