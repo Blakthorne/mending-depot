@@ -33,7 +33,7 @@ function NewRepair() {
 
     // Create state for stage of the new repair process
     // book and newRepairs
-    const [stage, setStage] = useState('newRepairs')
+    const [stage, setStage] = useState('book')
 
     // Create state for the attributes of a book
     const [title, setTitle] = useState('')
@@ -111,6 +111,7 @@ function NewRepair() {
         e.preventDefault()
 
         setStage('newRepairs')
+        scroll(0, 0)
     }
 
     /**
