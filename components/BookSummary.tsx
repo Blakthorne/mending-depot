@@ -111,21 +111,23 @@ export default function BookSummary({ bookId }: SummaryComponent) {
             </div>
             <div className="font-sans mx-auto">
                 {data.repairData.map(repair => (
-                    <div key={(iterKey += 1)} className="card bg-base-100 shadow-base-content">
-                        <div key={(iterKey += 1)} className="text-left mb-8 mt-16">
-                            <div key={repair.repairType.repairTypeName + (iterKey += 1).toString()} className="inline font-medium tracking-wide text-5xl text-left">{repair.repairType.repairTypeName}</div>
-                            <div key={repair.repair.repairMaterialsCost + (iterKey += 1).toString()} className="inline text-2xl text-left"> - ${repair.repair.repairMaterialsCost}</div>
+                    <div key={(iterKey += 1)} className="mt-16">
+                        <div key={(iterKey += 1)} className="text-center mb-8">
+                            <div key={repair.repairType.repairTypeName + (iterKey += 1).toString()} className="font-medium tracking-wide text-5xl mb-4">{repair.repairType.repairTypeName}</div>
+                            <div key={repair.repair.repairMaterialsCost + (iterKey += 1).toString()} className="text-2xl">${repair.repair.repairMaterialsCost}</div>
                         </div>
                         <div key={(iterKey += 1)}>
                             {repair.materialData
                                 .sort((a,b) => (a.material.materialName.toLowerCase() > b.material.materialName.toLowerCase()) ? 1 : ((b.material.materialName.toLowerCase() > a.material.materialName.toLowerCase()) ? -1 : 0))
                                 .map(material => (
-                                <div key={(iterKey += 1)} className="text-left mb-4">
-                                    <div key={material.material.materialName + (iterKey += 1).toString()} className="inline text-xl">{material.material.materialName} - </div>
-                                    {material.materialHeight ?
-                                    <div key={material.materialForRepair.amountUsed + (iterKey += 1).toString()} className="inline text-xl">{material.materialWidth.measurement} x {material.materialHeight.measurement} {material.unitType.unitTypeName}</div>
-                                    :
-                                    <div key={material.materialForRepair.amountUsed + (iterKey += 1).toString()} className="inline text-xl">{material.materialForRepair.amountUsed} {material.materialForRepair.amountUsed === 1 ? material.unitType.unitTypeName.slice(0, -1) : material.unitType.unitTypeName}</div>}
+                                <div key={(iterKey += 1)} className="card w-96 shadow-md bg-base-100 mb-4">
+                                    <div key={(iterKey += 1)} className="card-body">
+                                        <div key={material.material.materialName + (iterKey += 1).toString()} className="card-title">{material.material.materialName}</div>
+                                        {material.materialHeight ?
+                                        <div key={material.materialForRepair.amountUsed + (iterKey += 1).toString()} className="">{material.materialWidth.measurement} x {material.materialHeight.measurement} {material.unitType.unitTypeName}</div>
+                                        :
+                                        <div key={material.materialForRepair.amountUsed + (iterKey += 1).toString()} className="">{material.materialForRepair.amountUsed} {material.materialForRepair.amountUsed === 1 ? material.unitType.unitTypeName.slice(0, -1) : material.unitType.unitTypeName}</div>}
+                                    </div>
                                 </div>
                             ))}
                         </div>
