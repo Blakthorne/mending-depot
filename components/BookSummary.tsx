@@ -120,7 +120,7 @@ export default function BookSummary({ bookId }: SummaryComponent) {
                             {repair.materialData
                                 .sort((a,b) => (a.material.materialName.toLowerCase() > b.material.materialName.toLowerCase()) ? 1 : ((b.material.materialName.toLowerCase() > a.material.materialName.toLowerCase()) ? -1 : 0))
                                 .map(material => (
-                                <div key={(iterKey += 1)} className="card w-96 shadow-md bg-base-300 mb-4 mx-4">
+                                <div key={(iterKey += 1)} className="card w-96 shadow-md bg-base-300 mb-8 mx-6">
                                     <div key={(iterKey += 1)} className="card-body">
                                         <div key={material.material.materialName + (iterKey += 1).toString()} className="card-title">{material.material.materialName}</div>
                                         {material.materialHeight ?
