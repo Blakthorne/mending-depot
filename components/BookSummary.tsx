@@ -109,18 +109,18 @@ export default function BookSummary({ bookId }: SummaryComponent) {
                     
                 </div>
             </div>
-            <div className="font-sans mx-auto">
+            <div className="font-sans mx-auto w-full">
                 {data.repairData.map(repair => (
                     <div key={(iterKey += 1)} className="mt-16">
                         <div key={(iterKey += 1)} className="text-center mb-8">
                             <div key={repair.repairType.repairTypeName + (iterKey += 1).toString()} className="font-medium tracking-wide text-5xl mb-4">{repair.repairType.repairTypeName}</div>
                             <div key={repair.repair.repairMaterialsCost + (iterKey += 1).toString()} className="text-2xl">${repair.repair.repairMaterialsCost}</div>
                         </div>
-                        <div key={(iterKey += 1)}>
+                        <div key={(iterKey += 1)} className="flex flex-wrap justify-center">
                             {repair.materialData
                                 .sort((a,b) => (a.material.materialName.toLowerCase() > b.material.materialName.toLowerCase()) ? 1 : ((b.material.materialName.toLowerCase() > a.material.materialName.toLowerCase()) ? -1 : 0))
                                 .map(material => (
-                                <div key={(iterKey += 1)} className="card w-96 shadow-md bg-base-100 mb-4">
+                                <div key={(iterKey += 1)} className="card w-96 shadow-md bg-base-300 mb-4 mx-4">
                                     <div key={(iterKey += 1)} className="card-body">
                                         <div key={material.material.materialName + (iterKey += 1).toString()} className="card-title">{material.material.materialName}</div>
                                         {material.materialHeight ?
