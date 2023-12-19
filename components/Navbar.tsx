@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Navbar({ setTheme, isDark }) {
     return (
-        <div className="navbar sticky top-0 bg-base-100 shadow-lg">
+        <div className="navbar sticky top-0 bg-base-100 shadow-lg z-10">
             <div className="flex-1">
                 <Link href="/" className="btn btn-ghost text-xl">Mending Depot</Link>
             </div>
