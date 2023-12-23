@@ -1,5 +1,5 @@
 'use client'
-import { Metadata } from 'next'
+// import { Metadata } from 'next'
 
 function Home() {  
     return (
@@ -9,9 +9,9 @@ function Home() {
     )
 }
 
-export const metadata: Metadata = {
-    title: 'Home',
-    description: 'Welcome to the Mending Depot',
-  }
+// export const metadata: Metadata = {
+//     title: 'Home',
+//     description: 'Welcome to the Mending Depot',
+//   }
 
 export default Home

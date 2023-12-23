@@ -8,8 +8,8 @@ type MaterialData = {
     materialForRepair: MaterialForRepair;
     material: Material;
     unitType: UnitType;
-    materialHeight?: MaterialHeight;
-    materialWidth?: MaterialWidth;
+    materialHeight: MaterialHeight;
+    materialWidth: MaterialWidth;
 }
 
 type RepairData = {

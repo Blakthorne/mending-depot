@@ -54,8 +54,8 @@ type MaterialForRepair = {
     repairId: string;
     materialId: string;
     amountUsed: string | number;
-    materialCost: string | number;
-    id: string;
+    materialCost?: string | number;
+    id?: string;
 }
 
 // Create type structure for a type for material width entry

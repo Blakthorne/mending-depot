@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   mending-depot:
-    image: node:20
+    image: node:20-alpine
     build:
       context: .
       dockerfile: Dockerfile
