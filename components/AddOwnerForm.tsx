@@ -1,3 +1,4 @@
+'use client'
 import useSWR, { useSWRConfig } from 'swr'
 import React, { useState } from 'react'
 import FormTextInput from './FormTextInput'

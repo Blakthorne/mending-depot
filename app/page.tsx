@@ -1,4 +1,4 @@
-import Home from './index-page'
+import { Metadata } from 'next'
 
 export default async function Page() {
     return (
@@ -6,4 +6,9 @@ export default async function Page() {
             I meet your book mending needs.
         </div>
     )
+}
+
+export const metadata: Metadata = {
+    title: 'Home',
+    description: 'Welcome to the Mending Depot',
 }

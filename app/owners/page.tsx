@@ -1,21 +1,17 @@
-import Head from 'next/head'
-import { SWRConfig } from 'swr'
-import Table from '../components/Table'
-import AddOwnerForm from '../components/AddOwnerForm'
+'use client'
 
-function Owners() {  
+// import { Metadata } from 'next'
+import { SWRConfig } from 'swr'
+import Table from '../../components/Table'
+import AddOwnerForm from '../../components/AddOwnerForm'
+
+export default function Owners() {  
     return (
         <SWRConfig
             value = {{
                 fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
             }}
         >
-            <Head>
-                <title>Owners</title>
-                <meta name="description" content="Manage Owners" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-
             <div className="flex flex-col min-h-screen">
                 <div className="text-3xl text-center tracking-wide">Owners</div>
                 <div className="mx-auto">
@@ -29,4 +25,7 @@ function Owners() {
     )
 }
 
-export default Owners
+// export const metadata: Metadata = {
+//     title: 'Owners',
+//     description: 'Manage Owners',
+// }
