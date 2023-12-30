@@ -1,10 +1,10 @@
 'use client'
-import { SWRConfig } from 'swr'
 import Head from 'next/head'
+import { SWRConfig } from 'swr'
 import Table from '../components/Table'
-import AddOwnerForm from './AddOwnerForm'
+import AddUnitTypeForm from './AddUnitTypeForm'
 
-export default function Owners() {  
+function UnitTypes() {  
     return (
         <SWRConfig
             value = {{
@@ -12,20 +12,22 @@ export default function Owners() {
             }}
         >
             <Head>
-                <title>Owners</title>
-                <meta name="description" content="Manage Owners" />
+                <title>Unit Types</title>
+                <meta name="description" content="Manage Unit Types" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <div className="flex flex-col min-h-screen">
-                <div className="text-3xl text-center tracking-wide">Owners</div>
+                <div className="text-3xl text-center tracking-wide">Unit Types</div>
                 <div className="mx-auto">
-                    <AddOwnerForm/>
+                    <AddUnitTypeForm/>
                 </div>
                 <div className="mx-auto">
-                    <Table table={"owners"}/>
+                    <Table table={"unittypes"}/>
                 </div>
             </div>
         </SWRConfig>
     )
 }
+
+export default UnitTypes

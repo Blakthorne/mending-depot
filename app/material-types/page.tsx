@@ -1,10 +1,10 @@
 'use client'
-import { SWRConfig } from 'swr'
 import Head from 'next/head'
+import { SWRConfig } from 'swr'
 import Table from '../components/Table'
-import AddOwnerForm from './AddOwnerForm'
+import AddMaterialTypeForm from './AddMaterialTypeForm'
 
-export default function Owners() {  
+function MaterialTypes() {  
     return (
         <SWRConfig
             value = {{
@@ -12,20 +12,22 @@ export default function Owners() {
             }}
         >
             <Head>
-                <title>Owners</title>
-                <meta name="description" content="Manage Owners" />
+                <title>Material Types</title>
+                <meta name="description" content="Manage Material Types" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <div className="flex flex-col min-h-screen">
-                <div className="text-3xl text-center tracking-wide">Owners</div>
+                <div className="text-3xl text-center tracking-wide">Material Types</div>
                 <div className="mx-auto">
-                    <AddOwnerForm/>
+                    <AddMaterialTypeForm/>
                 </div>
                 <div className="mx-auto">
-                    <Table table={"owners"}/>
+                    <Table table={"materialtypes"}/>
                 </div>
             </div>
         </SWRConfig>
     )
 }
+
+export default MaterialTypes

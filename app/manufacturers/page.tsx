@@ -1,10 +1,10 @@
 'use client'
-import { SWRConfig } from 'swr'
 import Head from 'next/head'
-import Table from '../components/Table'
-import AddOwnerForm from './AddOwnerForm'
+import { SWRConfig } from 'swr'
+import Table from '../components/Table';
+import AddManufacturerForm from './AddManufacturerForm';
 
-export default function Owners() {  
+function Manufacturers() {  
     return (
         <SWRConfig
             value = {{
@@ -12,20 +12,22 @@ export default function Owners() {
             }}
         >
             <Head>
-                <title>Owners</title>
-                <meta name="description" content="Manage Owners" />
+                <title>Manufacturers</title>
+                <meta name="description" content="Manage Manufacturers" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <div className="flex flex-col min-h-screen">
-                <div className="text-3xl text-center tracking-wide">Owners</div>
+                <div className="text-3xl text-center tracking-wide">Manufacturers</div>
                 <div className="mx-auto">
-                    <AddOwnerForm/>
+                    <AddManufacturerForm/>
                 </div>
                 <div className="mx-auto">
-                    <Table table={"owners"}/>
+                    <Table table={"manufacturers"}/>
                 </div>
             </div>
         </SWRConfig>
     )
 }
+
+export default Manufacturers

@@ -1,10 +1,10 @@
 'use client'
-import { SWRConfig } from 'swr'
 import Head from 'next/head'
-import Table from '../components/Table'
-import AddOwnerForm from './AddOwnerForm'
+import { SWRConfig } from 'swr'
+import Table from '../components/Table';
+import AddBindingTypeForm from './AddBindingTypeForm';
 
-export default function Owners() {  
+export default function BindingTypes() {  
     return (
         <SWRConfig
             value = {{
@@ -12,18 +12,18 @@ export default function Owners() {
             }}
         >
             <Head>
-                <title>Owners</title>
-                <meta name="description" content="Manage Owners" />
+                <title>Binding Types</title>
+                <meta name="description" content="Manage Binding Types" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <div className="flex flex-col min-h-screen">
-                <div className="text-3xl text-center tracking-wide">Owners</div>
+                <div className="text-3xl text-center tracking-wide">Binding Types</div>
                 <div className="mx-auto">
-                    <AddOwnerForm/>
+                    <AddBindingTypeForm/>
                 </div>
                 <div className="mx-auto">
-                    <Table table={"owners"}/>
+                    <Table table={"bindingtypes"}/>
                 </div>
             </div>
         </SWRConfig>

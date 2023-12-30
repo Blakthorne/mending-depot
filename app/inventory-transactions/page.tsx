@@ -1,10 +1,10 @@
 'use client'
-import { SWRConfig } from 'swr'
 import Head from 'next/head'
+import { SWRConfig } from 'swr'
 import Table from '../components/Table'
-import AddOwnerForm from './AddOwnerForm'
+import AddInventoryTransactionForm from './AddInventoryTransactionForm'
 
-export default function Owners() {  
+function InventoryTransactions() {  
     return (
         <SWRConfig
             value = {{
@@ -12,20 +12,22 @@ export default function Owners() {
             }}
         >
             <Head>
-                <title>Owners</title>
-                <meta name="description" content="Manage Owners" />
+                <title>Inventory Transactions</title>
+                <meta name="description" content="Manage Inventory Transactions" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <div className="flex flex-col min-h-screen">
-                <div className="text-3xl text-center tracking-wide">Owners</div>
+                <div className="text-3xl text-center tracking-wide">Inventory Transactions</div>
                 <div className="mx-auto">
-                    <AddOwnerForm/>
+                    <AddInventoryTransactionForm/>
                 </div>
                 <div className="mx-auto">
-                    <Table table={"owners"}/>
+                    <Table table={"inventorytransactions"}/>
                 </div>
             </div>
         </SWRConfig>
     )
 }
+
+export default InventoryTransactions
