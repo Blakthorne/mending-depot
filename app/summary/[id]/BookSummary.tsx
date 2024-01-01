@@ -1,6 +1,3 @@
-'use client'
-import useSWR from 'swr'
-
 type SummaryComponent = {
     bookId: string
 }
@@ -27,20 +24,25 @@ type SummaryData = {
     repairData: RepairData[];
 }
 
+async function getData(bookId: string) {
+    const res = await fetch(process.env.URL + '/api/summary/' + bookId, { cache: 'no-store' })
+    const data: SummaryData = await res.json()
+
+    return data
+}
+
 /**
  * 
  * @param {string} bookId The specified book id
  * @returns HTML summary of the book repairs
  */
-export default function BookSummary({ bookId }: SummaryComponent) {
+export default async function BookSummary({ bookId }: SummaryComponent) {
 
     if (bookId === undefined) {
         bookId = ""
     }
 
-    // Retrieve the table requested by the parent component
-    const { data, error } = useSWR<SummaryData, Error>('/api/summary/' + bookId)
-    if (error) console.log(error)
+    const data = await getData(bookId)
     if (!data) {
         return (
             <span className="loading loading-infinity loading-lg text-info"></span>
