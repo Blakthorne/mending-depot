@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(book)
 }
 
-export async function UPDATE(req: NextRequest) {
+export async function PUT(req: NextRequest) {
     let { id, title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }: Book = await req.json()
 
     // Ensure the new entries are in the correct format
@@ -120,7 +120,6 @@ export async function UPDATE(req: NextRequest) {
 
     if (typeof received === "string") {
         received = new Date(parseFloat(received.slice(10)), parseFloat(received.slice(0, 2)) - 1, parseFloat(received.slice(5, 7)))
-        console.log(received)
     }
 
     if (returned === '') {

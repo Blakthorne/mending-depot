@@ -58,6 +58,7 @@ function FormatDates(book): Book {
  *      Repair Data
  */
 export async function GET(req: NextRequest, { params }: {params: { id: string } } ) {
+    
     // Get id of requested book
     const bookId = params.id
 

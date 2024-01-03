@@ -1,16 +1,17 @@
 'use client'
 import useSWR, { useSWRConfig } from 'swr'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
-import FormTextInput from '../components/forms/FormTextInput'
-import FormSelectInput from '../components/forms/FormSelectInput'
-import FormSubmitButton from '../components/forms/FormSubmitButton'
-import FormCancelButton from '../components/forms/FormCancelButton'
+import FormTextInput from '../../../components/forms/FormTextInput'
+import FormSelectInput from '../../../components/forms/FormSelectInput'
+import FormSubmitButton from '../../../components/forms/FormSubmitButton'
+import FormCancelButton from '../../../components/forms/FormCancelButton'
 
 /**
  * 
- * @returns HTML form for adding a book to the database, along with submit and cancel buttons
+ * @returns HTML form for editing an existing book in the database, along with submit and cancel buttons
  */
-export default function AddBookForm({ buttonText = "Add Book"}) {
+export default function EditBookForm({ bookId }) {
 
     // Create state for the attributes of a book
     const [title, setTitle] = useState('')
@@ -24,6 +25,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     const [bookMaterialsCost, setBookMaterialsCost] = useState('')
     const [amountCharged, setAmountCharged] = useState('')
     const [ownerId, setOwnerId] = useState('')
+    const [id, setId] = useState('')
 
     // Create state for determining the validity of a date;
     // Changed in the FormTextInput component where the constraint "date" is provided
@@ -34,6 +36,11 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
+    // For page refresh after form submission
+    const router = useRouter()
+
+    const buttonText: string = "Submit Update"
+
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
     const { data: owners, error } = useSWR<Owner[], Error>('/api/owners')
     if (error) console.log(error)
@@ -41,6 +48,50 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
     const { data: bindingTypes, error: bindingTypeError } = useSWR<BindingType[], Error>('/api/bindingtypes')
     if (bindingTypeError) console.log(bindingTypeError)
+
+    // Retrieve the book entry that corresponds to the requested book id
+    const { data: book, error: bookError } = useSWR<Book, Error>('/api/books/' + bookId)
+    if (bookError) console.log(bookError)
+    if (!book) {
+        return (
+            <span className="loading loading-infinity loading-lg text-info mt-16 mb-32"></span>
+        )
+    }
+
+    // Save the original copy of states so can revert back if user wants
+    const oldTitle = book.title
+    const oldAuthor = book.author
+    const oldPublisher = book.publisher
+    const oldYearPublished = book.yearPublished as string
+    const oldNumberOfPages = book.numberOfPages as string
+    const oldBindingTypeId = book.bindingTypeId
+    const oldReceived = book.received as string
+    const oldReturned = book.returned as string
+    const oldBookMaterialsCost = book.bookMaterialsCost as string
+    const oldAmountCharged = book.amountCharged as string
+    const oldOwnerId = book.ownerId
+
+    // Must set values to state below return statement above so it doesn't
+    // render an infinite loop.
+    // Only set if book is already defined, and
+    // the id check is to make sure it still doesn't render in an infinite loop.
+    // This is safe because `id` will never change since disabled.
+    if (book && id === '') {
+        setTitle(book.title)
+        setAuthor(book.author)
+        setPublisher(book.publisher)
+        setYearPublished(book.yearPublished as string)
+        setNumberOfPages(book.numberOfPages as string)
+        setbindingTypeId(book.bindingTypeId)
+        setReceived(book.received as string)
+        setReturned(book.returned as string)
+        setBookMaterialsCost(book.bookMaterialsCost as string)
+        setAmountCharged(book.amountCharged as string)
+        setOwnerId(book.ownerId)
+        setId(book.id)
+
+        setReceivedValid(true)
+      }  
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -54,17 +105,17 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
 
         try {
             // Don't submit id because of default creation by the database
-            const body: Book = { title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }
+            const body: Book = { id, title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }
             await fetch('/api/books', {
-                method: 'POST',
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
-            cancelInputs()
-            clearErrors()
 
             // Update the UI wherever this API call is referenced
             mutate('/api/books')
+            mutate('/api/owners')
+            mutate('/api/bindingtypes')
         } catch (error) {
             console.error(error)
         }
@@ -91,19 +142,19 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
      * Clear all the form inputs
      */
     const cancelInputs = (): void => {
-        setTitle('')
-        setAuthor('')
-        setPublisher('')
-        setYearPublished('')
-        setNumberOfPages('')
-        setbindingTypeId('')
-        setReceived('')
-        setReturned('')
-        setBookMaterialsCost('')
-        setAmountCharged('')
-        setOwnerId('')
+        setTitle(oldTitle)
+        setAuthor(oldAuthor)
+        setPublisher(oldPublisher)
+        setYearPublished(oldYearPublished)
+        setNumberOfPages(oldNumberOfPages)
+        setbindingTypeId(oldBindingTypeId)
+        setReceived(oldReceived)
+        setReturned(oldReturned)
+        setBookMaterialsCost(oldBookMaterialsCost)
+        setAmountCharged(oldAmountCharged)
+        setOwnerId(oldOwnerId)
 
-        setReceivedValid(false)
+        setReceivedValid(true)
         setReturnedValid(false)
     }
 
@@ -113,7 +164,15 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}
             >
-                
+                <FormTextInput
+                    onChange={(value) => setId(value)}
+                    placeholder={ "" }
+                    input={ id }
+                    inputId={ "Book ID" }
+                    required={ true }
+                    isDisabled={ true }
+                />
+
                 <FormTextInput
                     onChange={(value) => setTitle(value)}
                     placeholder={ "'The Divine Comedy'" }
@@ -198,6 +257,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
                     constraints={ ["money"] }
                     errorMessage={ "Please only enter a dollar value here." }
                     required={ false }
+                    isDisabled={ true }
                 />
 
                 <FormTextInput

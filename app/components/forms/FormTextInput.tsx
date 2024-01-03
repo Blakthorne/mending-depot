@@ -12,6 +12,7 @@ type FormTextInputComponent = {
     errorMessage?: string;
     dateIsValid?: (valid: boolean) => void;
     required: boolean;
+    isDisabled?: boolean;
 }
 
 /**
@@ -25,9 +26,10 @@ type FormTextInputComponent = {
  * @param {string} [errorMessage] Optional - The error message to display to the user when there is something wrong with the input
  * @param {(valid: boolean) => void} [dateIsValid] Optional - The function to call in the parent component upon change of date to valid or invalid
  * @param {boolean} required True if input is required, false otherwise
+ * @param {boolean} [isDisabled] Optional - True if disabled, false if enabled
  * @returns HTML input of type "text" with label and FormInputErrorMessage component
  */
-export default function FormTextInput({ onChange, placeholder, input, inputId, uniquesArray, constraints, errorMessage, dateIsValid, required }: FormTextInputComponent) {
+export default function FormTextInput({ onChange, placeholder, input, inputId, uniquesArray, constraints, errorMessage, dateIsValid, required, isDisabled }: FormTextInputComponent) {
 
     // Create state for keeping track of whether a date is valid;
     // Used for rendering a date input valid or invalid when its at full length
@@ -218,6 +220,7 @@ export default function FormTextInput({ onChange, placeholder, input, inputId, u
                 type="text"
                 value={ input }
                 id={ inputId }
+                disabled={isDisabled}
             />
             {!errorMessage ?
                 <FormInputErrorMessage
