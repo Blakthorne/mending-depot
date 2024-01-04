@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { SWRConfig } from 'swr'
 import AddBookForm from './AddBookForm'
 
-function Books() {
+function NewBook() {
     return (
         <SWRConfig
             value = {{
@@ -26,4 +26,4 @@ function Books() {
     )
 }
 
-export default Books
+export default NewBook

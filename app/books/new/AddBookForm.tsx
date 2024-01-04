@@ -89,7 +89,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     }
 
     const redirectToNewRepair = () => {
-        router.push('/new-repair/' + newBookId)
+        router.push('/books/repairs/' + newBookId)
     }
 
     /**

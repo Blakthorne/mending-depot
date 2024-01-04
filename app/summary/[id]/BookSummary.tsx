@@ -1,3 +1,6 @@
+'use client'
+import useSWR, { useSWRConfig } from 'swr'
+
 type SummaryComponent = {
     bookId: string
 }
@@ -24,28 +27,25 @@ type SummaryData = {
     repairData: RepairData[];
 }
 
-async function getData(bookId: string) {
-    const res = await fetch(process.env.URL + '/api/summary/' + bookId, { cache: 'no-store' })
-    const data: SummaryData = await res.json()
-
-    return data
-}
-
 /**
  * 
  * @param {string} bookId The specified book id
  * @returns HTML summary of the book repairs
  */
-export default async function BookSummary({ bookId }: SummaryComponent) {
+export default function BookSummary({ bookId }: SummaryComponent) {
 
     if (bookId === undefined) {
         bookId = ""
     }
 
-    const data = await getData(bookId)
+    const fetcher = url => fetch(url).then(r => r.json())
+
+    // Retrieve the owners for use in the names[] for the uniqueness check
+    const { data, error } = useSWR<SummaryData, Error>('/api/summary/' + bookId, fetcher)
+    if (error) console.log(error)
     if (!data) {
         return (
-            <span className="loading loading-infinity loading-lg text-info"></span>
+            <span className="loading loading-infinity loading-lg text-info mt-16 mb-32"></span>
         )
     }
 

@@ -3,9 +3,9 @@ import useSWR, { useSWRConfig } from 'swr'
 import Head from 'next/head'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
-import FormTextInput from '../../components/forms/FormTextInput'
-import FormSelectInput from '../../components/forms/FormSelectInput'
-import RepairFormCard from '../../components/RepairFormCard'
+import FormTextInput from '../../../components/forms/FormTextInput'
+import FormSelectInput from '../../../components/forms/FormSelectInput'
+import RepairFormCard from '../../../components/RepairFormCard'
 
 type TypeForMaterial = {
     materialTypeName: string;
@@ -98,7 +98,8 @@ function NewRepair({ params }: {params: { bookId: string } }) {
             clearErrors()
 
             mutate('/api/repairs')
-
+            mutate('/summary/' + bookId)
+            
             router.push('/summary/' + bookId)
         } catch (error) {
             console.error(error)

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { SWRConfig } from 'swr'
 import PrettyBookTable from './PrettyBookTable'
 
-function Books() {
+function ListBooks() {
     return (
         <SWRConfig
             value = {{
@@ -26,4 +26,4 @@ function Books() {
     )
 }
 
-export default Books
+export default ListBooks
