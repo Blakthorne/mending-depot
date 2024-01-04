@@ -1,10 +1,11 @@
 'use client'
 import useSWR, { useSWRConfig } from 'swr'
 import React, { useState } from 'react'
-import FormTextInput from '../components/forms/FormTextInput'
-import FormSelectInput from '../components/forms/FormSelectInput'
-import FormSubmitButton from '../components/forms/FormSubmitButton'
-import FormCancelButton from '../components/forms/FormCancelButton'
+import { useRouter } from 'next/navigation'
+import FormTextInput from '../../components/forms/FormTextInput'
+import FormSelectInput from '../../components/forms/FormSelectInput'
+import FormSubmitButton from '../../components/forms/FormSubmitButton'
+import FormCancelButton from '../../components/forms/FormCancelButton'
 
 /**
  * 
@@ -31,8 +32,16 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     const [receivedValid, setReceivedValid] = useState(false)
     const [returnedValid, setReturnedValid] = useState(false)
 
+    // Will be set after book submission
+    // Used to redirect to new repair if desired by user
+    const [newBookId, setNewBookId] = useState('')
+
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
+
+    // Create an instance useRouter()
+    // Used to redirect to new repair page
+    const router = useRouter()
 
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
     const { data: owners, error } = useSWR<Owner[], Error>('/api/owners')
@@ -55,19 +64,32 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
         try {
             // Don't submit id because of default creation by the database
             const body: Book = { title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }
-            await fetch('/api/books', {
+            const data = await fetch('/api/books', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
+
+            const newBook: Book = await data.json()
+
             cancelInputs()
             clearErrors()
 
             // Update the UI wherever this API call is referenced
             mutate('/api/books')
+
+            setNewBookId(newBook.id)
+
+            // I have to retype the element specifically as a Dialog Element or else TypeScript cries
+            let elem: HTMLDialogElement = document.getElementById('my_modal_5') as HTMLDialogElement
+            elem.showModal()
         } catch (error) {
             console.error(error)
         }
+    }
+
+    const redirectToNewRepair = () => {
+        router.push('/new-repair/' + newBookId)
     }
 
     /**
@@ -108,7 +130,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     }
 
     return (
-        <div className="mt-16">
+        <div className="mt-16 mb-32">
             <form
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}
@@ -232,6 +254,20 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
                     cancelClick={() => cancelInputs()}
                 />
             </form>
+            <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">It's Submitted!</h3>
+                    <p className="pt-6">Do you want to go ahead and add some repairs to your new book?</p>
+                    <div className="modal-action">
+                    <form className="flex gap-4"
+                          method="dialog">
+                        <div className="btn btn-primary"
+                             onClick={() => redirectToNewRepair()}>Sure</div>
+                        <button className="btn btn-secondary">Nope</button>
+                    </form>
+                    </div>
+                </div>
+            </dialog>
         </div>
     )
 }

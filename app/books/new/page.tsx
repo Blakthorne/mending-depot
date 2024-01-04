@@ -1,7 +1,7 @@
 'use client'
 import Head from 'next/head'
 import { SWRConfig } from 'swr'
-import PrettyBookTable from './PrettyBookTable'
+import AddBookForm from './AddBookForm'
 
 function Books() {
     return (
@@ -11,15 +11,15 @@ function Books() {
             }}
         >
             <Head>
-                <title>Books</title>
-                <meta name="description" content="Manage Books" />
+                <title>Add Book</title>
+                <meta name="description" content="Add A New Book" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <div className="flex flex-col min-h-screen">
                 <div className="text-3xl text-center tracking-wide">Books</div>
                 <div className="mx-auto">
-                    <PrettyBookTable/>
+                    <AddBookForm/>
                 </div>
             </div>
         </SWRConfig>

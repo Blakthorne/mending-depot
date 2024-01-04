@@ -7,7 +7,7 @@ type RepairSpecsType = {
 }
 
 type BatchReceived = {
-    bookBody: Book;
+    bookId: string;
     repairForms: RepairType[];
     repairSpecs: RepairSpecsType;
 }
@@ -1443,80 +1443,10 @@ async function createCoverRepair(tx: PrismaClient, repair: RepairType, repairSpe
 }
 
 export async function POST(req: NextRequest) {
-    let { bookBody, repairForms, repairSpecs }: BatchReceived = await req.json()
-
-    // So newBook can be returned
-    let newBook: Book
+    let { bookId, repairForms, repairSpecs }: BatchReceived = await req.json()
 
     const repairAdditions = await prisma.$transaction(async (tx: PrismaClient) => {
-
-        // Break out the bookBody object into the respective components
-        let { title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }: Book = bookBody
-    
-        // Cannot use 'else if' on string empty checks for type checking reasons - TypeScript thinks they could still be non-strings
-        if (publisher === '') publisher = null
-
-        if (yearPublished === '') {
-            yearPublished = null
-        }
-        if (typeof yearPublished === "string") {
-            yearPublished = parseFloat(yearPublished)
-        }
-
-        if (numberOfPages === '') {
-            numberOfPages = null
-        }
-        if (typeof numberOfPages === "string") {
-            numberOfPages = parseFloat(numberOfPages)
-        }
-
-        if (typeof received === "string") {
-            received = new Date(parseFloat(received.slice(10)), parseFloat(received.slice(0, 2)) - 1, parseFloat(received.slice(5, 7)))
-            console.log(received)
-        }
-
-        if (returned === '') {
-            returned = null
-        }
-        if (typeof returned === "string") {
-            returned = new Date(parseFloat(returned.slice(10)), parseFloat(returned.slice(0, 2)) - 1, parseFloat(returned.slice(5, 7)))
-        }
-
-        if (bookMaterialsCost === '') {
-            bookMaterialsCost = null
-        }
-        if (typeof bookMaterialsCost === "string") {
-            bookMaterialsCost = parseFloat(bookMaterialsCost)
-        }
-
-        if (amountCharged === '') {
-            amountCharged = null
-        }
-        if (typeof amountCharged === "string") {
-            amountCharged = parseFloat(amountCharged)
-        }
-
-        // Create the new book
-        newBook = await tx.book.create({
-            data: {
-                title: title,
-                author: author,
-                publisher: publisher,
-                yearPublished: yearPublished,
-                numberOfPages: numberOfPages,
-                bindingTypeId: bindingTypeId,
-                received: received,
-                returned: returned,
-                bookMaterialsCost: bookMaterialsCost,
-                amountCharged: amountCharged,
-                ownerId: ownerId,
-            }
-        })
-
-        let bookId: string = newBook.id
-
         for (let repair of repairForms) {
-
             // Paper Repair
             if (repair.repairTypeName === "Paper Repair") {
                 await createPaperRepair(tx, repair, repairSpecs, bookId)
@@ -1554,12 +1484,5 @@ export async function POST(req: NextRequest) {
         }
     })
 
-    let finalBook: Book = await prisma.book.findUnique({
-        where: {
-            id: newBook.id
-        }
-    })
-
-
-    return NextResponse.json(finalBook)
+    return NextResponse.json({bookId}, { status: 200 })
 }

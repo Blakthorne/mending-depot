@@ -3,11 +3,9 @@ import useSWR, { useSWRConfig } from 'swr'
 import Head from 'next/head'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
-import FormTextInput from '../components/forms/FormTextInput'
-import FormSelectInput from '../components/forms/FormSelectInput'
-import FormSubmitButton from '../components/forms/FormSubmitButton'
-import FormCancelButton from '../components/forms/FormCancelButton'
-import RepairFormCard from '../components/RepairFormCard'
+import FormTextInput from '../../components/forms/FormTextInput'
+import FormSelectInput from '../../components/forms/FormSelectInput'
+import RepairFormCard from '../../components/RepairFormCard'
 
 type TypeForMaterial = {
     materialTypeName: string;
@@ -21,7 +19,7 @@ type RepairSpecsType = {
 }
 
 type submitRepairsType = {
-    bookBody: Book;
+    bookId: string;
     repairForms: RepairType[];
     repairSpecs: RepairSpecsType;
 }
@@ -30,26 +28,7 @@ function If(props) {
     return props.condition ? <>{props.children}</> : null;
 }
 
-function NewRepair() {
-
-    // Create state for stage of the new repair process
-    // book and newRepairs
-    const [stage, setStage] = useState('book')
-
-    // Create state for the attributes of a book
-    const [title, setTitle] = useState('')
-    const [author, setAuthor] = useState('')
-    const [publisher, setPublisher] = useState('')
-    const [yearPublished, setYearPublished] = useState('')
-    const [numberOfPages, setNumberOfPages] = useState('')
-    const [bindingTypeId, setBindingTypeId] = useState(undefined)
-    const [received, setReceived] = useState('')
-    const [ownerId, setOwnerId] = useState('')
-
-    // Changed in the FormTextInput component where the constraint "date" is provided
-    // and passed via function through the optional parameter isDateValid
-    const [receivedValid, setReceivedValid] = useState(false)
-    const [returnedValid, setReturnedValid] = useState(false)
+function NewRepair({ params }: {params: { bookId: string } }) {
 
     // The currently selected repair type id that is set to be added upon add button clicked
     const [curSelectedRepairTypeId, setCurSelectedRepairTypeId] = useState('')
@@ -68,12 +47,6 @@ function NewRepair() {
 
     const [repairSpecs, setRepairSpecs] = useState(tempObj)
 
-    // Define variables empty strings for variables that won't be used in the form,
-    // but still need to be submitted to the API
-    const returned = ''
-    const bookMaterialsCost = ''
-    const amountCharged = ''
-
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
@@ -81,10 +54,6 @@ function NewRepair() {
 
     // For redirecting to summary page upon entry completion
     const router = useRouter()
-
-    // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
-    const { data: owners, error } = useSWR<Owner[], Error>('/api/owners', fetcher)
-    if (error) console.log(error)
 
     // Retrieve the repairtypes table to get the repair type names and ids to be used as the foreign key in the repairs table
     const { data: repairTypes, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes', fetcher)
@@ -98,56 +67,39 @@ function NewRepair() {
     const { data: bindingTypeIds, error: bindingTypeIdsError } = useSWR<object[], Error>('/api/bindingtypes', fetcher)
     if (bindingTypeIdsError) console.log(bindingTypeIdsError)
 
+    const { data: book, error: bookError } = useSWR<Book, Error>('/api/books/' + params.bookId, fetcher)
+    if (bookError) console.log(bookError)
+    if (!book) {
+        return (
+            <span className="loading loading-infinity loading-lg text-info"></span>
+        )
+    }
+
+    // Must create this var because so it's consistent with the
+    // Book type when creating bookBody object for HTTP POST
+    const bookId: string = params.bookId
+
     // Create array of the cover type options to be used in the Cover Replacement form
     let coverTypeOptions: object[] =  [{"display": "Full Bound", "store": "fullBound"}, {"display": "Quarter Bound", "store": "quarterBound"}, {"display": "Three-Quarter Bound", "store": "threeQuarterBound"}]
 
     /**
      * Submit data to the server upon pressing the submit button in the form
-     * 
-     * @param {React.FormEvent<HTMLFormElement>} e The event provided when the submit button is pressed
-     */
-     const submitBookData = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-
-        // Prevent the browser from reloading the whole page
-        e.preventDefault()
-
-        setStage('newRepairs')
-        scroll(0, 0)
-    }
-
-    /**
-     * Submit data to the server upon pressing the submit button in the form
      */
      const submitNewRepairsData = async (): Promise<void>  => {
-
-        // Create an object composed of the info from the new Book form
-        const bookBody: Book = { title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }
-
-        let newBook: Book
-
         try {
-            const body: submitRepairsType = { bookBody, repairForms, repairSpecs }
+            const body: submitRepairsType = { bookId, repairForms, repairSpecs }
             await fetch('/api/repairs/batch', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
-            .then((response) => response.json())
-            .then((response) => {
-                newBook = response
-            });
 
-            cancelBookInputs()
             cancelAllRepairForms()
             clearErrors()
 
-            // Update the UI wherever this API call is referenced
-            mutate('/api/books')
             mutate('/api/repairs')
 
-            if (newBook.id !== undefined) {
-                router.push('/summary/' + newBook.id)
-            }
+            router.push('/summary/' + bookId)
         } catch (error) {
             console.error(error)
         }
@@ -168,23 +120,6 @@ function NewRepair() {
             inputs[i].classList.remove("focus:border-error")
             inputs[i].classList.add("focus:border-info")
         }
-    }
-
-    /**
-     * Clear the book form inputs
-     */
-    const cancelBookInputs = (): void => {
-        setTitle('')
-        setAuthor('')
-        setPublisher('')
-        setYearPublished('')
-        setNumberOfPages('')
-        setBindingTypeId('')
-        setReceived('')
-        setOwnerId('')
-
-        setReceivedValid(false)
-        setReturnedValid(false)
     }
 
     /**
@@ -252,13 +187,6 @@ function NewRepair() {
         if (materials) {
             return materials.filter((material: TypeForMaterial) => material.materialTypeName === materialTypeName)
         }
-    }
-
-    /**
-     * Return to book stage
-     */
-    const toPrevStep = (): void => {
-        if (stage === 'newRepairs') setStage('book')
     }
 
     /**
@@ -354,108 +282,6 @@ function NewRepair() {
                     </If>
                 ))}
             </div>
-        )
-    }
-
-    /**
-     * Componenets for the New Book Form
-     * @returns 
-     */
-    const newBookForm = () => {
-        return (
-            <form
-                autoComplete="off"
-                onSubmit={(event) => submitBookData(event)}
-            >
-                
-                <FormTextInput
-                    onChange={(value) => setTitle(value)}
-                    placeholder={ "'The Divine Comedy'" }
-                    input={ title }
-                    inputId={ "Title" }
-                    required={ true }
-                />
-
-                <FormTextInput
-                    onChange={(value) => setAuthor(value)}
-                    placeholder={ "'Dante Alighieri'" }
-                    input={ author }
-                    inputId={ "Author" }
-                    required={ true }
-                />
-
-                <FormTextInput
-                    onChange={(value) => setPublisher(value)}
-                    placeholder={ "'Doubleday & Company, Inc'" }
-                    input={ publisher }
-                    inputId={ "Publisher" }
-                    required={ false }
-                />
-
-                <FormTextInput
-                    onChange={(value) => setYearPublished(value)}
-                    placeholder={ "'1946'" }
-                    input={ yearPublished }
-                    inputId={ "Year Published" }
-                    constraints={ ["int"] }
-                    errorMessage={ "Please only enter a number here." }
-                    required={ false }
-                />
-
-                <FormTextInput
-                    onChange={(value) => setNumberOfPages(value)}
-                    placeholder={ "'475'" }
-                    input={ numberOfPages }
-                    inputId={ "Number of Pages" }
-                    constraints={ ["int"] }
-                    errorMessage={ "Please only enter a number here." }
-                    required={ false }
-                />
-
-                <FormSelectInput
-                    onChange={(value) => setBindingTypeId(value)}
-                    input={ bindingTypeId }
-                    inputId={ "Binding Type" }
-                    options={ bindingTypeIds }
-                    displayKey={ "bindingTypeName"}
-                    storeKey={ "id" }
-                    required={ true }
-                />
-
-                <FormTextInput
-                    onChange={(value) => setReceived(value)}
-                    placeholder={ "'01 - 18 - 2017'" }
-                    input={ received }
-                    inputId={ "Date Received" }
-                    constraints={ ["date"] }
-                    errorMessage={ "Sorry, but that's not a real date." }
-                    dateIsValid={(validity) => setReceivedValid(validity)}
-                    required={ true }
-                />
-
-                <FormSelectInput
-                    onChange={(value) => setOwnerId(value)}
-                    input={ ownerId }
-                    inputId={ "Owner" }
-                    options={ owners }
-                    displayKey={ "ownerName"}
-                    storeKey={ "id" }
-                    required={ true }
-                />
-
-                <FormSubmitButton
-                    requiredInputs={ [title, author, bindingTypeId, received, ownerId] }
-                    requiredDates={ [receivedValid] }
-                    dateValids={ [receivedValid, returnedValid] }
-                    text="Start Adding Repairs"
-                    id='bookSubmitButton'
-                />
-
-                <FormCancelButton
-                    clearInvalids={() => clearErrors()}
-                    cancelClick={() => cancelBookInputs()}
-                />
-            </form>
         )
     }
 
@@ -928,40 +754,21 @@ function NewRepair() {
             </Head>
 
             <div className="grid grid-cols-3 grid-rows-1 min-h-screen pb-16 ml-16 mr-16">
-                <If condition={stage !== 'book'}>
+                <div className="col-start-2">
+                    <div className="text-3xl text-center pb-10">
+                        Create Your Repairs
+                    </div>
+                    <div>
+                        {selectNewRepairsForm()}
+                    </div>
+                    <div className="m-auto">
+                        {addNewRepairsForm()}
+                    </div>
+                </div>
                     <button
                         className="btn btn-ghost mx-auto"
-                        onClick={() => toPrevStep()}
-                    >&lt; Back</button>
-                </If>
-
-                <div className="col-start-2">
-                    <If condition={stage === 'book'}>
-                        <div className="text-3xl text-center pb-10">
-                            Begin by Adding A New Book
-                        </div>
-                        <div className="m-auto">
-                            {newBookForm()}
-                        </div>
-                    </If>
-                    <If condition={stage === 'newRepairs'}>
-                        <div className="text-3xl text-center pb-10">
-                            Create Your Repairs
-                        </div>
-                        <div>
-                            {selectNewRepairsForm()}
-                        </div>
-                        <div className="m-auto">
-                            {addNewRepairsForm()}
-                        </div>
-                    </If>
-                </div>
-                <If condition={stage === 'newRepairs'}>
-                        <button
-                            className="btn btn-ghost mx-auto"
-                            onClick={() => submitNewRepairsData()}
-                        >Finish &gt;</button>
-                </If>
+                        onClick={() => submitNewRepairsData()}
+                    >Finish &gt;</button>
             </div>
         </div>
     )

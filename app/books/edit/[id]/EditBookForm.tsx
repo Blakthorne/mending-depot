@@ -116,6 +116,8 @@ export default function EditBookForm({ bookId }) {
             mutate('/api/books')
             mutate('/api/owners')
             mutate('/api/bindingtypes')
+
+            router.push("/books")
         } catch (error) {
             console.error(error)
         }
@@ -159,7 +161,7 @@ export default function EditBookForm({ bookId }) {
     }
 
     return (
-        <div className="mt-16">
+        <div className="mt-16 mb-32">
             <form
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}
