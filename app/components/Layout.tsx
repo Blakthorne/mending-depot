@@ -60,7 +60,7 @@ export default function Layout({children}) {
             />
             <Sidebar/>
 			<div className="fixed h-full bg-gray-600 w-1 ml-80"></div>
-            <div className="pl-80 pt-24">
+            <div className="pl-80 pt-24 min-h-screen">
                 {children}
             </div>
             
