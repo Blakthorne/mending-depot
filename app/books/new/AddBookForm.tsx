@@ -6,6 +6,7 @@ import FormTextInput from '../../components/forms/FormTextInput'
 import FormSelectInput from '../../components/forms/FormSelectInput'
 import FormSubmitButton from '../../components/forms/FormSubmitButton'
 import FormCancelButton from '../../components/forms/FormCancelButton'
+import AddBookModal from './AddBookModal'
 
 /**
  * 
@@ -254,20 +255,9 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
                     cancelClick={() => cancelInputs()}
                 />
             </form>
-            <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box">
-                    <h3 className="font-bold text-lg">It's Submitted!</h3>
-                    <p className="pt-6">Do you want to go ahead and add some repairs to your new book?</p>
-                    <div className="modal-action">
-                    <form className="flex gap-4"
-                          method="dialog">
-                        <div className="btn btn-primary"
-                             onClick={() => redirectToNewRepair()}>Sure</div>
-                        <button className="btn btn-secondary">Nope</button>
-                    </form>
-                    </div>
-                </div>
-            </dialog>
+            <AddBookModal
+                redirectToNewRepair={() => redirectToNewRepair()}
+            />
         </div>
     )
 }

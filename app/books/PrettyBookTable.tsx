@@ -1,7 +1,7 @@
 'use client'
 import useSWR from 'swr'
-import Link from 'next/link';
 import React, { useState } from 'react'
+import PrettyBookModal from './PrettyBookModal'
 
 export default function PrettyBookTable() {
 
@@ -123,30 +123,10 @@ export default function PrettyBookTable() {
                     ))}
                 </tbody>
             </table>
-            <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box">
-                    <h3 className="font-bold text-lg">{curBookTitle}</h3>
-                    <div className="flex gap-x-8 justify-center mt-4 mb--4">
-                        <Link
-                            className="btn btn-outline"
-                            href={"/summary/" + curBookId}>Summary
-                        </Link>
-                        <Link
-                            className="btn btn-outline"
-                            href={"/books/edit/" + curBookId}>Edit
-                        </Link>
-                        <Link
-                            className="btn btn-outline"
-                            href={"/books/repairs/" + curBookId}>Add Repairs
-                        </Link>
-                    </div>
-                    <div className="modal-action">
-                        <form method="dialog">
-                            <button className="btn">Close</button>
-                        </form>
-                    </div>
-                </div>
-            </dialog>
+            <PrettyBookModal
+                curBookTitle={curBookTitle}
+                curBookId={curBookId}
+            />
         </div>
     )
 }

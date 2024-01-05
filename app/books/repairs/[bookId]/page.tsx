@@ -63,10 +63,6 @@ function NewRepair({ params }: {params: { bookId: string } }) {
     const { data: materials, error: materialsError } = useSWR<object[], Error>('/api/typesformaterials/pairs', fetcher)
     if (materialsError) console.log(materialsError)
 
-    // Retrieve the binding types
-    const { data: bindingTypeIds, error: bindingTypeIdsError } = useSWR<object[], Error>('/api/bindingtypes', fetcher)
-    if (bindingTypeIdsError) console.log(bindingTypeIdsError)
-
     const { data: book, error: bookError } = useSWR<Book, Error>('/api/books/' + params.bookId, fetcher)
     if (bookError) console.log(bookError)
     if (!book) {
@@ -221,7 +217,7 @@ function NewRepair({ params }: {params: { bookId: string } }) {
                         required={ false }
                     />
                 </div>
-                <button className="btn btn-primary disabled:btn-disabled my-2 join-item"
+                <button className="btn btn-neutral disabled:btn-disabled my-2 ml-4"
                         onClick={() => updateRepairTypeInputs(curSelectedRepairTypeId)}
                         disabled={ addShouldBeDisabled }
                 >Add Another Repair</button>
@@ -749,27 +745,29 @@ function NewRepair({ params }: {params: { bookId: string } }) {
     return (
         <div>
             <Head>
-                <title>New Repair</title>
-                <meta name="description" content="Begin New Repair" />
+                <title>Add Repairs</title>
+                <meta name="description" content="Add repairs to a book" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <div className="grid grid-cols-3 grid-rows-1 min-h-screen pb-16 ml-16 mr-16">
-                <div className="col-start-2">
-                    <div className="text-3xl text-center pb-10">
-                        Create Your Repairs
-                    </div>
+            <div className="flex flex-col min-h-screen">
+                <div className="text-3xl text-center tracking-wide mb-10">
+                    Add Repairs to '{book.title}'
+                </div>
+                <div className="mx-auto">
                     <div>
                         {selectNewRepairsForm()}
+                    </div>
+                    <div className="flex flex-row justify-center">
+                        <button
+                            className="btn btn-primary mb-10 w-full"
+                            onClick={() => submitNewRepairsData()}
+                        >Finish</button>
                     </div>
                     <div className="m-auto">
                         {addNewRepairsForm()}
                     </div>
                 </div>
-                    <button
-                        className="btn btn-ghost mx-auto"
-                        onClick={() => submitNewRepairsData()}
-                    >Finish &gt;</button>
             </div>
         </div>
     )
