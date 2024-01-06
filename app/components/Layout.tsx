@@ -53,16 +53,22 @@ export default function Layout({children}) {
       }, [isDark])
 
     return  (
-        <div data-theme={themeName}>
-            <Navbar 
-                setTheme={setIsDark}
-                isDark={isDark}
-            />
-            <Sidebar/>
-            <div className="pl-80 pt-24 min-h-screen">
-                {children}
+        <div data-theme={themeName} 
+             className="drawer lg:drawer-open">
+            <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+            <div className="drawer-content flex flex-col">
+                <Navbar 
+                    setTheme={setIsDark}
+                    isDark={isDark}
+                />
+                <div className="pt-16 min-h-screen">
+                    {children}
+                </div>
             </div>
-            
+            <div className="drawer-side z-20">
+                <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
+                <Sidebar/>
+            </div>
         </div>
     )
 }
