@@ -1,5 +1,6 @@
 'use client'
-import useSWR from 'swr'
+import useSWR, { SWRConfig } from 'swr'
+import LoadingIcon from '../loading';
 
 type TableComponent = {
     table: string;
@@ -17,7 +18,7 @@ export default function Table({ table }: TableComponent) {
     if (error) console.log(error)
     if (!data) {
         return (
-            <span className="loading loading-infinity loading-lg text-info mt-16 mb-32"></span>
+            <LoadingIcon/>
         )
     }
     if (data[0] == undefined) return <div className="mt-16">There is no data in this table</div>
@@ -26,36 +27,38 @@ export default function Table({ table }: TableComponent) {
     let cellKey = 0
 
     return (
-        <div className="overflow-x-auto">
-            <table className="table table-zebra text-xs mt-16 mb-32">
-                <thead>
-                    <tr className="table-row">
-                        {Object.keys(data[0])
-                            .map(item => (
-                            <th
-                                key={item.toString()}
-                                className="capitalize">
-                                    {item.split(/(?=[A-Z])/).join(" ")}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map(row => (
-                        <tr className="hover"
-                            key={Object.values(row).toString()}>
-                            {Object.values(row)
-                                .map(maybeNull => maybeNull ? maybeNull : "-")
-                                .map(cell => (
-                                    <td
-                                        key={(cellKey += 1).toString()}>
-                                            {cell}
-                                    </td>
+        <div className="flex">
+            <div className="overflow-x-auto mx-auto">
+                <table className="table table-zebra text-xs mb-32">
+                    <thead>
+                        <tr className="table-row">
+                            {Object.keys(data[0])
+                                .map(item => (
+                                <th
+                                    key={item.toString()}
+                                    className="capitalize">
+                                        {item.split(/(?=[A-Z])/).join(" ")}
+                                </th>
                             ))}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {data.map(row => (
+                            <tr className="hover"
+                                key={Object.values(row).toString()}>
+                                {Object.values(row)
+                                    .map(maybeNull => maybeNull ? maybeNull : "-")
+                                    .map(cell => (
+                                        <td
+                                            key={(cellKey += 1).toString()}>
+                                                {cell}
+                                        </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

@@ -1,11 +1,13 @@
 'use client'
 import useSWR, { useSWRConfig } from 'swr'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { revalidatePath } from 'next/cache'
 import FormTextInput from '../../../components/forms/FormTextInput'
 import FormSelectInput from '../../../components/forms/FormSelectInput'
 import FormSubmitButton from '../../../components/forms/FormSubmitButton'
 import FormCancelButton from '../../../components/forms/FormCancelButton'
+import LoadingIcon from '../../../loading'
 
 /**
  * 
@@ -33,13 +35,28 @@ export default function EditBookForm({ bookId }) {
     const [receivedValid, setReceivedValid] = useState(false)
     const [returnedValid, setReturnedValid] = useState(false)
 
+    const setInputs = (book: Book) => {
+        setTitle(book.title)
+        setAuthor(book.author)
+        setPublisher(book.publisher)
+        setYearPublished(book.yearPublished as string)
+        setNumberOfPages(book.numberOfPages as string)
+        setbindingTypeId(book.bindingTypeId)
+        setReceived(book.received as string)
+        setReturned(book.returned as string)
+        setBookMaterialsCost(book.bookMaterialsCost as string)
+        setAmountCharged(book.amountCharged as string)
+        setOwnerId(book.ownerId)
+        setId(book.id)
+
+        setReceivedValid(true)
+    }
+
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
     // For page refresh after form submission
     const router = useRouter()
-
-    const buttonText: string = "Submit Update"
 
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
     const { data: owners, error } = useSWR<Owner[], Error>('/api/owners')
@@ -54,7 +71,7 @@ export default function EditBookForm({ bookId }) {
     if (bookError) console.log(bookError)
     if (!book) {
         return (
-            <span className="loading loading-infinity loading-lg text-info mt-16 mb-32"></span>
+            <LoadingIcon/>
         )
     }
 
@@ -77,21 +94,8 @@ export default function EditBookForm({ bookId }) {
     // the id check is to make sure it still doesn't render in an infinite loop.
     // This is safe because `id` will never change since disabled.
     if (book && id === '') {
-        setTitle(book.title)
-        setAuthor(book.author)
-        setPublisher(book.publisher)
-        setYearPublished(book.yearPublished as string)
-        setNumberOfPages(book.numberOfPages as string)
-        setbindingTypeId(book.bindingTypeId)
-        setReceived(book.received as string)
-        setReturned(book.returned as string)
-        setBookMaterialsCost(book.bookMaterialsCost as string)
-        setAmountCharged(book.amountCharged as string)
-        setOwnerId(book.ownerId)
-        setId(book.id)
-
-        setReceivedValid(true)
-      }  
+        setInputs(book)
+    }
 
     /**
      * Submit data to the server upon pressing the submit button in the form
@@ -106,18 +110,20 @@ export default function EditBookForm({ bookId }) {
         try {
             // Don't submit id because of default creation by the database
             const body: Book = { id, title, author, publisher, yearPublished, numberOfPages, bindingTypeId, received, returned, bookMaterialsCost, amountCharged, ownerId }
-            await fetch('/api/books', {
+            const data = await fetch('/api/books', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
 
+            const newBook: Book = await data.json()
+
             // Update the UI wherever this API call is referenced
             mutate('/api/books')
-            mutate('/api/owners')
-            mutate('/api/bindingtypes')
+            mutate('/api/books/' + id)
 
-            router.push("/books")
+            await fetch('/books/summary/revalidate/' + id)
+            router.push("/books/summary/" + id)
         } catch (error) {
             console.error(error)
         }
@@ -286,7 +292,7 @@ export default function EditBookForm({ bookId }) {
                     requiredInputs={ [title, author, bindingTypeId, received, ownerId] }
                     requiredDates={ [receivedValid] }
                     dateValids={ [receivedValid, returnedValid] }
-                    text={ buttonText }
+                    text={ "Submit Update" }
                 />
 
                 <FormCancelButton

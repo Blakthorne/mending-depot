@@ -32,7 +32,7 @@ type FormTextInputComponent = {
 export default function FormTextInput({ onChange, placeholder, input, inputId, uniquesArray, constraints, errorMessage, dateIsValid, required, isDisabled }: FormTextInputComponent) {
 
     // Create state for keeping track of whether a date is valid;
-    // Used for rendering a date input valid or invalid when its at full length
+    // Used for rendering a date input valid or invalid when it's at full length
     // based on what it was last rendered as
     const [privateDateValid, setPrivateDateValid] = useState(false)
 

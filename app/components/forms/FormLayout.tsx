@@ -7,7 +7,7 @@ export default function FormLayout({ children, formTitle }: {
     formTitle: string,
     }) {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col">
             <div className="text-3xl text-center tracking-wide">{formTitle}</div>
             <div className=" mx-auto px-2 mt-16 mb-16">
                 {children}

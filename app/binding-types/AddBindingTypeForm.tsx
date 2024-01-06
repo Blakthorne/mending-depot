@@ -1,9 +1,10 @@
 'use client'
 import useSWR, { useSWRConfig } from 'swr'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import FormTextInput from '../components/forms/FormTextInput'
 import FormSubmitButton from '../components/forms/FormSubmitButton'
 import FormCancelButton from '../components/forms/FormCancelButton'
+import FormLayout from '../components/forms/FormLayout'
 
 /**
  * 
@@ -85,34 +86,36 @@ export default function AddBindingTypeForm() {
     }
 
     return (
-        <div className="mt-16 w-96">
-            <form
-                autoComplete="off"
-                onSubmit={(event) => submitData(event)}
-            >
+        <div>
+            <FormLayout formTitle="Add Binding Type">
+                <form
+                    autoComplete="off"
+                    onSubmit={(event) => submitData(event)}
+                >
 
-                <FormTextInput
-                    onChange={(value) => setBindingTypeName(value)}
-                    placeholder={ "'Smyth Sewn'" }
-                    input={ bindingTypeName }
-                    inputId={ "Binding Type" }
-                    uniquesArray={ bindingTypes }
-                    constraints={ ["unique"] }
-                    errorMessage={ "That binding type already exists. Please enter a new binding type." }
-                    required={ true }
-                />
+                    <FormTextInput
+                        onChange={(value) => setBindingTypeName(value)}
+                        placeholder={ "'Smyth Sewn'" }
+                        input={ bindingTypeName }
+                        inputId={ "Binding Type" }
+                        uniquesArray={ bindingTypes }
+                        constraints={ ["unique"] }
+                        errorMessage={ "That binding type already exists. Please enter a new binding type." }
+                        required={ true }
+                    />
 
-                <FormSubmitButton
-                    requiredInputs={ [bindingTypeName] }
-                    uniques={ [{"key": bindingTypeName, "values": bindingTypes}] }
-                    text="Add Binding Type"
-                />
+                    <FormSubmitButton
+                        requiredInputs={ [bindingTypeName] }
+                        uniques={ [{"key": bindingTypeName, "values": bindingTypes}] }
+                        text="Add Binding Type"
+                    />
 
-                <FormCancelButton
-                    clearInvalids={() => clearErrors()}
-                    cancelClick={() => cancelInputs()}
-                />
-            </form>
+                    <FormCancelButton
+                        clearInvalids={() => clearErrors()}
+                        cancelClick={() => cancelInputs()}
+                    />
+                </form>
+            </FormLayout>
         </div>
     )
 }

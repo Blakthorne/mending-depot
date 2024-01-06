@@ -1,5 +1,5 @@
-'use client'
-import useSWR from 'swr'
+import { revalidatePath } from 'next/cache';
+import LoadingIcon from '../../../loading'
 
 type SummaryComponent = {
     bookId: string
@@ -27,27 +27,31 @@ type SummaryData = {
     repairData: RepairData[];
 }
 
+async function getData(bookId: string) {
+    const res = await fetch(process.env.URL + '/api/summary/' + bookId, { cache: 'no-store' } )
+    const summary = await res.json()
+
+    return summary
+}
+
 /**
  * 
  * @param {string} bookId The specified book id
  * @returns HTML summary of the book repairs
  */
-export default function BookSummary({ bookId }: SummaryComponent) {
+export default async function BookSummary({ bookId }: SummaryComponent) {
 
     if (bookId === undefined) {
         bookId = ""
     }
 
-    const fetcher = url => fetch(url).then(r => r.json())
-
-    // Retrieve the summary data
-    const { data, error } = useSWR<SummaryData, Error>('/api/summary/' + bookId, fetcher)
-    if (error) console.log(error)
+    const data: SummaryData = await getData(bookId)
     if (!data) {
         return (
-            <span className="loading loading-infinity loading-lg text-info mt-16 mb-32"></span>
+            <LoadingIcon/>
         )
     }
+
 
     if (data.book.received instanceof Date) {
         data.book.received = data.book.received.toString()

@@ -1,5 +1,5 @@
 'use client'
-
+import { SWRConfig } from 'swr';
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
@@ -62,7 +62,13 @@ export default function Layout({children}) {
                     isDark={isDark}
                 />
                 <div className="pt-16 min-h-screen">
-                    {children}
+                    <SWRConfig
+                        value = {{
+                            fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
+                        }}
+                    >
+                        {children}
+                    </SWRConfig>
                 </div>
             </div>
             <div className="drawer-side z-20">
