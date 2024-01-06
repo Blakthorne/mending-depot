@@ -1,6 +1,3 @@
-'use client'
-import React from 'react'
-
 type FormSubmitButtonComponent = {
     requiredInputs?: string[];
     requiredDates?: boolean[];

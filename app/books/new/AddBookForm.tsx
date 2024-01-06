@@ -1,18 +1,19 @@
 'use client'
 import useSWR, { useSWRConfig } from 'swr'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import FormTextInput from '../../components/forms/FormTextInput'
 import FormSelectInput from '../../components/forms/FormSelectInput'
 import FormSubmitButton from '../../components/forms/FormSubmitButton'
 import FormCancelButton from '../../components/forms/FormCancelButton'
 import AddBookModal from './AddBookModal'
+import FormLayout from '../../components/forms/FormLayout'
 
 /**
  * 
  * @returns HTML form for adding a book to the database, along with submit and cancel buttons
  */
-export default function AddBookForm({ buttonText = "Add Book"}) {
+export default function AddBookForm() {
 
     // Create state for the attributes of a book
     const [title, setTitle] = useState('')
@@ -44,12 +45,15 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     // Used to redirect to new repair page
     const router = useRouter()
 
+    // Define the fetcher function for useSWR
+    const fetcher = url => fetch(url).then(r => r.json())
+
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
-    const { data: owners, error } = useSWR<Owner[], Error>('/api/owners')
+    const { data: owners, error } = useSWR<Owner[], Error>('/api/owners', fetcher)
     if (error) console.log(error)
 
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
-    const { data: bindingTypes, error: bindingTypeError } = useSWR<BindingType[], Error>('/api/bindingtypes')
+    const { data: bindingTypes, error: bindingTypeError } = useSWR<BindingType[], Error>('/api/bindingtypes', fetcher)
     if (bindingTypeError) console.log(bindingTypeError)
 
     /**
@@ -93,6 +97,10 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
         router.push('/books/repairs/' + newBookId)
     }
 
+    const redirectToSummary = () => {
+        router.push('/books/summary/' + newBookId)
+    }
+
     /**
      * Clear all the formatting for showing errors in the form
      */
@@ -131,12 +139,11 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
     }
 
     return (
-        <div className="mt-16 mb-32">
+        <FormLayout formTitle="Add Book">
             <form
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}
-            >
-                
+                >
                 <FormTextInput
                     onChange={(value) => setTitle(value)}
                     placeholder={ "'The Divine Comedy'" }
@@ -247,7 +254,7 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
                     requiredInputs={ [title, author, bindingTypeId, received, ownerId] }
                     requiredDates={ [receivedValid] }
                     dateValids={ [receivedValid, returnedValid] }
-                    text={ buttonText }
+                    text={ "Add Book" }
                 />
 
                 <FormCancelButton
@@ -257,7 +264,8 @@ export default function AddBookForm({ buttonText = "Add Book"}) {
             </form>
             <AddBookModal
                 redirectToNewRepair={() => redirectToNewRepair()}
+                redirectToSummary={() => redirectToSummary()}
             />
-        </div>
+        </FormLayout>
     )
 }

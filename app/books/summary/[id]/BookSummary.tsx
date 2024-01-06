@@ -109,7 +109,7 @@ export default function BookSummary({ bookId }: SummaryComponent) {
                 </div>
             </div>
             <div className="overflow-x-auto mx-auto mt-16">
-                <div className="table table-zebra border-2 border-base-300">
+                <table className="table table-zebra border-2 border-base-300">
                     <tbody>
                         <tr>
                             <td>Publisher</td>
@@ -140,7 +140,7 @@ export default function BookSummary({ bookId }: SummaryComponent) {
                             <td>{data.book.returned}</td>
                         </tr>
                     </tbody>
-                </div>
+                </table>
             </div>
             <div className="font-sans mx-auto w-full">
                 {data.repairData.map(repair => (

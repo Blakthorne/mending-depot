@@ -50,6 +50,7 @@ function NewRepair({ params }: {params: { bookId: string } }) {
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
+    // Define the fetcher function for useSWR
     const fetcher = url => fetch(url).then(r => r.json())
 
     // For redirecting to summary page upon entry completion
