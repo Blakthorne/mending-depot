@@ -71,7 +71,7 @@ export default function BookSummary({ bookId }: SummaryComponent) {
     
     return (
         <div className="flex flex-col min-h-screen">
-            <div className="font-sans text-8xl text-center tracking-wide mb-16">
+            <div className="font-sans text-8xl text-center tracking-wide mb-16 mx-4">
                 {data.book.title}
             </div>
             <div className="flex flex-col justify-center mx-auto gap-y-16">
@@ -109,7 +109,7 @@ export default function BookSummary({ bookId }: SummaryComponent) {
                 </div>
             </div>
             <div className="overflow-x-auto mx-auto mt-16">
-                <div className="table table-zebra">
+                <div className="table table-zebra border-2 border-base-300">
                     <tbody>
                         <tr>
                             <td>Publisher</td>
@@ -146,8 +146,8 @@ export default function BookSummary({ bookId }: SummaryComponent) {
                 {data.repairData.map(repair => (
                     <div key={(iterKey += 1)} className="mt-16">
                         <div key={(iterKey += 1)} className="text-center mb-8">
-                            <div key={repair.repairType.repairTypeName + (iterKey += 1).toString()} className="font-medium tracking-wide text-5xl mb-4">{repair.repairType.repairTypeName}</div>
-                            <div key={repair.repair.repairMaterialsCost + (iterKey += 1).toString()} className="text-2xl">${repair.repair.repairMaterialsCost}</div>
+                            <div key={repair.repairType.repairTypeName + (iterKey += 1).toString()} className="font-medium tracking-wide text-5xl mb-4 mx-2">{repair.repairType.repairTypeName}</div>
+                            <div key={repair.repair.repairMaterialsCost + (iterKey += 1).toString()} className="text-2xl text-base-content/75 font-light">${repair.repair.repairMaterialsCost}</div>
                         </div>
                         <div key={(iterKey += 1)} className="flex flex-wrap justify-center mx-4 gap-x-6 gap-y-8">
                             {repair.materialData

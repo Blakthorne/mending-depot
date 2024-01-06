@@ -89,7 +89,7 @@ export default function PrettyBookTable() {
     return (
         <div className="overflow-x-auto">
             <table id="pretty-table"
-                   className="table table-zebra text-s mt-16 mb-32">
+                   className="table table-zebra text-xs mt-16 mb-32">
                 <thead>
                     <tr className="table-row">
                         {Object.keys(data[0])
@@ -97,7 +97,7 @@ export default function PrettyBookTable() {
                             (
                             <th
                                 key={item.toString()}
-                                className="capitalize hover:bg-base-300"
+                                className="capitalize hover:bg-base-300 cursor-default"
                                 onClick={() => sortColumn(index - 1)}>
                                     {item.split(/(?=[A-Z])/).join(" ")}
                             </th>
