@@ -1,5 +1,5 @@
 'use client'
-import useSWR, { SWRConfig } from 'swr'
+import useSWR from 'swr'
 import LoadingIcon from '../loading';
 
 type TableComponent = {

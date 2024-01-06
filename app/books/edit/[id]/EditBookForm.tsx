@@ -2,11 +2,11 @@
 import useSWR, { useSWRConfig } from 'swr'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { revalidatePath } from 'next/cache'
 import FormTextInput from '../../../components/forms/FormTextInput'
 import FormSelectInput from '../../../components/forms/FormSelectInput'
 import FormSubmitButton from '../../../components/forms/FormSubmitButton'
 import FormCancelButton from '../../../components/forms/FormCancelButton'
+import FormLayout from '../../../components/forms/FormLayout'
 import LoadingIcon from '../../../loading'
 
 /**
@@ -167,7 +167,7 @@ export default function EditBookForm({ bookId }) {
     }
 
     return (
-        <div className="mt-16 mb-32">
+        <FormLayout formTitle={"Edit '" + book.title + "'"}>
             <form
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}
@@ -300,6 +300,6 @@ export default function EditBookForm({ bookId }) {
                     cancelClick={() => cancelInputs()}
                 />
             </form>
-        </div>
+        </FormLayout>
     )
 }
