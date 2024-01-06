@@ -18,10 +18,10 @@ export default function Layout({children}) {
      */
     const determineThemeName = (): void => {
         if (isDark === true) {
-            setThemeName("dracula")
+            setThemeName("dim")
         }
         else {
-            setThemeName("light")
+            setThemeName("garden")
         }
     }
 
@@ -59,7 +59,6 @@ export default function Layout({children}) {
                 isDark={isDark}
             />
             <Sidebar/>
-			<div className="fixed h-full bg-gray-600 w-1 ml-80"></div>
             <div className="pl-80 pt-24 min-h-screen">
                 {children}
             </div>

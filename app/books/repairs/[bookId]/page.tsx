@@ -94,9 +94,9 @@ function NewRepair({ params }: {params: { bookId: string } }) {
             clearErrors()
 
             mutate('/api/repairs')
-            mutate('/summary/' + bookId)
+            mutate('/books/summary/' + bookId)
             
-            router.push('/summary/' + bookId)
+            router.push('/books/summary/' + bookId)
         } catch (error) {
             console.error(error)
         }

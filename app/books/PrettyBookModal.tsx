@@ -8,7 +8,7 @@ export default function PrettyBookModal({ curBookTitle, curBookId }: { curBookTi
                 <div className="flex gap-x-8 justify-center mt-8 mb-4">
                     <Link
                         className="btn btn-outline"
-                        href={"/summary/" + curBookId}>Summary
+                        href={"/books/summary/" + curBookId}>Summary
                     </Link>
                     <Link
                         className="btn btn-outline"
