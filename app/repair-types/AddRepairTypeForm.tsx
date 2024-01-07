@@ -25,12 +25,10 @@ export default function AddRepairTypeForm() {
     // Retrieve the owners for use in the repairTypes[] for the uniqueness check
     const { data, error } = useSWR<RepairType[], Error>('/api/repairtypes')
     if (error) console.log(error)
-    else {
-
-        // Extract all the names of the repair types
-        for (const entry in data) {
-            repairTypes.push(data[entry].repairTypeName)
-        }
+    
+    // Extract all the names of the repair types
+    for (const entry in data) {
+        repairTypes.push(data[entry].repairTypeName)
     }
 
     /**

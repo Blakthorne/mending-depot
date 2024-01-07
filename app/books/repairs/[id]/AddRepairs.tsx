@@ -6,6 +6,7 @@ import { useState } from 'react'
 import FormTextInput from '../../../components/forms/FormTextInput'
 import FormSelectInput from '../../../components/forms/FormSelectInput'
 import RepairFormCard from '../../../components/RepairFormCard'
+import LoadingIcon from '../../../loading'
 
 type TypeForMaterial = {
     materialTypeName: string;
@@ -65,7 +66,7 @@ export default function AddRepairs({ bookId }: {  bookId: string }) {
     if (bookError) console.log(bookError)
     if (!book) {
         return (
-            <span className="loading loading-infinity loading-lg text-info"></span>
+            <LoadingIcon/>
         )
     }
 

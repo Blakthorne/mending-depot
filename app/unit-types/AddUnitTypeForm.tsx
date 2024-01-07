@@ -25,12 +25,10 @@ export default function AddUnitTypeForm() {
     // Retrieve the unit types for use in the unitTypes[] for the uniqueness check
     const { data, error } = useSWR<UnitType[], Error>('/api/unittypes')
     if (error) console.log(error)
-    else {
-
-        // Extract all the names of the unit types
-        for (const entry in data) {
-            unitTypes.push(data[entry].unitTypeName)
-        }
+    
+    // Extract all the names of the unit types
+    for (const entry in data) {
+        unitTypes.push(data[entry].unitTypeName)
     }
 
     /**

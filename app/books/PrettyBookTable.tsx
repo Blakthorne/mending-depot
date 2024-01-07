@@ -2,6 +2,7 @@
 import useSWR from 'swr'
 import { useState } from 'react'
 import PrettyBookModal from './PrettyBookModal'
+import LoadingIcon from '../loading'
 
 export default function PrettyBookTable() {
 
@@ -13,7 +14,7 @@ export default function PrettyBookTable() {
     if (error) console.log(error)
     if (!data) {
         return (
-            <span className="loading loading-infinity loading-lg text-info mt-16 mb-32"></span>
+            <LoadingIcon/>
         )
     }
     if (data[0] == undefined) return <div className="mt-16">There is no data in this table</div>

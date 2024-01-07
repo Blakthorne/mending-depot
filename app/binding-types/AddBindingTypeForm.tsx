@@ -5,6 +5,7 @@ import FormTextInput from '../components/forms/FormTextInput'
 import FormSubmitButton from '../components/forms/FormSubmitButton'
 import FormCancelButton from '../components/forms/FormCancelButton'
 import FormLayout from '../components/forms/FormLayout'
+import LoadingIcon from '../loading'
 
 /**
  * 
@@ -25,12 +26,10 @@ export default function AddBindingTypeForm() {
     // Retrieve the binding types for use in the bindingTypes[] for the uniqueness check
     const { data, error } = useSWR<BindingType[], Error>('/api/bindingtypes')
     if (error) console.log(error)
-    else {
 
-        // Extract all the names of the binding types
-        for (const entry in data) {
-            bindingTypes.push(data[entry].bindingTypeName)
-        }
+    // Extract all the names of the binding types
+    for (const entry in data) {
+        bindingTypes.push(data[entry].bindingTypeName)
     }
 
     /**

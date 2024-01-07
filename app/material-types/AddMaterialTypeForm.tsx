@@ -25,12 +25,10 @@ export default function AddMaterialTypeForm() {
     // Retrieve the material types for use in the materialTypes[] for the uniqueness check
     const { data, error } = useSWR<MaterialType[], Error>('/api/materialtypes')
     if (error) console.log(error)
-    else {
 
-        // Extract all the names of the material types
-        for (const entry in data) {
-            materialTypes.push(data[entry].materialTypeName)
-        }
+    // Extract all the names of the material types
+    for (const entry in data) {
+        materialTypes.push(data[entry].materialTypeName)
     }
 
     /**

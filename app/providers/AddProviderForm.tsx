@@ -25,12 +25,10 @@ export default function AddProviderForm() {
     // Retrieve the owners for use in the providers[] for the uniqueness check
     const { data, error } = useSWR<Provider[], Error>('/api/providers')
     if (error) console.log(error)
-    else {
 
-        // Extract all the names of the providers
-        for (const entry in data) {
-            providers.push(data[entry].providerName)
-        }
+    // Extract all the names of the providers
+    for (const entry in data) {
+        providers.push(data[entry].providerName)
     }
 
     /**
