@@ -45,15 +45,12 @@ export default function AddBookForm() {
     // Used to redirect to new repair page
     const router = useRouter()
 
-    // Define the fetcher function for useSWR
-    const fetcher = url => fetch(url).then(r => r.json())
-
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
-    const { data: owners, error } = useSWR<Owner[], Error>('/api/owners', fetcher)
+    const { data: owners, error } = useSWR<Owner[], Error>('/api/owners')
     if (error) console.log(error)
 
     // Retrieve the owners table to get the owner names and ids to be used as the foreign key in the book table
-    const { data: bindingTypes, error: bindingTypeError } = useSWR<BindingType[], Error>('/api/bindingtypes', fetcher)
+    const { data: bindingTypes, error: bindingTypeError } = useSWR<BindingType[], Error>('/api/bindingtypes')
     if (bindingTypeError) console.log(bindingTypeError)
 
     /**

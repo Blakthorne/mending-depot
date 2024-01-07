@@ -1,33 +1,17 @@
-'use client'
-import Head from 'next/head'
-import { SWRConfig } from 'swr'
+import { Metadata } from 'next';
 import Table from '../components/Table';
 import AddProviderForm from './AddProviderForm';
 
-function Providers() {  
+export default function Providers() {  
     return (
-        <SWRConfig
-            value = {{
-                fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
-            }}
-        >
-            <Head>
-                <title>Providers</title>
-                <meta name="description" content="Manage Providers" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-
-            <div className="flex flex-col min-h-screen">
-                <div className="text-3xl text-center tracking-wide">Providers</div>
-                <div className="mx-auto">
-                    <AddProviderForm/>
-                </div>
-                <div className="mx-auto">
-                    <Table table={"providers"}/>
-                </div>
-            </div>
-        </SWRConfig>
+        <div>
+            <AddProviderForm/>
+            <Table table={"providers"}/>
+        </div>
     )
 }
 
-export default Providers
+export const metadata: Metadata = {
+    title: 'Providers',
+    description: 'View and add providers'
+}

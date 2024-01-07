@@ -12,6 +12,6 @@ export default function BindingTypes() {
 }
 
 export const metadata: Metadata = {
-    title: 'Add Binding Type',
-    description: 'Add a new binding type to the database'
+    title: 'Binding Types',
+    description: 'View and add binding types'
 }

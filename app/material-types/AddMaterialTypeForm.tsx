@@ -1,9 +1,10 @@
 'use client'
 import useSWR, { useSWRConfig } from 'swr'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import FormTextInput from '../components/forms/FormTextInput'
 import FormSubmitButton from '../components/forms/FormSubmitButton'
 import FormCancelButton from '../components/forms/FormCancelButton'
+import FormLayout from '../components/forms/FormLayout'
 
 /**
  * 
@@ -85,7 +86,7 @@ export default function AddMaterialTypeForm() {
     }
 
     return (
-        <div className="mt-16 w-96">
+        <FormLayout formTitle="Material Types">
             <form
                 autoComplete="off"
                 onSubmit={(event) => submitData(event)}
@@ -113,6 +114,6 @@ export default function AddMaterialTypeForm() {
                     cancelClick={() => cancelInputs()}
                 />
             </form>
-        </div>
+        </FormLayout>
     )
 }

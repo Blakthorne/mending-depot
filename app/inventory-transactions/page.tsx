@@ -1,33 +1,17 @@
-'use client'
-import Head from 'next/head'
-import { SWRConfig } from 'swr'
+import { Metadata } from 'next'
 import Table from '../components/Table'
 import AddInventoryTransactionForm from './AddInventoryTransactionForm'
 
-function InventoryTransactions() {  
+export default function InventoryTransactions() {  
     return (
-        <SWRConfig
-            value = {{
-                fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
-            }}
-        >
-            <Head>
-                <title>Inventory Transactions</title>
-                <meta name="description" content="Manage Inventory Transactions" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-
-            <div className="flex flex-col min-h-screen">
-                <div className="text-3xl text-center tracking-wide">Inventory Transactions</div>
-                <div className="mx-auto">
-                    <AddInventoryTransactionForm/>
-                </div>
-                <div className="mx-auto">
-                    <Table table={"inventorytransactions"}/>
-                </div>
-            </div>
-        </SWRConfig>
+        <div>
+            <AddInventoryTransactionForm/>
+            <Table table={"inventorytransactions"}/>
+        </div>
     )
 }
 
-export default InventoryTransactions
+export const metadata: Metadata = {
+    title: 'Inventory Transactions',
+    description: 'View and add inventory transactions'
+}

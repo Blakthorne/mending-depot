@@ -2,7 +2,7 @@
 import useSWR, { useSWRConfig } from 'swr'
 import Head from 'next/head'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import FormTextInput from '../../../components/forms/FormTextInput'
 import FormSelectInput from '../../../components/forms/FormSelectInput'
 import RepairFormCard from '../../../components/RepairFormCard'
@@ -28,7 +28,7 @@ function If(props) {
     return props.condition ? <>{props.children}</> : null;
 }
 
-function NewRepair({ params }: {params: { bookId: string } }) {
+export default function AddRepairs({ bookId }: {  bookId: string }) {
 
     // The currently selected repair type id that is set to be added upon add button clicked
     const [curSelectedRepairTypeId, setCurSelectedRepairTypeId] = useState('')
@@ -50,31 +50,24 @@ function NewRepair({ params }: {params: { bookId: string } }) {
     // For updating the UI on changes to specified API calls
     const { mutate } = useSWRConfig()
 
-    // Define the fetcher function for useSWR
-    const fetcher = url => fetch(url).then(r => r.json())
-
     // For redirecting to summary page upon entry completion
     const router = useRouter()
 
     // Retrieve the repairtypes table to get the repair type names and ids to be used as the foreign key in the repairs table
-    const { data: repairTypes, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes', fetcher)
+    const { data: repairTypes, error: repairTypesError } = useSWR<RepairType[], Error>('/api/repairtypes')
     if (repairTypesError) console.log(repairTypesError)
 
     // Retrieve the type for materials pairs table to get the material type and material names for material selection
-    const { data: materials, error: materialsError } = useSWR<object[], Error>('/api/typesformaterials/pairs', fetcher)
+    const { data: materials, error: materialsError } = useSWR<object[], Error>('/api/typesformaterials/pairs')
     if (materialsError) console.log(materialsError)
 
-    const { data: book, error: bookError } = useSWR<Book, Error>('/api/books/' + params.bookId, fetcher)
+    const { data: book, error: bookError } = useSWR<Book, Error>('/api/books/' + bookId,)
     if (bookError) console.log(bookError)
     if (!book) {
         return (
             <span className="loading loading-infinity loading-lg text-info"></span>
         )
     }
-
-    // Must create this var because so it's consistent with the
-    // Book type when creating bookBody object for HTTP POST
-    const bookId: string = params.bookId
 
     // Create array of the cover type options to be used in the Cover Replacement form
     let coverTypeOptions: object[] =  [{"display": "Full Bound", "store": "fullBound"}, {"display": "Quarter Bound", "store": "quarterBound"}, {"display": "Three-Quarter Bound", "store": "threeQuarterBound"}]
@@ -746,7 +739,7 @@ function NewRepair({ params }: {params: { bookId: string } }) {
     return (
         <div>
             <Head>
-                <title>Add Repairs</title>
+                <title>Add Repairs to {book.title}</title>
                 <meta name="description" content="Add repairs to a book" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -773,5 +766,3 @@ function NewRepair({ params }: {params: { bookId: string } }) {
         </div>
     )
 }
-
-export default NewRepair

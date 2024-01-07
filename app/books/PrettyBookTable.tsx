@@ -1,6 +1,6 @@
 'use client'
 import useSWR from 'swr'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import PrettyBookModal from './PrettyBookModal'
 
 export default function PrettyBookTable() {
@@ -95,8 +95,7 @@ export default function PrettyBookTable() {
                         {Object.keys(data[0])
                             .map((item, index) => item === 'id' ? null :
                             (
-                            <th
-                                key={item.toString()}
+                            <th key={item.toString()}
                                 className="capitalize hover:bg-base-300 cursor-default"
                                 onClick={() => sortColumn(index - 1)}>
                                     {item.split(/(?=[A-Z])/).join(" ")}
@@ -114,6 +113,7 @@ export default function PrettyBookTable() {
                                 .map(cell => Object.values(row)[0] === cell ? null :
                                 (
                                     <td key={(cellKey += 1).toString()}
+                                        className="cursor-default"
                                         onClick={() => rowClick(Object.values(row)[0], Object.values(row)[1])}>
                                             {cell}
                                     </td>

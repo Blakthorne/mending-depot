@@ -1,6 +1,6 @@
 'use client'
 import { SWRConfig } from 'swr';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
 
