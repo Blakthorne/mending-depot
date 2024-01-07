@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import LoadingIcon from '../../../loading'
+import Link from 'next/link';
 
 type MaterialData = {
     materialForRepair: MaterialForRepair;
@@ -78,7 +79,13 @@ export default async function BookSummary({ params }: { params: { id: string } }
     let iterKey: number = 0
     
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen mb-4">
+            <div className="flex place-self-end gap-x-4 mr-16">
+                <Link className="btn btn-outline"
+                      href={"/books/edit/" + data.book.id}>Edit</Link>
+                <Link className="btn btn-outline"
+                      href={"/books/repairs/" + data.book.id}>Add Repair</Link>
+            </div>
             <div className="font-sans text-8xl text-center tracking-wide mb-16 mx-4">
                 {data.book.title}
             </div>

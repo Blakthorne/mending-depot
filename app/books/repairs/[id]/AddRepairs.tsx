@@ -91,7 +91,8 @@ export default function AddRepairs({ bookId }: {  bookId: string }) {
             mutate('/api/repairs')
             mutate('/books/summary/' + bookId)
             
-            router.push('/books/summary/' + bookId)
+            await fetch('/books/summary/revalidate/' + bookId)
+            router.push("/books/summary/" + bookId)
         } catch (error) {
             console.error(error)
         }

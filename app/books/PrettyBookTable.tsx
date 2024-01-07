@@ -29,7 +29,7 @@ export default function PrettyBookTable() {
     }
 
     // Copied from https://www.w3schools.com/howto/howto_js_sort_table.asp
-    function sortColumn(n) {
+    const sortColumn = (n: number) => {
         var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
         table = document.getElementById("pretty-table");
         switching = true;
