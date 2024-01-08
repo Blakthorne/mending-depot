@@ -3,7 +3,7 @@ import PrettyBookTable from './PrettyBookTable'
 
 export default function ListBooks() {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col">
             <div className="text-3xl text-center tracking-wide">Books List</div>
             <div className="mx-auto">
                 <PrettyBookTable/>

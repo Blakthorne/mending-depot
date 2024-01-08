@@ -5,7 +5,7 @@ export default function PrettyBookModal({ curBookTitle, curBookId }: { curBookTi
         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
             <div className="modal-box">
                 <h3 className="font-bold text-center text-lg">You've selected '{curBookTitle}'</h3>
-                <div className="flex gap-x-8 justify-center mt-8 mb-4">
+                <div className="flex gap-x-4 justify-center mt-8 mb-4">
                     <Link
                         className="btn btn-outline"
                         href={"/books/summary/" + curBookId}>Summary

@@ -74,19 +74,21 @@ export default async function BookSummary({ params }: { params: { id: string } }
         data.book.bookMaterialsCost = parseFloat(data.book.bookMaterialsCost)
     }
 
-    const profit: number = data.book.amountCharged - data.book.bookMaterialsCost
+    const profitNotRounded: number = data.book.amountCharged - data.book.bookMaterialsCost
+
+    const profit: number = Math.round(profitNotRounded * 100) / 100
 
     let iterKey: number = 0
     
     return (
         <div className="flex flex-col min-h-screen mb-4">
-            <div className="flex place-self-end gap-x-4 mr-16">
+            <div className="flex place-self-center mb-8 sm:place-self-end gap-x-4 sm:mr-16">
                 <Link className="btn btn-outline"
                       href={"/books/edit/" + data.book.id}>Edit</Link>
                 <Link className="btn btn-outline"
                       href={"/books/repairs/" + data.book.id}>Add Repair</Link>
             </div>
-            <div className="font-sans text-8xl text-center tracking-wide mb-16 mx-4">
+            <div className="font-sans text-5xl sm:text-8xl text-center tracking-wide mb-16 mx-4">
                 {data.book.title}
             </div>
             <div className="flex flex-col justify-center mx-auto gap-y-16">
