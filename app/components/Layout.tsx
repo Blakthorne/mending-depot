@@ -61,7 +61,7 @@ export default function Layout({children}) {
                     setTheme={setIsDark}
                     isDark={isDark}
                 />
-                <div className="pt-16">
+                <div className="pt-16 min-h-screen">
                     <SWRConfig
                         value = {{
                             fetcher: (resource, init) => fetch(resource, init).then(res => res.json())

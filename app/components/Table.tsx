@@ -84,9 +84,9 @@ export default function Table({ table }: TableComponent) {
 
     return (
         <div className="flex">
-            <div className="overflow-x-auto mx-auto">
+            <div className="overflow-x-auto mx-auto px-2">
                 <table id="table"
-                       className="table table-zebra text-xs mb-32">
+                       className="table table-zebra border-2 border-base-300 text-xs mb-32">
                     <thead>
                         <tr className="table-row">
                             {Object.keys(data[0])
