@@ -21,7 +21,13 @@ export default function Table({ table }: TableComponent) {
             <LoadingIcon/>
         )
     }
-    if (data[0] == undefined) return <div className="mt-16">There is no data in this table</div>
+    if (data[0] == undefined) return (
+        <div className="flex">
+            <div className="mx-auto">
+                <div className="mt-16">There is no data in this table</div>
+            </div>
+        </div>
+    )
 
     // Copied from https://www.w3schools.com/howto/howto_js_sort_table.asp
     function sortColumn(n) {

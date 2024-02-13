@@ -17,7 +17,7 @@ export async function generateMetadata(
     const book: Book = await fetch(process.env.URL + "/api/books/" + params.id).then((res) => res.json())
 
     return {
-    title: "Add Repairs to '" + book.title + "'",
-    description: "Add repairs to book with the title '" + book.title + "'"
+        title: "Add Repairs to '" + book.title + "'",
+        description: "Add repairs to book with the title '" + book.title + "'"
     }
 }

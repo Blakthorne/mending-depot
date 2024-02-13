@@ -1,0 +1,31 @@
+name: Install and Run App on Server
+
+on:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Clone Repo
+          uses: actions/checkout@v2
+
+        - name: Deploy to Server
+          env:
+            DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+            LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
+          run: |
+            mkdir -p ~/.ssh
+            echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts
+            rsync -avz --exclude='.git*' --exclude='.github' ./LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:~/mending-depot-app
+            ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash mending-depot-app/scripts/deploy.sh ${{ secrets.DATABASE_URL }} ${{ secrets.DATABASE_PASSWORD }} ${{ secrets.URL }} ${{ secrets.NEXTAUTH_URL }} ${{ secrets.NEXTAUTH_SECRET }} ${{ secrets.APP_CLIENT_ID }} ${{ secrets.APP_CLIENT_SECRET }} '
+
+        - name: Deployment completed Successfully
+          run: echo "Deployment completed successfully"

@@ -1,12 +1,13 @@
-FROM node:20-alpine
+FROM node:lts-buster-slim AS builder
 
 # Create app directory
 RUN mkdir -p /app
 WORKDIR /app
 
 # Install dependencies
-COPY package.json .
-COPY package-lock.json .
+COPY package*.json .
+COPY prisma ./prisma/
+RUN apt-get update -y && apt-get install -y openssl
 RUN npm install
 
 # Copy source files
@@ -14,7 +15,14 @@ COPY . .
 
 # Build app
 RUN npm run build
-EXPOSE 3000
+
+# FROM node:lts-buster-slim AS prod
+
+# COPY --from=builder /app/node_modules ./node_modules
+# COPY --from=builder /app/package*.json ./
+# COPY --from=builder /app/dist ./dist
+
+EXPOSE 80
 
 # Run app
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

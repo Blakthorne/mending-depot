@@ -1,36 +1,10 @@
 version: "3.9"
 
 services:
-  mending-depot:
-    image: node:20-alpine
+  mending-depot-app-local:
+    image: mending-depot-app-local
+    container_name: mending-depot-app
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: mending-depot-app
-    ports:
-      - 3000:3000
-    volumes:
-      - ./:/app
-      - next:/app/.next
-    environment:
-      MYSQL_HOST: mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: env("DATABASE_PASSWORD")
-      MYSQL_DB: mending-depot-db
-    depends_on:
-      - mysql
-
-  mysql:
-    image: mysql:8
-    container_name: mending-depot-db
-    volumes:
-      - db-data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: mending-depot-db
-    ports:
-      - 3306:3306
-
-volumes:
-  db-data:
-  next:
+    network_mode: host
