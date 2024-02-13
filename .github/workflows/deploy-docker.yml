@@ -14,7 +14,7 @@ jobs:
         - name: Clone Repo
           uses: actions/checkout@v3
 
-        - name: Deploy to Server
+        - name: Connect to Server
           env:
             DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
@@ -31,7 +31,24 @@ jobs:
             echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
             ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts
+            
+        - name: Copy Files to Server
+          env:
+            LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+            LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
+          run: |
             rsync -avz --exclude='.git*' --exclude='.github' ./LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:~/mending-depot-app
+
+        - name: Run Deploy Script
+          env:
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+            URL: ${{ secrets.URL }}
+            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+            APP_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
+            APP_CLIENT_SECRET: ${{ secrets.APP_CLIENT_SECRET }}
+          run: |
             ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash mending-depot-app/scripts/deploy.sh DATABASE_URL DATABASE_PASSWORD URL NEXTAUTH_URL NEXTAUTH_SECRET APP_CLIENT_ID APP_CLIENT_SECRET'
 
         - name: Deployment completed Successfully
