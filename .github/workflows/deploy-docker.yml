@@ -23,6 +23,7 @@ jobs:
             DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           run: |
             echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+            echo "$DEPLOY_SSH_KEY"
 
         - name: Allow Permissions on SSH Key File
           run: |
