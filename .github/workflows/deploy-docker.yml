@@ -33,14 +33,14 @@ jobs:
           env:
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
           run: |
-            ssh-keyscan -Hv -p 22 $LIGHTSAIL_IP >> ~/.ssh/known_hosts
+            ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts
             
         - name: Copy Files to Server
           env:
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
             LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
           run: |
-            rsync -avz --exclude='.git*' --exclude='.github' ./$LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:~/mending-depot-app
+            rsync -avz --exclude='.git*' --exclude='.github' ./$LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/mending-depot-app
 
         - name: Run Deploy Script
           env:
