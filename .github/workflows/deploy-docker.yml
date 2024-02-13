@@ -19,13 +19,20 @@ jobs:
             DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
             LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+            URL: ${{ secrets.URL }}
+            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+            APP_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
+            APP_CLIENT_SECRET: ${{ secrets.APP_CLIENT_SECRET }}
           run: |
             mkdir -p ~/.ssh
             echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
             ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts
             rsync -avz --exclude='.git*' --exclude='.github' ./LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:~/mending-depot-app
-            ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash mending-depot-app/scripts/deploy.sh ${{ secrets.DATABASE_URL }} ${{ secrets.DATABASE_PASSWORD }} ${{ secrets.URL }} ${{ secrets.NEXTAUTH_URL }} ${{ secrets.NEXTAUTH_SECRET }} ${{ secrets.APP_CLIENT_ID }} ${{ secrets.APP_CLIENT_SECRET }} '
+            ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash mending-depot-app/scripts/deploy.sh DATABASE_URL DATABASE_PASSWORD URL NEXTAUTH_URL NEXTAUTH_SECRET APP_CLIENT_ID APP_CLIENT_SECRET'
 
         - name: Deployment completed Successfully
           run: echo "Deployment completed successfully"
