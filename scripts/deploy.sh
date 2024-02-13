@@ -14,6 +14,9 @@ GITHUB_CLIENT_SECRET=$7
 # Take down current running docker container
 sudo docker compose down
 
+# Clone directory onto server
+git clone git@github.com:Blakthorne/mending-depot.git
+
 # Create .env file
 cd ~/mending-depot-app
 touch .env
