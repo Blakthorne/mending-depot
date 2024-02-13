@@ -14,14 +14,24 @@ jobs:
         - name: Clone Repo
           uses: actions/checkout@v3
 
-        - name: Connect to Server
-          env:
-            DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-            LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+        - name: Make SSH Folder
           run: |
             mkdir -p ~/.ssh
-            echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
+
+        - name: Add Private Key to SSH
+          env:
+            DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          run: |
+            echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+
+        - name: Allow Permissions on SSH Key File
+          run: |
+            chmod 600 ~/.ssh/id_ed25519
+
+        - name: Add Server to Known Hosts
+          env:
+            LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+          run: |
             ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts
             
         - name: Copy Files to Server
