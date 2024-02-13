@@ -23,7 +23,6 @@ jobs:
             DEPLOY_SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           run: |
             echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
-            echo "$DEPLOY_SSH_KEY"
 
         - name: Allow Permissions on SSH Key File
           run: |
@@ -33,7 +32,7 @@ jobs:
           env:
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
           run: |
-            ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts
+            ssh-keyscan -Hv -p 22 $LIGHTSAIL_IP >> ~/.ssh/known_hosts
             
         - name: Copy Files to Server
           env:
