@@ -8,10 +8,6 @@ WORKDIR /app
 COPY package*.json .
 COPY prisma ./prisma/
 RUN apt-get update -y && apt-get install -y openssl
-
-# Must set this so npm install doesn't run out of memory
-# since I'm currently running on a machine 1GB of RAM
-RUN NODE_OPTIONS=--max_old_space_size=1000;
 RUN npm install
 
 # Copy source files
