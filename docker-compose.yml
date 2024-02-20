@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   mending-depot-app-local:
-    image: mending-depot-app-local
+    image: mending-depot-app
     container_name: mending-depot-app
     # build:
     #   context: .
