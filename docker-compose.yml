@@ -4,7 +4,7 @@ services:
   mending-depot-app-local:
     image: mending-depot-app-local
     container_name: mending-depot-app
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     network_mode: host

@@ -18,7 +18,7 @@ sudo docker compose down
 git clone git@github.com:Blakthorne/mending-depot.git
 
 # Create .env file
-cd ~/mending-depot-app
+cd ~/mending-depot
 touch .env
 printf "DATABASE_URL="$DATABASE_URL"\n" >> .env
 printf "DATABASE_PASSWORD="$DATABASE_PASSWORD"\n" >> .env
