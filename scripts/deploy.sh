@@ -16,7 +16,7 @@ SRC_DIR=/mending-depot
 # Remove old source code if there
 if [ -d "$SRC_DIR" ];
 then
-    rm -r mending-depot
+    sudo rm -r $SRC_DIR
 fi
 
 # Clone new repo
