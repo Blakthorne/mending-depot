@@ -14,7 +14,7 @@ GITHUB_CLIENT_SECRET=$7
 SRC_DIR=/mending-depot
 
 # Remove old source code if there
-if [ -d "$SRC_DIR"];
+if [ -d "$SRC_DIR" ];
 then
     rm -r mending-depot
 fi
