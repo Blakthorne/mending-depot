@@ -79,6 +79,7 @@ export default function AddBookForm() {
 
             // Update the UI wherever this API call is referenced
             mutate('/api/books')
+            mutate('/api/books/pretty')
 
             setNewBookId(newBook.id)
 

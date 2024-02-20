@@ -121,6 +121,7 @@ export default function EditBookForm({ bookId }) {
             // Update the UI wherever this API call is referenced
             mutate('/api/books')
             mutate('/api/books/' + id)
+            mutate('/api/books/pretty')
 
             await fetch('/books/summary/revalidate/' + id)
             router.push("/books/summary/" + id)
