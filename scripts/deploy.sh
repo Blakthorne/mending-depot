@@ -11,11 +11,11 @@ NEXTAUTH_SECRET=$5
 GITHUB_CLIENT_ID=$6
 GITHUB_CLIENT_SECRET=$7
 
-# Take down current running docker container
-sudo docker compose down
+SRC_DIR=/mending-depot
 
 # Remove old source code if there
-if [ -d "mending-depot"]; then
+if [ -d "$SRC_DIR"];
+then
     rm -r mending-depot
 fi
 
@@ -24,6 +24,11 @@ git clone git@github.com:Blakthorne/mending-depot.git
 
 # Create .env file
 cd ~/mending-depot
+
+# Take down current running docker container
+sudo docker compose down
+
+# Create env. file with variables
 touch .env
 printf "DATABASE_URL="$DATABASE_URL"\n" >> .env
 printf "DATABASE_PASSWORD="$DATABASE_PASSWORD"\n" >> .env
