@@ -17,6 +17,7 @@ SRC_DIR=/mending-depot
 if [ -d "$SRC_DIR" ];
 then
     sudo rm -r $SRC_DIR
+    echo "done"
 fi
 
 # Clone new repo
