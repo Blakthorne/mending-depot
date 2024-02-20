@@ -16,10 +16,10 @@ COPY . .
 # Build app
 RUN npm run build
 
-FROM node:lts-buster-slim AS prod
+# FROM node:lts-buster-slim AS prod
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
+# COPY --from=builder /app/node_modules ./node_modules
+# COPY --from=builder /app/package*.json ./
 
 EXPOSE 80
 
