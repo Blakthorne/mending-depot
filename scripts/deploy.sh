@@ -14,8 +14,10 @@ GITHUB_CLIENT_SECRET=$7
 # Take down current running docker container
 sudo docker compose down
 
-# Clone directory onto server
+# Clone directory onto server if doesn't yet exist
+if [ ! -d "mending-depot/"]; then
 git clone git@github.com:Blakthorne/mending-depot.git
+fi
 
 # Create .env file
 cd ~/mending-depot
