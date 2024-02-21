@@ -1,5 +1,5 @@
 'use client'
-import useSWR from 'swr'
+import useSWR, { useSWRConfig } from 'swr'
 import { useState } from 'react'
 import PrettyBookModal from './PrettyBookModal'
 import LoadingIcon from '../loading'
@@ -8,6 +8,9 @@ export default function PrettyBookTable() {
 
     const [curBookId, setCurBookId] = useState('')
     const [curBookTitle, setCurBookTitle] = useState('')
+    
+    // For updating the UI on changes to specified API calls
+    const { mutate } = useSWRConfig()
 
     // Retrieve from 'api/books/pretty'
     const { data, error } = useSWR<object[], Error>('/api/books/pretty')
