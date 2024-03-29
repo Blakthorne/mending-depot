@@ -34,25 +34,47 @@ jobs:
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
           run: |
             ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts
-            
-        - name: Copy Deploy Script to Server
+
+        - name: Create testing script
+          run: |
+            touch test_script.sh
+
+        - name: Write to test script
+          run: |
+            echo "touch output.txt" >> test_script.sh
+
+        - name: Copy Test Script to Server
           env:
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
             LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
           run: |
-            scp ./scripts/deploy.sh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
+            scp test_script.sh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
 
-        - name: Run Deploy Script
+        - name: Run test script
           env:
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-            URL: ${{ secrets.URL }}
-            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-            APP_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
-            APP_CLIENT_SECRET: ${{ secrets.APP_CLIENT_SECRET }}
+            LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+            LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
           run: |
-            ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash deploy.sh $DATABASE_URL $DATABASE_PASSWORD $URL $NEXTAUTH_URL $NEXTAUTH_SECRET $APP_CLIENT_ID $APP_CLIENT_SECRET'
+            ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash test_script.sh'
+            
+        # - name: Copy Deploy Script to Server
+        #   env:
+        #     LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+        #     LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
+        #   run: |
+        #     scp ./scripts/deploy.sh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
+
+        # - name: Run Deploy Script
+        #   env:
+        #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        #     DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        #     URL: ${{ secrets.URL }}
+        #     NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+        #     NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+        #     APP_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
+        #     APP_CLIENT_SECRET: ${{ secrets.APP_CLIENT_SECRET }}
+        #   run: |
+        #     ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash deploy.sh $DATABASE_URL $DATABASE_PASSWORD $URL $NEXTAUTH_URL $NEXTAUTH_SECRET $APP_CLIENT_ID $APP_CLIENT_SECRET'
 
         - name: Deployment completed Successfully
           run: echo "Deployment completed successfully"
