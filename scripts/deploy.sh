@@ -22,7 +22,7 @@ fi
 # Clone new repo
 git clone git@github.com:Blakthorne/mending-depot.git
 
-# Create .env file
+# Go into newly cloned source code folder
 cd ~/mending-depot
 
 # Take down current running docker container
