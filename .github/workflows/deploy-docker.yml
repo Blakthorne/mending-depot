@@ -44,6 +44,8 @@ jobs:
 
         - name: Run Deploy Script
           env:
+            LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+            LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
             DATABASE_URL: ${{ secrets.DATABASE_URL }}
             DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
             URL: ${{ secrets.URL }}
