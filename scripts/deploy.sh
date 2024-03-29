@@ -28,7 +28,7 @@ cd ~/mending-depot
 # Take down current running docker container
 sudo docker compose down
 
-# Create env. file with variables
+# Create .env file with variables
 touch .env
 printf "DATABASE_URL="$DATABASE_URL"\n" >> .env
 printf "DATABASE_PASSWORD="$DATABASE_PASSWORD"\n" >> .env
