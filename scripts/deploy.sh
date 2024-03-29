@@ -30,15 +30,15 @@ sudo docker compose down
 
 # Create .env file with variables
 touch .env
-printf "DATABASE_URL="${DATABASE_URL}"\n" >> .env
-printf "DATABASE_PASSWORD="${DATABASE_PASSWORD}"\n" >> .env
-printf "URL="${URL}"\n" >> .env
+echo "DATABASE_URL="$DATABASE_URL"\n" >> .env
+echo "DATABASE_PASSWORD="$DATABASE_PASSWORD"\n" >> .env
+echo "URL="$URL"\n" >> .env
 
-printf "NEXTAUTH_URL="${NEXTAUTH_URL}"\n" >> .env
-printf "NEXTAUTH_SECRET="${NEXTAUTH_SECRET}"\n" >> .env
+echo "NEXTAUTH_URL="$NEXTAUTH_URL"\n" >> .env
+echo "NEXTAUTH_SECRET="$NEXTAUTH_SECRET"\n" >> .env
 
-printf "GITHUB_CLIENT_ID="${GITHUB_CLIENT_ID}"\n" >> .env
-printf "GITHUB_CLIENT_SECRET="${GITHUB_CLIENT_SECRET}"\n" >> .env
+echo "GITHUB_CLIENT_ID="$GITHUB_CLIENT_ID"\n" >> .env
+echo "GITHUB_CLIENT_SECRET="$GITHUB_CLIENT_SECRET"\n" >> .env
 
 # Build new docker image
 sudo docker build --network host -t mending-depot-app:latest .
