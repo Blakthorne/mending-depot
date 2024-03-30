@@ -61,7 +61,7 @@ jobs:
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
             LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
           run: |
-            scp -r . $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
+            scp -r "$(PWD)" $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
 
         - name: Run Deploy Script
           env:
