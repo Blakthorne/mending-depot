@@ -10,4 +10,4 @@ sudo docker compose down
 sudo docker build --network host -t mending-depot-app:latest .
 
 # Start new docker container
-sudo docker compose up
+sudo docker compose up &
