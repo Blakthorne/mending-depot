@@ -21,7 +21,7 @@ RUN npm run build
 # COPY --from=builder /app/node_modules ./node_modules
 # COPY --from=builder /app/package*.json ./
 
-EXPOSE 80
+EXPOSE 3000
 
 # Run app
 CMD ["npm", "run", "start"]
