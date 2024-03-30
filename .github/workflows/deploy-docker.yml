@@ -40,7 +40,28 @@ jobs:
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
             LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
           run: |
-            scp ./scripts/deploy2.sh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
+            scp ./scripts/deploy.sh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
+
+        - name: Create .env File
+          env:
+            LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+            LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+            URL: ${{ secrets.URL }}
+            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+            APP_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
+            APP_CLIENT_SECRET: ${{ secrets.APP_CLIENT_SECRET }}
+          run: |
+            touch .env && echo "DATABASE_URL=$DATABASE_URL\nDATABASE_PASSWORD=$DATABASE_PASSWORD\nURL=$URL\nNEXTAUTH_URL=$NEXTAUTH_URL\nNEXTAUTH_SECRET=$NEXTAUTH_SECRET\nGITHUB_CLIENT_ID=$GITHUB_CLIENT_ID\nGITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET\n" >> .env
+            
+        - name: Copy Source to Server
+          env:
+            LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+            LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
+          run: |
+            scp -r ./ $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
 
         - name: Run Deploy Script
           env:
@@ -54,9 +75,7 @@ jobs:
             APP_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
             APP_CLIENT_SECRET: ${{ secrets.APP_CLIENT_SECRET }}
           run: |
-            ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash deploy2.sh' 
-          # run: |
-          #   ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash deploy.sh "$DATABASE_URL" "$DATABASE_PASSWORD" "$URL" "$NEXTAUTH_URL" "$NEXTAUTH_SECRET" "$APP_CLIENT_ID" "$APP_CLIENT_SECRET"'
+            ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash deploy.sh "$DATABASE_URL" "$DATABASE_PASSWORD" "$URL" "$NEXTAUTH_URL" "$NEXTAUTH_SECRET" "$APP_CLIENT_ID" "$APP_CLIENT_SECRET"'
 
         - name: Deployment completed Successfully
           run: echo "Deployment completed successfully"
