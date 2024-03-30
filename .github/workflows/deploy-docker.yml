@@ -61,7 +61,7 @@ jobs:
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
             LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
           run: |
-            ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash mending-depot/scripts/deploy.sh &'
+            ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash mending-depot/scripts/deploy.sh' &
 
         - name: Deployment completed Successfully
           run: echo "Deployment completed successfully"
