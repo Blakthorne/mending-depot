@@ -1,34 +1,10 @@
 #! /bin/bash
 
-# Declare variables
-DATABASE_URL=$1
-DATABASE_PASSWORD=$2
-URL=$3
-
-NEXTAUTH_URL=$4
-NEXTAUTH_SECRET=$5
-
-GITHUB_CLIENT_ID=$6
-GITHUB_CLIENT_SECRET=$7
-
-
 # Go into newly cloned source code folder
 cd ~/mending-depot
 
 # Take down current running docker container
 sudo docker compose down
-
-# Create .env file with variables
-# touch .env
-# echo "DATABASE_URL=${DATABASE_URL}" >> .env
-# echo "DATABASE_PASSWORD=${DATABASE_PASSWORD}" >> .env
-# echo "URL=${URL}" >> .env
-
-# echo "NEXTAUTH_URL=${NEXTAUTH_URL}" >> .env
-# echo "NEXTAUTH_SECRET=${NEXTAUTH_SECRET}" >> .env
-
-# echo "GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}" >> .env
-# echo "GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}" >> .env
 
 # Build new docker image
 sudo docker build --network host -t mending-depot-app:latest .
