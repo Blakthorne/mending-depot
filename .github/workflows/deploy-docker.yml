@@ -63,5 +63,11 @@ jobs:
           run: |
             ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash mending-depot/scripts/deploy.sh'
 
+        - name: Test Server is Running Normally
+          env:
+            LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+          run: |
+            timeout 22 bash -c 'until printf "" 2>>/dev/null >>/dev/tcp/$0/$1; do sleep 1; done' $LIGHTSAIL_IP 80
+
         - name: Deployment completed Successfully
           run: echo "Deployment completed successfully"
