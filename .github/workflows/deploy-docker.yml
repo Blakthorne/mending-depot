@@ -56,7 +56,7 @@ jobs:
           run: |
             echo $DATABASE_URL
           # run: |
-          #   ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash deploy.sh $DATABASE_URL $DATABASE_PASSWORD $URL $NEXTAUTH_URL $NEXTAUTH_SECRET $APP_CLIENT_ID $APP_CLIENT_SECRET'
+          #   ssh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP 'bash deploy.sh "$DATABASE_URL" "$DATABASE_PASSWORD" "$URL" "$NEXTAUTH_URL" "$NEXTAUTH_SECRET" "$APP_CLIENT_ID" "$APP_CLIENT_SECRET"'
 
         - name: Deployment completed Successfully
           run: echo "Deployment completed successfully"
