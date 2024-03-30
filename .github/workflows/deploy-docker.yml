@@ -40,7 +40,7 @@ jobs:
             LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
             LIGHTSAIL_USERNAME: ${{ secrets.LIGHTSAIL_USERNAME }}
           run: |
-            scp ./scripts/deploy.sh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
+            scp ./scripts/deploy2.sh $LIGHTSAIL_USERNAME@$LIGHTSAIL_IP:/home/$LIGHTSAIL_USERNAME/
 
         - name: Run Deploy Script
           env:
