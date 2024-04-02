@@ -24,12 +24,7 @@ export default function Navbar() {
                     
                 </label>
                 <button className="btn btn-neutral"
-                        onClick={() => signIn()}
-                >
-                    Sign In
-                </button>
-                <button className="btn"
-                        onClick={() => signOut()}
+                    onClick={() => signOut()}
                 >
                     Sign Out
                 </button>
