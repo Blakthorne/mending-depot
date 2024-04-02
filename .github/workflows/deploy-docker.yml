@@ -44,8 +44,8 @@ jobs:
             URL: ${{ secrets.URL }}
             NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
             NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-            APP_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
-            APP_CLIENT_SECRET: ${{ secrets.APP_CLIENT_SECRET }}
+            GITHUB_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
+            GITHUB_CLIENT_SECRET: ${{ secrets.APP_CLIENT_SECRET }}
           run: |
             touch .env && printf "DATABASE_URL=$DATABASE_URL\nDATABASE_PASSWORD=$DATABASE_PASSWORD\nURL=$URL\nNEXTAUTH_URL=$NEXTAUTH_URL\nNEXTAUTH_SECRET=$NEXTAUTH_SECRET\nGITHUB_CLIENT_ID=$GITHUB_CLIENT_ID\nGITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET\n" >> .env
             
