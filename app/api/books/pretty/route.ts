@@ -20,6 +20,9 @@ type PrettyBook = {
 // Define an array of books as an array of type Book
 type PrettyBooks = PrettyBook[]
 
+// Force out of caching for clients that request from this route
+export const dynamic = 'true'
+
 export async function GET(req: NextRequest) {
     let books: PrettyBooks = await prisma.book.findMany({
         select: {
